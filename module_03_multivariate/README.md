@@ -7,6 +7,7 @@ Distributions of several variables together: the multivariate Normal, the Dirich
 | Lesson | Notebook | Interactive page | Status |
 |---|---|---|---|
 | 03_01 The Multivariate Normal | [notebook](notebooks/03_01_multivariate_normal.ipynb) | [page](html/03_01_multivariate_normal.html) | done |
+| 03_02 The Dirichlet and Dirichlet-Multinomial | [notebook](notebooks/03_02_dirichlet_multinomial.ipynb) | [page](html/03_02_dirichlet_multinomial.html) | done |
 
 ## How to open
 

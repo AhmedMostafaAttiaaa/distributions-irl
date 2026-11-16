@@ -33,3 +33,10 @@
 | One-hot encoding | Vector with a single 1 marking the class. | [01_05](html/01_05_uniform_categorical_multinomial.html) |
 | Cross-entropy loss | Negative log-probability the model assigns to the true class. | [01_05](html/01_05_uniform_categorical_multinomial.html) |
 | Chi-square statistic | Sum of (observed - expected)^2 / expected over categories. | [01_05](html/01_05_uniform_categorical_multinomial.html) |
+| Zipf distribution | P(X=k) proportional to k^(-s); frequency falls as a power of rank. | [01_06](html/01_06_zipf_power_laws.html) |
+| Zeta distribution | Infinite-support Zipf with s > 1, normalized by the Riemann zeta function. | [01_06](html/01_06_zipf_power_laws.html) |
+| Power law | Relationship y = C x^(-s); a straight line of slope -s on log-log axes. | [01_06](html/01_06_zipf_power_laws.html) |
+| Heavy tail | Tail that decays more slowly than any exponential, so extreme values are common. | [01_06](html/01_06_zipf_power_laws.html) |
+| Rank-frequency plot | Counts plotted against rank, usually on log-log axes. | [01_06](html/01_06_zipf_power_laws.html) |
+| Hapax legomenon | A word that occurs exactly once in a text. | [01_06](html/01_06_zipf_power_laws.html) |
+| Harmonic number | H_N = 1 + 1/2 + ... + 1/N. | [01_06](html/01_06_zipf_power_laws.html) |

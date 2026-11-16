@@ -11,6 +11,7 @@ How the common discrete distributions are generated, their full math, how to com
 | 01_03 Poisson | [notebook](notebooks/01_03_poisson.ipynb) | [page](html/01_03_poisson.html) | done |
 | 01_04 Hypergeometric | [notebook](notebooks/01_04_hypergeometric.ipynb) | [page](html/01_04_hypergeometric.html) | done |
 | 01_05 Uniform, Categorical and Multinomial | [notebook](notebooks/01_05_uniform_categorical_multinomial.ipynb) | [page](html/01_05_uniform_categorical_multinomial.html) | done |
+| 01_06 Zipf and Power Laws | [notebook](notebooks/01_06_zipf_power_laws.ipynb) | [page](html/01_06_zipf_power_laws.html) | done |
 
 ## How to open
 
@@ -21,3 +22,4 @@ How the common discrete distributions are generated, their full math, how to com
 
 - Where hand arithmetic over many PMF terms is impractical, the "by hand" step is the exact formula written as an explicit sum with `math.comb`, preceded by a normal-approximation calculation done on paper.
 - Lesson 01_03 uses the 2023/24 Premier League season (`data/E0_2324.csv`, 380 matches). Run `data/download_data.py` if the file is missing.
+- Lesson 01_06 uses *Pride and Prejudice* from Project Gutenberg (`data/pride_and_prejudice.txt`). www.gutenberg.org was down on the download date, so `download_data.py` tries the official mirror gutenberg.pglaf.org first. The HTML page embeds the top 500 word counts as JSON so it works from `file://`.

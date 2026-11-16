@@ -360,6 +360,53 @@ function drawChart(svg, spec) {
   });
 }
 
+// Log-log scatter/line chart for power laws. spec: { title, xlabel, ylabel, series: [{kind: "points"|"line", xs, ys, color, label}] }
+// Axes show decades (1, 10, 100, ...); all x and y values must be positive.
+function drawLogLog(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right, plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+  let xlo = Infinity, xhi = -Infinity, ylo = Infinity, yhi = -Infinity;
+  for (const s of spec.series) {
+    s.xs.forEach((x, i) => {
+      if (x > 0 && s.ys[i] > 0) {
+        xlo = Math.min(xlo, Math.log10(x)); xhi = Math.max(xhi, Math.log10(x));
+        ylo = Math.min(ylo, Math.log10(s.ys[i])); yhi = Math.max(yhi, Math.log10(s.ys[i]));
+      }
+    });
+  }
+  xlo = Math.floor(xlo); xhi = Math.max(Math.ceil(xhi), xlo + 1);
+  ylo = Math.floor(ylo); yhi = Math.max(Math.ceil(yhi), ylo + 1);
+  const sx = x => margin.left + (Math.log10(x) - xlo) / (xhi - xlo) * plotW;
+  const sy = y => margin.top + plotH - (Math.log10(y) - ylo) / (yhi - ylo) * plotH;
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (let e = ylo; e <= yhi; e++) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(Math.pow(10, e)), y2: sy(Math.pow(10, e)), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(Math.pow(10, e)) + 4, "text-anchor": "end" }, "1e" + e));
+  }
+  for (let e = xlo; e <= xhi; e++) {
+    svg.appendChild(svgEl("line", { x1: sx(Math.pow(10, e)), x2: sx(Math.pow(10, e)), y1: margin.top, y2: margin.top + plotH, class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: sx(Math.pow(10, e)), y: H - margin.bottom + 16, "text-anchor": "middle" }, "1e" + e));
+  }
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  svg.appendChild(svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || ""));
+  spec.series.forEach((s, idx) => {
+    const color = s.color || "var(--main)";
+    if (s.kind === "points") {
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 2.2, fill: color })); });
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) d += (d === "" ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`; });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) {
+      svg.appendChild(svgEl("rect", { x: W - margin.right - 130, y: margin.top + idx * 16 - 2, width: 12, height: 10, fill: color }));
+      svg.appendChild(svgEl("text", { x: W - margin.right - 112, y: margin.top + idx * 16 + 7 }, s.label));
+    }
+  });
+}
+
 /* =====================================================================
    SECTION D. OPTIONAL 3D (Plotly gl3d partial bundle, loaded on demand)
    ===================================================================== */

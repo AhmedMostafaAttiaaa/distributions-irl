@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01_06 Zipf and Power Laws | Probability Distributions Book</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+/* ---------- Theme: colorblind-safe Okabe-Ito colors, light and dark ---------- */
+:root {
+  --bg: #ffffff; --panel: #f6f7f9; --text: #1b1f24; --muted: #5b636d; --border: #d8dce1;
+  --main: #0072B2;      /* theoretical curve */
+  --sim: #E69F00;       /* simulated samples */
+  --highlight: #D55E00; --third: #009E73; /* shaded region */
+  --grid: #e3e6ea;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14171a; --panel: #1d2126; --text: #e8eaed; --muted: #9aa3ad; --border: #343a41;
+    --main: #56B4E9; --sim: #E69F00; --highlight: #F08A4B; --third: #2FD0A0; --grid: #2b3036;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 980px; margin: 0 auto; padding: 0 16px 48px; }
+h1 { font-size: 1.7rem; margin: 20px 0 4px; }
+h2 { font-size: 1.2rem; margin: 28px 0 10px; }
+p, li { color: var(--text); }
+.muted { color: var(--muted); }
+
+/* ---------- Navigation bar ---------- */
+nav.topnav { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap;
+  padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--panel); }
+nav.topnav a { color: var(--main); text-decoration: none; font-weight: 600; }
+nav.topnav a:hover { text-decoration: underline; }
+nav.topnav .disabled { color: var(--muted); }
+
+/* ---------- Cards and layout ---------- */
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 720px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+/* ---------- Sliders ---------- */
+.slider-row { display: grid; grid-template-columns: 90px 1fr 70px; align-items: center; gap: 10px; margin: 6px 0; }
+.slider-row label { font-weight: 600; }
+.slider-row output { text-align: right; font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; accent-color: var(--main); }
+input[type=number] { width: 80px; padding: 4px 6px; background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px; }
+button { background: var(--main); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px;
+  font: inherit; font-weight: 600; cursor: pointer; }
+button.secondary { background: transparent; color: var(--main); border: 1px solid var(--main); }
+@media (prefers-color-scheme: dark) { button { color: #0b0d0f; } }
+
+/* ---------- Readouts ---------- */
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.readout { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
+.readout .name { color: var(--muted); font-size: 0.8rem; }
+.readout .value { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- Charts (SVG) ---------- */
+svg.chart { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+svg.chart text { fill: var(--muted); font-size: 12px; font-family: inherit; }
+svg.chart .title { fill: var(--text); font-size: 14px; font-weight: 600; }
+svg.chart .gridline { stroke: var(--grid); stroke-width: 1; }
+svg.chart .axisline { stroke: var(--muted); stroke-width: 1; }
+.plot3d { width: 100%; height: 420px; }
+.cards3 .card h3 { margin: 0 0 6px; font-size: 1rem; }
+footer { margin-top: 36px; padding-top: 12px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+footer a { color: var(--main); }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="../../index.html">Book index</a>
+  <a class="disabled" href="#" id="prevLink">&larr; Previous lesson</a>
+  <a class="disabled" href="#" id="nextLink">Next lesson &rarr;</a>
+</nav>
+<main>
+<h1>01_06 Zipf and Power Laws</h1>
+<p class="muted">A few items are extremely common and a long tail is rare: frequency proportional to 1/rank^s.</p>
+
+<section class="card"><h2 style="margin-top:0">Key ideas</h2><p>$$P(X=k)=\frac{k^{-s}}{H_{N,s}},\qquad H_{N,s}=\sum_{j=1}^Nj^{-s}.$$
+On log-log axes the PMF is a straight line of slope $-s$. For the infinite version (zeta distribution) the mean is finite only for $s>2$ and the variance only for $s>3$. The top $n$ ranks cover $H_{n,s}/H_{N,s}$ of all tokens.</p></section>
+
+<section>
+  <h2>Explore the distribution</h2>
+  <div class="card" id="sliders"></div>
+  <div class="grid2">
+    <div class="card"><svg class="chart" id="pmfChart" viewBox="0 0 480 300"></svg></div>
+    <div class="card"><svg class="chart" id="cdfChart" viewBox="0 0 480 300"></svg></div>
+  </div>
+</section>
+
+<section>
+  <h2>Summary numbers</h2>
+  <div class="readouts" id="readouts"></div>
+  <div class="card"><strong>Probability calculator:</strong>
+    P( <input type="number" id="calcA" value="0" step="1"> &le; X &le; <input type="number" id="calcB" value="1" step="1"> )
+    = <strong id="calcResult"></strong> <span class="muted">(highlighted on the PMF chart)</span></div>
+</section>
+
+<section>
+  <h2>Draw samples</h2>
+  <div class="card">N = <input type="number" id="sampleN" value="1000" min="10" max="100000" step="10">
+    <button id="drawBtn">Draw N samples</button> <button id="clearBtn" class="secondary">Clear</button>
+    <span class="muted" id="sampleInfo"></span></div>
+</section>
+
+<section>
+  <h2>Worked example</h2>
+  <div class="card" id="examplePanel">
+<p>Real data: <em>Pride and Prejudice</em> (Project Gutenberg, 128,565 word tokens, 6,729 distinct words).
+How much of the text do the top <input type="number" id="exN" value="10" min="1" max="500"> words cover?
+Target coverage: <input type="number" id="exTarget" value="50" min="1" max="75"> % (the page holds the top 500 words, which cover about 75 %).</p>
+<div class="readouts" id="exOut"></div>
+<svg class="chart" id="exChart" viewBox="0 0 480 300"></svg>
+<p id="exText" class="muted"></p>
+<p class="muted">Top 10 words: <span id="topWords"></span></p>
+</div>
+</section>
+
+<section>
+  <h2>Where it is used</h2>
+  <div class="grid3 cards3">
+    <div class="card"><h3>Statistics</h3><p>Heavy-tailed counts, power-law exponents by maximum likelihood, infinite-moment warnings.</p></div>
+    <div class="card"><h3>Data science</h3><p>Long-tail popularity, cache hit rates for the top-n items, text analytics.</p></div>
+    <div class="card"><h3>ML and AI</h3><p>Tokenization and vocabularies in NLP, long-tailed classification, rare-token learning.</p></div>
+  </div>
+</section>
+<section id="section3d"><h2>3D view</h2><div class="card"><div id="plot3d" class="plot3d"></div></div><p class="muted">Rotate with the mouse. Plotly is loaded from a CDN only on this page type.</p></section>
+<footer>Matching notebook: <a href="../notebooks/01_06_zipf_power_laws.ipynb">notebooks/01_06_zipf_power_laws.ipynb</a></footer>
+</main>
+<script>
+"use strict";
+/* =====================================================================
+   SECTION A. MATH HELPERS (small, readable, no libraries)
+   ===================================================================== */
+
+// log(n!) using a running sum; fine for the sizes used in these lessons.
+function logFactorial(n) {
+  let total = 0;
+  for (let i = 2; i <= n; i++) total += Math.log(i);
+  return total;
+}
+
+// Binomial PMF computed in log space so large n does not overflow.
+function binomPmf(k, n, p) {
+  if (k < 0 || k > n) return 0;
+  if (p === 0) return k === 0 ? 1 : 0;
+  if (p === 1) return k === n ? 1 : 0;
+  const logChoose = logFactorial(n) - logFactorial(k) - logFactorial(n - k);
+  return Math.exp(logChoose + k * Math.log(p) + (n - k) * Math.log(1 - p));
+}
+
+// Turn an array of probabilities into running totals (the CDF).
+function cumulative(probs) {
+  const out = [];
+  let running = 0;
+  for (const p of probs) { running += p; out.push(running); }
+  return out;
+}
+
+// Mean, variance, std and skewness of a discrete distribution given as (xs, probs).
+function discreteMoments(xs, probs) {
+  let mean = 0;
+  for (let i = 0; i < xs.length; i++) mean += xs[i] * probs[i];
+  let variance = 0, third = 0;
+  for (let i = 0; i < xs.length; i++) {
+    const d = xs[i] - mean;
+    variance += d * d * probs[i];
+    third += d * d * d * probs[i];
+  }
+  const std = Math.sqrt(variance);
+  const skew = std > 0 ? third / (std * std * std) : 0;
+  return { mean, variance, std, skew };
+}
+
+// Sample from a discrete distribution by inverting the CDF (xs sorted ascending).
+function sampleDiscrete(xs, cdf, count) {
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    const u = Math.random();
+    let j = 0;
+    while (j < cdf.length - 1 && cdf[j] < u) j++;
+    out.push(xs[j]);
+  }
+  return out;
+}
+
+// Format a number for display.
+function fmt(x, digits = 4) { return Number.isFinite(x) ? x.toFixed(digits) : "n/a"; }
+
+/* =====================================================================
+   SECTION B. UI HELPERS: sliders and readouts
+   ===================================================================== */
+
+// Add a labelled slider to a container. Calls onChange(value) whenever it moves.
+function addSlider(container, { label, min, max, step, value, onChange }) {
+  const row = document.createElement("div");
+  row.className = "slider-row";
+  const name = document.createElement("label");
+  name.textContent = label;
+  const input = document.createElement("input");
+  Object.assign(input, { type: "range", min, max, step, value });
+  const out = document.createElement("output");
+  out.textContent = value;
+  input.addEventListener("input", () => { out.textContent = input.value; onChange(Number(input.value)); });
+  row.append(name, input, out);
+  container.appendChild(row);
+  return { get: () => Number(input.value) };
+}
+
+// Fill the readouts grid from an object like { Mean: 1.2, Variance: 3.4 }.
+function showReadouts(values) {
+  const box = document.getElementById("readouts");
+  box.innerHTML = "";
+  for (const [name, value] of Object.entries(values)) {
+    const cell = document.createElement("div");
+    cell.className = "readout";
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${fmt(value)}</div>`;
+    box.appendChild(cell);
+  }
+}
+
+/* =====================================================================
+   SECTION C. SVG CHART HELPERS
+   drawChart(svgElement, spec) where spec is:
+     { title, xlabel, ylabel,
+       series: [ { kind: "bar" | "line" | "step" | "points", xs, ys, color, label } ],
+       shade: [a, b]   // optional: highlight x values between a and b
+       xrange, yrange  // optional fixed ranges
+     }
+   ===================================================================== */
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function svgEl(name, attrs, text) {
+  const node = document.createElementNS(SVG_NS, name);
+  for (const [key, value] of Object.entries(attrs || {})) node.setAttribute(key, value);
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+// Pick about 5 round tick values between lo and hi.
+function niceTicks(lo, hi) {
+  const span = hi - lo || 1;
+  const rawStep = span / 5;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const options = [1, 2, 5, 10];
+  let step = magnitude;
+  for (const o of options) { if (o * magnitude >= rawStep) { step = o * magnitude; break; } }
+  const ticks = [];
+  for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) ticks.push(Number(t.toPrecision(10)));
+  return ticks;
+}
+
+function drawChart(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right;
+  const plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+
+  // Work out the data ranges from all series.
+  let xmin = Infinity, xmax = -Infinity, ymax = 0;
+  for (const s of spec.series) {
+    for (const x of s.xs) { xmin = Math.min(xmin, x); xmax = Math.max(xmax, x); }
+    for (const y of s.ys) ymax = Math.max(ymax, y);
+  }
+  if (spec.xrange) [xmin, xmax] = spec.xrange;
+  if (spec.yrange) ymax = spec.yrange[1];
+  ymax = ymax * 1.08 || 1;
+  const hasBars = spec.series.some(s => s.kind === "bar");
+  const pad = hasBars ? 0.7 : 0;               // keep the first and last bar inside the axes
+  const x0 = xmin - pad, x1 = xmax + pad || 1;
+  const sx = x => margin.left + (x - x0) / (x1 - x0) * plotW;
+  const sy = y => margin.top + plotH - y / ymax * plotH;
+
+  // Title, grid and axes.
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (const t of niceTicks(0, ymax)) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(t), y2: sy(t), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(t) + 4, "text-anchor": "end" }, String(t)));
+  }
+  for (const t of niceTicks(x0, x1)) {
+    svg.appendChild(svgEl("text", { x: sx(t), y: H - margin.bottom + 16, "text-anchor": "middle" }, String(t)));
+  }
+  svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(0), y2: sy(0), class: "axisline" }));
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  const yl = svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || "");
+  svg.appendChild(yl);
+
+  // Shaded region for the probability calculator.
+  if (spec.shade) {
+    const [a, b] = spec.shade;
+    svg.appendChild(svgEl("rect", { x: sx(a - (hasBars ? 0.5 : 0)), y: margin.top,
+      width: Math.max(0, sx(b + (hasBars ? 0.5 : 0)) - sx(a - (hasBars ? 0.5 : 0))), height: plotH,
+      fill: "var(--highlight)", opacity: 0.15 }));
+  }
+
+  // Draw each series.
+  const legendItems = [];
+  for (const s of spec.series) {
+    const color = s.color || "var(--main)";
+    if (s.kind === "bar") {
+      const barW = Math.max(1, plotW / (x1 - x0) * 0.8);
+      s.xs.forEach((x, i) => {
+        const inside = spec.shade && x >= spec.shade[0] && x <= spec.shade[1];
+        svg.appendChild(svgEl("rect", { x: sx(x) - barW / 2, y: sy(s.ys[i]), width: barW,
+          height: Math.max(0, sy(0) - sy(s.ys[i])), fill: inside ? "var(--highlight)" : color,
+          opacity: s.opacity || 0.9 }));
+      });
+    } else if (s.kind === "points") {
+      s.xs.forEach((x, i) => svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 3, fill: color })));
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => {
+        if (s.kind === "step" && i > 0) d += ` L${sx(x)},${sy(s.ys[i - 1])}`;
+        d += (i === 0 ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`;
+      });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) legendItems.push({ label: s.label, color });
+  }
+  legendItems.forEach((item, i) => {
+    const lx = W - margin.right - 130, ly = margin.top + 6 + i * 16;
+    svg.appendChild(svgEl("rect", { x: lx, y: ly - 8, width: 12, height: 10, fill: item.color }));
+    svg.appendChild(svgEl("text", { x: lx + 18, y: ly + 1 }, item.label));
+  });
+}
+
+// Log-log scatter/line chart for power laws. spec: { title, xlabel, ylabel, series: [{kind: "points"|"line", xs, ys, color, label}] }
+// Axes show decades (1, 10, 100, ...); all x and y values must be positive.
+function drawLogLog(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right, plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+  let xlo = Infinity, xhi = -Infinity, ylo = Infinity, yhi = -Infinity;
+  for (const s of spec.series) {
+    s.xs.forEach((x, i) => {
+      if (x > 0 && s.ys[i] > 0) {
+        xlo = Math.min(xlo, Math.log10(x)); xhi = Math.max(xhi, Math.log10(x));
+        ylo = Math.min(ylo, Math.log10(s.ys[i])); yhi = Math.max(yhi, Math.log10(s.ys[i]));
+      }
+    });
+  }
+  xlo = Math.floor(xlo); xhi = Math.max(Math.ceil(xhi), xlo + 1);
+  ylo = Math.floor(ylo); yhi = Math.max(Math.ceil(yhi), ylo + 1);
+  const sx = x => margin.left + (Math.log10(x) - xlo) / (xhi - xlo) * plotW;
+  const sy = y => margin.top + plotH - (Math.log10(y) - ylo) / (yhi - ylo) * plotH;
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (let e = ylo; e <= yhi; e++) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(Math.pow(10, e)), y2: sy(Math.pow(10, e)), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(Math.pow(10, e)) + 4, "text-anchor": "end" }, "1e" + e));
+  }
+  for (let e = xlo; e <= xhi; e++) {
+    svg.appendChild(svgEl("line", { x1: sx(Math.pow(10, e)), x2: sx(Math.pow(10, e)), y1: margin.top, y2: margin.top + plotH, class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: sx(Math.pow(10, e)), y: H - margin.bottom + 16, "text-anchor": "middle" }, "1e" + e));
+  }
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  svg.appendChild(svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || ""));
+  spec.series.forEach((s, idx) => {
+    const color = s.color || "var(--main)";
+    if (s.kind === "points") {
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 2.2, fill: color })); });
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) d += (d === "" ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`; });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) {
+      svg.appendChild(svgEl("rect", { x: W - margin.right - 130, y: margin.top + idx * 16 - 2, width: 12, height: 10, fill: color }));
+      svg.appendChild(svgEl("text", { x: W - margin.right - 112, y: margin.top + idx * 16 + 7 }, s.label));
+    }
+  });
+}
+
+/* =====================================================================
+   SECTION D. OPTIONAL 3D (Plotly gl3d partial bundle, loaded on demand)
+   ===================================================================== */
+function loadPlotlyThen(callback) {
+  if (window.Plotly) { callback(); return; }
+  const script = document.createElement("script");
+  script.src = "https://cdn.plot.ly/plotly-gl3d-2.35.2.min.js";
+  script.onload = callback;
+  script.onerror = () => { document.getElementById("plot3d").textContent = "Could not load Plotly from the CDN (check your connection)."; };
+  document.head.appendChild(script);
+}
+
+
+
+const BOOK = {"tokens":128565,"vocab":6729,"words":["the","to","of","and","her","i","a","in","was","she","that","it","not","you","he","his","be","as","had","with","for","but","is","have","at","mr","him","on","my","by","s","all","elizabeth","they","so","were","which","been","could","from","no","very","what","would","this","me","their","your","them","darcy","will","said","such","when","an","there","are","if","mrs","do","bennet","much","more","am","or","miss","must","bingley","jane","than","who","one","any","did","we","should","has","know","though","herself","how","well","never","before","only","other","think","can","soon","sister","now","some","good","might","may","after","time","wickham","most","lady","own","little","collins","nothing","every","being","again","without","then","lydia","make","illustration","dear","shall","first","say","man","room","family","see","great","day","too","two","into","out","mother","however","ever","father","himself","young","made","catherine","about","give","us","always","hope","its","many","away","long","last","letter","way","up","friend","cannot","thought","enough","house","go","felt","sure","replied","love","saw","indeed","quite","better","wish","come","myself","manner","lizzy","gardiner","till","over","even","pleasure","came","having","done","where","oh","feelings","often","does","really","cried","believe","perhaps","like","chapter","whom","aunt","longbourn","subject","charlotte","heard","daughter","take","ladies","happy","anything","less","whole","while","seen","place","ill","down","sir","brother","these","just","yet","morning","certainly","still","let","sisters","something","our","looked","yes","therefore","here","evening","same","both","netherfield","nor","least","present","world","upon","added","half","kitty","few","next","happiness","kind","told","moment","lucas","hear","went","speak","tell","towards","attention","uncle","character","between","found","town","colonel","seemed","opinion","home","marriage","woman","left","almost","each","answer","together","those","because","three","leave","either","conversation","rather","once","off","far","acquaintance","gone","affection","others","part","find","immediately","passed","received","party","possible","given","another","look","whose","married","everything","coming","london","whether","means","since","began","seeing","life","certain","knew","mind","side","known","going","meryton","pride","took","pemberley","friends","behaviour","general","eyes","why","gave","able","perfectly","against","get","reason","course","visit","husband","word","continued","idea","daughters","return","person","walk","hardly","wife","cousin","regard","people","sense","suppose","agreeable","yourself","rosings","want","point","manners","settled","object","george","business","impossible","girls","best","heart","marry","called","short","back","ought","read","walked","william","right","spoke","returned","scarcely","civility","carriage","longer","mary","de","country","rest","else","through","expected","turned","doubt","help","honour","power","ladyship","likely","years","sometimes","feel","girl","bourgh","talking","assure","wished","hertfordshire","everybody","account","brought","poor","entered","stay","gentlemen","engaged","gentleman","asked","convinced","men","dare","near","former","neither","fortune","pleased","met","spirits","forster","write","four","different","occasion","sat","talked","hour","situation","allen","beyond","feeling","ball","door","handsome","afraid","minutes","surprise","believed","sort","fitzwilliam","things","care","glad","making","amiable","table","case","deal","satisfied","put","also","wishes","five","merely","under","wonder","looking","copyright","sorry","expect","night","saying","surprised","fine","mean","respect","head","real","themselves","philips","determined","invitation","thousand","advantage","within","silence","answered","usual","taken","end","ask","speaking","officers","name","consider","hurst","particularly","appearance","whatever","consequence","necessary","early","days","exactly","arrival","talk","news","sensible","dance","ten","afterwards","appeared","society","length","equal","appear","words","smile","meet","dinner","set","allow","instantly","comfort"],"counts":[4663,4325,3844,3767,2284,2122,2038,1994,1875,1751,1646,1590,1500,1376,1358,1303,1264,1229,1186,1103,1096,1038,926,879,816,808,777,734,728,699,672,651,645,610,607,570,568,536,531,510,509,504,493,485,466,462,456,455,445,432,428,406,397,389,378,372,370,366,354,352,339,337,337,333,326,315,315,310,302,300,298,295,283,280,266,258,256,244,238,236,235,230,230,228,225,222,222,220,217,217,215,214,209,206,206,205,201,200,199,198,196,192,190,187,185,182,182,177,177,176,171,163,163,163,160,160,158,153,153,153,148,148,146,145,145,144,137,136,136,135,133,133,132,132,129,127,127,126,125,123,121,121,119,119,118,115,115,115,114,112,111,110,107,106,106,103,102,102,100,98,98,98,98,97,97,97,97,96,95,95,94,94,94,93,93,93,92,92,91,91,91,90,89,89,89,88,88,88,87,87,87,84,83,83,83,81,81,80,80,79,79,79,79,79,79,78,78,78,78,77,77,77,77,76,76,76,76,75,74,74,73,73,73,73,72,72,72,72,72,72,72,72,72,72,71,71,71,71,71,70,70,70,70,70,70,69,68,68,68,68,67,67,67,67,66,66,65,65,65,65,64,64,64,64,63,63,62,62,62,62,62,62,61,61,61,61,61,61,61,60,60,60,60,60,60,60,60,60,59,59,59,59,59,59,58,58,58,58,57,57,57,57,55,55,55,55,55,54,54,54,54,54,53,53,53,53,52,52,52,52,52,51,51,51,51,51,50,50,50,50,50,49,49,49,49,49,48,48,48,48,48,47,47,47,47,46,46,46,46,46,46,46,46,46,46,45,45,45,45,44,44,44,43,43,43,43,43,43,43,43,42,42,42,42,42,41,41,41,41,41,41,41,41,41,41,40,40,40,40,40,40,40,40,40,40,40,39,39,39,39,39,39,39,39,39,39,39,38,38,38,38,38,38,38,37,37,37,37,37,37,37,37,37,37,37,37,36,36,36,36,36,36,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,33,33,33,33,33,33,33,33,33,33,33,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,31,31,31,31,31,31,31,31,31,31]};
+function zipfianDist(s, N) {
+  const xs = [], weights = [];
+  let total = 0;
+  for (let k = 1; k <= N; k++) { xs.push(k); const w = Math.pow(k, -s); weights.push(w); total += w; }
+  return { xs, probs: weights.map(w => w / total) };
+}
+
+
+/* =====================================================================
+   SECTION E. GENERIC LESSON ENGINE (the lesson config below plugs into it)
+   ===================================================================== */
+function startLesson(cfg) {
+  const params = {};
+  cfg.params.forEach(p => { params[p.key] = p.value; });
+  let samples = null;
+  let showOverlay = true;
+
+  function refresh() {
+    const dist = cfg.dist(params);
+    const cdf = cumulative(dist.probs);
+    const a = Number(document.getElementById("calcA").value);
+    const b = Number(document.getElementById("calcB").value);
+    let prob = 0;
+    dist.xs.forEach((x, i) => { if (x >= a && x <= b) prob += dist.probs[i]; });
+    document.getElementById("calcResult").textContent = fmt(prob, 5);
+
+    const series = [{ kind: "bar", xs: dist.xs, ys: dist.probs, color: "var(--main)", label: "Theory" }];
+    if (cfg.overlay && showOverlay) {
+      const o = cfg.overlay(params, dist);
+      series.push({ kind: "line", xs: o.xs, ys: o.ys, color: "var(--third)", label: o.label });
+    }
+    if (samples) {
+      const counts = new Map();
+      for (const s of samples) counts.set(s, (counts.get(s) || 0) + 1);
+      const freq = dist.xs.map(x => (counts.get(x) || 0) / samples.length);
+      series.push({ kind: "points", xs: dist.xs, ys: freq, color: "var(--sim)", label: "Samples" });
+    }
+    (cfg.drawPmf || drawChart)(document.getElementById("pmfChart"), { title: cfg.title(params), xlabel: cfg.xlabel,
+      ylabel: "P(X = k)", series, shade: [a, b], xrange: cfg.xrange ? cfg.xrange(params, dist) : undefined,
+      logx: cfg.logx });
+    drawChart(document.getElementById("cdfChart"), { title: "CDF", xlabel: cfg.xlabel, ylabel: "P(X <= k)",
+      series: [{ kind: "step", xs: dist.xs, ys: cdf, color: "var(--main)" }], yrange: [0, 1],
+      xrange: cfg.xrange ? cfg.xrange(params, dist) : undefined });
+    const m = discreteMoments(dist.xs, dist.probs);
+    showReadouts({ Mean: m.mean, Variance: m.variance, Std: m.std, Skewness: m.skew });
+    if (cfg.exampleUpdate) cfg.exampleUpdate();
+  }
+
+  const box = document.getElementById("sliders");
+  cfg.params.forEach(p => addSlider(box, { label: p.label, min: p.min, max: p.max, step: p.step, value: p.value,
+    onChange: v => { params[p.key] = v; samples = null; if (cfg.onParams) cfg.onParams(params); refresh(); } }));
+  if (cfg.overlay) {
+    const row = document.createElement("div");
+    row.innerHTML = `<label><input type="checkbox" id="overlayToggle" checked> show ${cfg.overlayName}</label>`;
+    box.appendChild(row);
+    row.querySelector("input").addEventListener("change", ev => { showOverlay = ev.target.checked; refresh(); });
+  }
+  if (cfg.extraControls) cfg.extraControls(box, params, () => { samples = null; refresh(); });
+  document.getElementById("calcA").value = cfg.calc[0];
+  document.getElementById("calcB").value = cfg.calc[1];
+  document.getElementById("calcA").addEventListener("input", refresh);
+  document.getElementById("calcB").addEventListener("input", refresh);
+  document.getElementById("drawBtn").addEventListener("click", () => {
+    const dist = cfg.dist(params);
+    const count = Math.min(100000, Math.max(10, Number(document.getElementById("sampleN").value)));
+    samples = sampleDiscrete(dist.xs, cumulative(dist.probs), count);
+    const mean = samples.reduce((acc, v) => acc + v, 0) / count;
+    document.getElementById("sampleInfo").textContent = ` ${count} samples, sample mean = ${fmt(mean, 3)}`;
+    refresh();
+  });
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    samples = null; document.getElementById("sampleInfo").textContent = ""; refresh(); });
+  if (cfg.exampleInit) cfg.exampleInit();
+  refresh();
+  if (cfg.plot3d) loadPlotlyThen(() => Plotly.newPlot("plot3d", cfg.plot3d.data, cfg.plot3d.layout, { responsive: true }));
+}
+
+function setupNav(id, target) {
+  const link = document.getElementById(id);
+  if (target) { link.href = target; link.classList.remove("disabled"); }
+}
+
+setupNav("prevLink", "01_05_uniform_categorical_multinomial.html");
+setupNav("nextLink", "01_07_discrete_summary_chooser.html");
+window.addEventListener("DOMContentLoaded", () => {
+
+  let logView = false;
+  function showExample(values) {
+    const box = document.getElementById("exOut");
+    box.innerHTML = "";
+    for (const [name, value] of Object.entries(values)) {
+      const cell = document.createElement("div");
+      cell.className = "readout";
+      cell.innerHTML = `<div class="name">${name}</div><div class="value">${Number.isInteger(value) ? value : fmt(value, 3)}</div>`;
+      box.appendChild(cell);
+    }
+  }
+  function exampleUpdate() {
+    const n = Math.min(500, Math.max(1, Number(document.getElementById("exN").value)));
+    const target = Number(document.getElementById("exTarget").value) / 100;
+    const total = BOOK.tokens;
+    const cumulativeShare = [];
+    let running = 0;
+    BOOK.counts.forEach(c => { running += c / total; cumulativeShare.push(running); });
+    const harmonic = k => { let h = 0; for (let j = 1; j <= k; j++) h += 1 / j; return h; };
+    const modelShare = harmonic(n) / harmonic(BOOK.vocab);                 // Zipf s = 1 over the whole vocabulary
+    let needed = cumulativeShare.findIndex(v => v >= target) + 1;
+    showExample({ "Observed coverage": cumulativeShare[n - 1], "Zipf s=1 model": modelShare,
+                  ["Words for " + Math.round(target * 100) + "%"]: needed > 0 ? needed : NaN });
+    const xs = cumulativeShare.map((_, i) => i + 1);
+    drawChart(document.getElementById("exChart"), { title: "Coverage by the top words",
+      xlabel: "number of top words", ylabel: "share of all tokens", yrange: [0, 1],
+      series: [{ kind: "line", xs, ys: cumulativeShare, color: "var(--main)", label: "observed" },
+               { kind: "points", xs: [n], ys: [cumulativeShare[n - 1]], color: "var(--highlight)", label: "top n" }],
+      shade: [1, n] });
+    document.getElementById("exText").textContent =
+      `The top ${n} words cover ${(100 * cumulativeShare[n - 1]).toFixed(1)}% of the text; the s = 1 model predicts ${(100 * modelShare).toFixed(1)}%. ` +
+      (needed > 0 ? `${needed} distinct words are needed for ${Math.round(target * 100)}% coverage.` : "That target needs more than the 500 words stored here.");
+    document.getElementById("topWords").textContent = BOOK.words.slice(0, 10).map((w, i) => `${w} (${BOOK.counts[i]})`).join(", ");
+  }
+
+  // 3D: log10 PMF over (rank, s), N = 50
+  const ranks3 = [], s3 = [], z = [];
+  for (let k = 1; k <= 50; k++) ranks3.push(k);
+  for (let i = 1; i <= 29; i++) s3.push(0.2 + i * 0.1);
+  for (const s of s3) { const d = zipfianDist(s, 50); z.push(d.probs.map(p => Math.log10(p))); }
+
+  startLesson({
+    params: [
+      { key: "s", label: "s", min: 0.1, max: 3, step: 0.05, value: 1 },
+      { key: "N", label: "N (vocabulary)", min: 5, max: 1000, step: 1, value: 100 }],
+    dist: q => zipfianDist(q.s, q.N),
+    title: q => `Zipfian PMF (s=${q.s}, N=${q.N})`,
+    xlabel: "rank k",
+    calc: [1, 10],
+    xrange: (q, dist) => [1, Math.min(q.N, logView ? q.N : 60)],
+    drawPmf: (svg, spec) => {
+      if (logView) {
+        const theory = spec.series[0];
+        const series = [{ kind: "line", xs: theory.xs, ys: theory.ys, color: "var(--main)", label: "Theory" }];
+        for (const extraSeries of spec.series.slice(1)) series.push({ kind: "points", xs: extraSeries.xs, ys: extraSeries.ys.map(v => v > 0 ? v : NaN), color: "var(--sim)", label: "Samples" });
+        drawLogLog(svg, { title: spec.title + " (log-log)", xlabel: "rank k", ylabel: "P(X = k)", series });
+      } else {
+        drawChart(svg, Object.assign({}, spec, { xrange: [1, Math.min(60, spec.series[0].xs.length)] }));
+      }
+    },
+    extraControls: (box, q, redraw) => {
+      const row = document.createElement("div");
+      row.innerHTML = `<label><input type="checkbox" id="logToggle"> log-log axes (power laws become straight lines)</label>`;
+      box.appendChild(row);
+      row.querySelector("input").addEventListener("change", ev => { logView = ev.target.checked; redraw(); });
+    },
+    exampleInit: () => ["exN", "exTarget"].forEach(id => document.getElementById(id).addEventListener("input", exampleUpdate)),
+    exampleUpdate,
+    plot3d: {
+      data: [{ type: "surface", x: ranks3, y: s3, z, colorscale: "Viridis" }],
+      layout: { margin: { l: 0, r: 0, t: 30, b: 0 }, title: { text: "Zipfian log10 PMF over (rank, s), N = 50" },
+        scene: { xaxis: { title: "rank" }, yaxis: { title: "s" }, zaxis: { title: "log10 P" } } } },
+  });
+
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, { delimiters: [
+      { left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
+  }
+});
+</script>
+</body>
+</html>

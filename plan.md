@@ -114,7 +114,7 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 - **Real data / worked example:** word frequencies in a public-domain book from Project Gutenberg (e.g. *Pride and Prejudice*). Tokenize, count, rank-frequency log-log plot, estimate s, and answer: what share of all words do the top 10 / top 100 words cover? Document the source in `data/README.md` and add `download_data.py`.
 - Used in: NLP vocabulary & tokenization, long-tail recommendations, city sizes, popularity / cache design.
 - HTML: s slider; linear vs log-log toggle; "top-N coverage" calculator; embed the precomputed book word counts (top ~500) as JSON.
-- NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
 
 ### 01_07 discrete_summary_chooser
 - Content: comparison table of all Module 01 distributions; a "which discrete distribution?" decision flowchart; relationships map (Bernoulli → Binomial → Poisson; Geometric → NegBin; Hypergeometric → Binomial); mixed practice problems with solutions.

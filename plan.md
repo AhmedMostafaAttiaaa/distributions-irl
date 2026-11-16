@@ -97,7 +97,7 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 - Second example: a card game, e.g. P(≥ 2 aces in a 5-card hand).
 - Used in: audit sampling, Fisher's exact test, gene-set enrichment analysis, lottery odds.
 - HTML: sliders N, K, n; Hypergeometric vs Binomial overlay.
-- NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
 
 ### 01_05 uniform_categorical_multinomial
 - Content: discrete uniform; categorical (one draw, k classes); multinomial (n draws); covariance between category counts (negative); marginals are Binomial; link to softmax outputs and one-hot labels; chi-square goodness-of-fit preview.

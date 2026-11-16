@@ -21,3 +21,8 @@
 | Thinning | Keeping each Poisson event with probability q gives Poisson(q lambda). | [01_03](html/01_03_poisson.html) |
 | Chi-square goodness of fit | Test comparing observed counts with expected counts from a fitted model. | [01_03](html/01_03_poisson.html) |
 | Dispersion | Variance relative to the mean; Poisson has ratio 1. | [01_03](html/01_03_poisson.html) |
+| Hypergeometric distribution | Number of special items in a sample drawn without replacement from a finite population. | [01_04](html/01_04_hypergeometric.html) |
+| Sampling without replacement | Drawn items are not returned, so draws are dependent. | [01_04](html/01_04_hypergeometric.html) |
+| Finite-population correction | Factor (N-n)/(N-1) that shrinks the variance when sampling without replacement. | [01_04](html/01_04_hypergeometric.html) |
+| Fisher exact test | Exact test for a 2x2 table based on the Hypergeometric distribution. | [01_04](html/01_04_hypergeometric.html) |
+| Acceptance sampling | Inspecting a sample to decide whether to accept a lot. | [01_04](html/01_04_hypergeometric.html) |

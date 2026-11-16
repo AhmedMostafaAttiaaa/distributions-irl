@@ -9,6 +9,7 @@ How the common discrete distributions are generated, their full math, how to com
 | 01_01 Bernoulli and Binomial | [notebook](notebooks/01_01_bernoulli_binomial.ipynb) | [page](html/01_01_bernoulli_binomial.html) | done |
 | 01_02 Geometric and Negative Binomial | [notebook](notebooks/01_02_geometric_negative_binomial.ipynb) | [page](html/01_02_geometric_negative_binomial.html) | done |
 | 01_03 Poisson | [notebook](notebooks/01_03_poisson.ipynb) | [page](html/01_03_poisson.html) | done |
+| 01_04 Hypergeometric | [notebook](notebooks/01_04_hypergeometric.ipynb) | [page](html/01_04_hypergeometric.html) | done |
 
 ## How to open
 

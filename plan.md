@@ -50,7 +50,7 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 **Goal:** the vocabulary every later module uses. **Data:** synthetic only. **Module 00 decision:** to keep the lessons short, each has one main worked example (all five steps of CLAUDE.md §5) plus one shorter extra example; derivations are compact with an "In plain words" cell.
 
 - [x] 00_01 random_variables — discrete vs continuous, PMF/PDF/CDF, quantiles/PPF, survival function. *Example:* dice and waiting-time measurements. NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
-- [ ] 00_02 expectation_moments — expectation, variance, moments, skewness, kurtosis, MGF. *Example:* expected profit of a raffle / insurance policy. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- [x] 00_02 expectation_moments — expectation, variance, moments, skewness, kurtosis, MGF. *Example:* expected profit of a raffle / insurance policy. NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
 - [ ] 00_03 joint_conditional — joint, marginal, conditional, independence, covariance, correlation; 3D joint surfaces. *Example:* height vs weight. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
 - [ ] 00_04 transformations — functions of random variables, change of variables, linear transforms, z-scores. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
 - [ ] 00_05 bayes_theorem — conditional probability, Bayes, total probability. *Example:* medical test with 1% prevalence (sets up the confusion matrix in Module 10). NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐

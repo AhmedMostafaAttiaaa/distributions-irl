@@ -7,6 +7,7 @@ The vocabulary every later module uses: random variables, expectation and moment
 | Lesson | Notebook | Interactive page | Status |
 |---|---|---|---|
 | 00_01 Random Variables: PMF, PDF, CDF and Quantiles | [notebook](notebooks/00_01_random_variables.ipynb) | [page](html/00_01_random_variables.html) | done |
+| 00_02 Expectation, Variance, Moments and the MGF | [notebook](notebooks/00_02_expectation_moments.ipynb) | [page](html/00_02_expectation_moments.html) | done |
 
 ## How to open
 

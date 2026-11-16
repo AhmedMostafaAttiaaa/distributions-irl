@@ -16,13 +16,13 @@
   --bg: #ffffff; --panel: #f6f7f9; --text: #1b1f24; --muted: #5b636d; --border: #d8dce1;
   --main: #0072B2;      /* theoretical curve */
   --sim: #E69F00;       /* simulated samples */
-  --highlight: #D55E00; /* shaded region */
+  --highlight: #D55E00; --third: #009E73; /* shaded region */
   --grid: #e3e6ea;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #14171a; --panel: #1d2126; --text: #e8eaed; --muted: #9aa3ad; --border: #343a41;
-    --main: #56B4E9; --sim: #E69F00; --highlight: #F08A4B; --grid: #2b3036;
+    --main: #56B4E9; --sim: #E69F00; --highlight: #F08A4B; --third: #2FD0A0; --grid: #2b3036;
   }
 }
 * { box-sizing: border-box; }
@@ -66,7 +66,7 @@ button.secondary { background: transparent; color: var(--main); border: 1px soli
 .readout .value { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 /* ---------- Charts (SVG) ---------- */
-svg.chart { width: 100%; height: auto; display: block; }
+svg.chart { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
 svg.chart text { fill: var(--muted); font-size: 12px; font-family: inherit; }
 svg.chart .title { fill: var(--text); font-size: 14px; font-weight: 600; }
 svg.chart .gridline { stroke: var(--grid); stroke-width: 1; }

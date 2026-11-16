@@ -70,7 +70,7 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 - Second example: QC with a 2 % defect rate in boxes of 50, P(box has ≥ 3 defects).
 - Used in: A/B testing (conversion counts), binary labels & logistic regression likelihood, dropout masks (Bernoulli), ensemble majority voting.
 - HTML: sliders n, p; PMF + CDF; range calculator; sample button; editable store example.
-- NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
 
 ### 01_02 geometric_negative_binomial
 - Content: trials until the first success (Geometric; mention both the "trials" and "failures" conventions and which one scipy uses); memorylessness proof; trials until the r-th success (Negative Binomial); NB as an overdispersed alternative to Poisson (Gamma–Poisson mixture, intuition only, full treatment in 07).

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01_01 Bernoulli and Binomial | Probability Distributions Book</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+/* ---------- Theme: colorblind-safe Okabe-Ito colors, light and dark ---------- */
+:root {
+  --bg: #ffffff; --panel: #f6f7f9; --text: #1b1f24; --muted: #5b636d; --border: #d8dce1;
+  --main: #0072B2;      /* theoretical curve */
+  --sim: #E69F00;       /* simulated samples */
+  --highlight: #D55E00; --third: #009E73; /* shaded region */
+  --grid: #e3e6ea;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14171a; --panel: #1d2126; --text: #e8eaed; --muted: #9aa3ad; --border: #343a41;
+    --main: #56B4E9; --sim: #E69F00; --highlight: #F08A4B; --third: #2FD0A0; --grid: #2b3036;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 980px; margin: 0 auto; padding: 0 16px 48px; }
+h1 { font-size: 1.7rem; margin: 20px 0 4px; }
+h2 { font-size: 1.2rem; margin: 28px 0 10px; }
+p, li { color: var(--text); }
+.muted { color: var(--muted); }
+
+/* ---------- Navigation bar ---------- */
+nav.topnav { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap;
+  padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--panel); }
+nav.topnav a { color: var(--main); text-decoration: none; font-weight: 600; }
+nav.topnav a:hover { text-decoration: underline; }
+nav.topnav .disabled { color: var(--muted); }
+
+/* ---------- Cards and layout ---------- */
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 720px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+/* ---------- Sliders ---------- */
+.slider-row { display: grid; grid-template-columns: 90px 1fr 70px; align-items: center; gap: 10px; margin: 6px 0; }
+.slider-row label { font-weight: 600; }
+.slider-row output { text-align: right; font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; accent-color: var(--main); }
+input[type=number] { width: 80px; padding: 4px 6px; background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px; }
+button { background: var(--main); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px;
+  font: inherit; font-weight: 600; cursor: pointer; }
+button.secondary { background: transparent; color: var(--main); border: 1px solid var(--main); }
+@media (prefers-color-scheme: dark) { button { color: #0b0d0f; } }
+
+/* ---------- Readouts ---------- */
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.readout { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
+.readout .name { color: var(--muted); font-size: 0.8rem; }
+.readout .value { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- Charts (SVG) ---------- */
+svg.chart { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+svg.chart text { fill: var(--muted); font-size: 12px; font-family: inherit; }
+svg.chart .title { fill: var(--text); font-size: 14px; font-weight: 600; }
+svg.chart .gridline { stroke: var(--grid); stroke-width: 1; }
+svg.chart .axisline { stroke: var(--muted); stroke-width: 1; }
+.plot3d { width: 100%; height: 420px; }
+.cards3 .card h3 { margin: 0 0 6px; font-size: 1rem; }
+footer { margin-top: 36px; padding-top: 12px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+footer a { color: var(--main); }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="../../index.html">Book index</a>
+  <a class="disabled" href="#" id="prevLink">&larr; Previous lesson</a>
+  <a class="disabled" href="#" id="nextLink">Next lesson &rarr;</a>
+</nav>
+<main>
+<h1>01_01 Bernoulli and Binomial</h1>
+<p class="muted">Count the successes in n independent yes/no trials.</p>
+
+<section class="card"><h2 style="margin-top:0">Key ideas</h2><p>A Bernoulli trial has success probability $p$. Summing $n$ independent trials gives a Binomial:
+$$P(X=k)=\binom{n}{k}p^k(1-p)^{n-k},\qquad E[X]=np,\qquad \mathrm{Var}(X)=np(1-p).$$
+For large $n$ the shape approaches a Normal curve (toggle it on the chart below).</p></section>
+
+<section>
+  <h2>Explore the distribution</h2>
+  <div class="card" id="sliders"></div>
+  <div class="grid2">
+    <div class="card"><svg class="chart" id="pmfChart" viewBox="0 0 480 300"></svg></div>
+    <div class="card"><svg class="chart" id="cdfChart" viewBox="0 0 480 300"></svg></div>
+  </div>
+</section>
+
+<section>
+  <h2>Summary numbers</h2>
+  <div class="readouts" id="readouts"></div>
+  <div class="card"><strong>Probability calculator:</strong>
+    P( <input type="number" id="calcA" value="0" step="1"> &le; X &le; <input type="number" id="calcB" value="1" step="1"> )
+    = <strong id="calcResult"></strong> <span class="muted">(highlighted on the PMF chart)</span></div>
+</section>
+
+<section>
+  <h2>Draw samples</h2>
+  <div class="card">N = <input type="number" id="sampleN" value="1000" min="10" max="100000" step="10">
+    <button id="drawBtn">Draw N samples</button> <button id="clearBtn" class="secondary">Clear</button>
+    <span class="muted" id="sampleInfo"></span></div>
+</section>
+
+<section>
+  <h2>Worked example</h2>
+  <div class="card" id="examplePanel">
+<p>An online store gets <input type="number" id="exN" value="1000" min="1" max="5000"> visitors per day and
+<input type="number" id="exP" value="3.2" min="0.1" max="50" step="0.1"> % of them order (illustrative numbers).
+Orders per day $X\sim\text{Bin}(n,p)$.</p>
+<p>Great day threshold: P(X &ge; <input type="number" id="exT" value="45">) &nbsp;
+Stock-out risk allowed: <input type="number" id="exRisk" value="5" min="1" max="50"> %</p>
+<div class="readouts" id="exOut"></div>
+<svg class="chart" id="exChart" viewBox="0 0 480 300"></svg>
+<p id="exText" class="muted"></p>
+</div>
+</section>
+
+<section>
+  <h2>Where it is used</h2>
+  <div class="grid3 cards3">
+    <div class="card"><h3>Statistics</h3><p>A/B tests compare two conversion proportions; confidence intervals for a share.</p></div>
+    <div class="card"><h3>Data science</h3><p>Conversion, click-through and churn counts per day or cohort.</p></div>
+    <div class="card"><h3>ML and AI</h3><p>Bernoulli labels in logistic regression, dropout masks, majority voting of classifiers.</p></div>
+  </div>
+</section>
+<section id="section3d"><h2>3D view</h2><div class="card"><div id="plot3d" class="plot3d"></div></div><p class="muted">Rotate with the mouse. Plotly is loaded from a CDN only on this page type.</p></section>
+<footer>Matching notebook: <a href="../notebooks/01_01_bernoulli_binomial.ipynb">notebooks/01_01_bernoulli_binomial.ipynb</a></footer>
+</main>
+<script>
+"use strict";
+/* =====================================================================
+   SECTION A. MATH HELPERS (small, readable, no libraries)
+   ===================================================================== */
+
+// log(n!) using a running sum; fine for the sizes used in these lessons.
+function logFactorial(n) {
+  let total = 0;
+  for (let i = 2; i <= n; i++) total += Math.log(i);
+  return total;
+}
+
+// Binomial PMF computed in log space so large n does not overflow.
+function binomPmf(k, n, p) {
+  if (k < 0 || k > n) return 0;
+  if (p === 0) return k === 0 ? 1 : 0;
+  if (p === 1) return k === n ? 1 : 0;
+  const logChoose = logFactorial(n) - logFactorial(k) - logFactorial(n - k);
+  return Math.exp(logChoose + k * Math.log(p) + (n - k) * Math.log(1 - p));
+}
+
+// Turn an array of probabilities into running totals (the CDF).
+function cumulative(probs) {
+  const out = [];
+  let running = 0;
+  for (const p of probs) { running += p; out.push(running); }
+  return out;
+}
+
+// Mean, variance, std and skewness of a discrete distribution given as (xs, probs).
+function discreteMoments(xs, probs) {
+  let mean = 0;
+  for (let i = 0; i < xs.length; i++) mean += xs[i] * probs[i];
+  let variance = 0, third = 0;
+  for (let i = 0; i < xs.length; i++) {
+    const d = xs[i] - mean;
+    variance += d * d * probs[i];
+    third += d * d * d * probs[i];
+  }
+  const std = Math.sqrt(variance);
+  const skew = std > 0 ? third / (std * std * std) : 0;
+  return { mean, variance, std, skew };
+}
+
+// Sample from a discrete distribution by inverting the CDF (xs sorted ascending).
+function sampleDiscrete(xs, cdf, count) {
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    const u = Math.random();
+    let j = 0;
+    while (j < cdf.length - 1 && cdf[j] < u) j++;
+    out.push(xs[j]);
+  }
+  return out;
+}
+
+// Format a number for display.
+function fmt(x, digits = 4) { return Number.isFinite(x) ? x.toFixed(digits) : "n/a"; }
+
+/* =====================================================================
+   SECTION B. UI HELPERS: sliders and readouts
+   ===================================================================== */
+
+// Add a labelled slider to a container. Calls onChange(value) whenever it moves.
+function addSlider(container, { label, min, max, step, value, onChange }) {
+  const row = document.createElement("div");
+  row.className = "slider-row";
+  const name = document.createElement("label");
+  name.textContent = label;
+  const input = document.createElement("input");
+  Object.assign(input, { type: "range", min, max, step, value });
+  const out = document.createElement("output");
+  out.textContent = value;
+  input.addEventListener("input", () => { out.textContent = input.value; onChange(Number(input.value)); });
+  row.append(name, input, out);
+  container.appendChild(row);
+  return { get: () => Number(input.value) };
+}
+
+// Fill the readouts grid from an object like { Mean: 1.2, Variance: 3.4 }.
+function showReadouts(values) {
+  const box = document.getElementById("readouts");
+  box.innerHTML = "";
+  for (const [name, value] of Object.entries(values)) {
+    const cell = document.createElement("div");
+    cell.className = "readout";
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${fmt(value)}</div>`;
+    box.appendChild(cell);
+  }
+}
+
+/* =====================================================================
+   SECTION C. SVG CHART HELPERS
+   drawChart(svgElement, spec) where spec is:
+     { title, xlabel, ylabel,
+       series: [ { kind: "bar" | "line" | "step" | "points", xs, ys, color, label } ],
+       shade: [a, b]   // optional: highlight x values between a and b
+       xrange, yrange  // optional fixed ranges
+     }
+   ===================================================================== */
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function svgEl(name, attrs, text) {
+  const node = document.createElementNS(SVG_NS, name);
+  for (const [key, value] of Object.entries(attrs || {})) node.setAttribute(key, value);
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+// Pick about 5 round tick values between lo and hi.
+function niceTicks(lo, hi) {
+  const span = hi - lo || 1;
+  const rawStep = span / 5;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const options = [1, 2, 5, 10];
+  let step = magnitude;
+  for (const o of options) { if (o * magnitude >= rawStep) { step = o * magnitude; break; } }
+  const ticks = [];
+  for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) ticks.push(Number(t.toPrecision(10)));
+  return ticks;
+}
+
+function drawChart(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right;
+  const plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+
+  // Work out the data ranges from all series.
+  let xmin = Infinity, xmax = -Infinity, ymax = 0;
+  for (const s of spec.series) {
+    for (const x of s.xs) { xmin = Math.min(xmin, x); xmax = Math.max(xmax, x); }
+    for (const y of s.ys) ymax = Math.max(ymax, y);
+  }
+  if (spec.xrange) [xmin, xmax] = spec.xrange;
+  if (spec.yrange) ymax = spec.yrange[1];
+  ymax = ymax * 1.08 || 1;
+  const hasBars = spec.series.some(s => s.kind === "bar");
+  const pad = hasBars ? 0.7 : 0;               // keep the first and last bar inside the axes
+  const x0 = xmin - pad, x1 = xmax + pad || 1;
+  const sx = x => margin.left + (x - x0) / (x1 - x0) * plotW;
+  const sy = y => margin.top + plotH - y / ymax * plotH;
+
+  // Title, grid and axes.
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (const t of niceTicks(0, ymax)) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(t), y2: sy(t), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(t) + 4, "text-anchor": "end" }, String(t)));
+  }
+  for (const t of niceTicks(x0, x1)) {
+    svg.appendChild(svgEl("text", { x: sx(t), y: H - margin.bottom + 16, "text-anchor": "middle" }, String(t)));
+  }
+  svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(0), y2: sy(0), class: "axisline" }));
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  const yl = svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || "");
+  svg.appendChild(yl);
+
+  // Shaded region for the probability calculator.
+  if (spec.shade) {
+    const [a, b] = spec.shade;
+    svg.appendChild(svgEl("rect", { x: sx(a - (hasBars ? 0.5 : 0)), y: margin.top,
+      width: Math.max(0, sx(b + (hasBars ? 0.5 : 0)) - sx(a - (hasBars ? 0.5 : 0))), height: plotH,
+      fill: "var(--highlight)", opacity: 0.15 }));
+  }
+
+  // Draw each series.
+  const legendItems = [];
+  for (const s of spec.series) {
+    const color = s.color || "var(--main)";
+    if (s.kind === "bar") {
+      const barW = Math.max(1, plotW / (x1 - x0) * 0.8);
+      s.xs.forEach((x, i) => {
+        const inside = spec.shade && x >= spec.shade[0] && x <= spec.shade[1];
+        svg.appendChild(svgEl("rect", { x: sx(x) - barW / 2, y: sy(s.ys[i]), width: barW,
+          height: Math.max(0, sy(0) - sy(s.ys[i])), fill: inside ? "var(--highlight)" : color,
+          opacity: s.opacity || 0.9 }));
+      });
+    } else if (s.kind === "points") {
+      s.xs.forEach((x, i) => svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 3, fill: color })));
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => {
+        if (s.kind === "step" && i > 0) d += ` L${sx(x)},${sy(s.ys[i - 1])}`;
+        d += (i === 0 ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`;
+      });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) legendItems.push({ label: s.label, color });
+  }
+  legendItems.forEach((item, i) => {
+    const lx = W - margin.right - 130, ly = margin.top + 6 + i * 16;
+    svg.appendChild(svgEl("rect", { x: lx, y: ly - 8, width: 12, height: 10, fill: item.color }));
+    svg.appendChild(svgEl("text", { x: lx + 18, y: ly + 1 }, item.label));
+  });
+}
+
+/* =====================================================================
+   SECTION D. OPTIONAL 3D (Plotly gl3d partial bundle, loaded on demand)
+   ===================================================================== */
+function loadPlotlyThen(callback) {
+  if (window.Plotly) { callback(); return; }
+  const script = document.createElement("script");
+  script.src = "https://cdn.plot.ly/plotly-gl3d-2.35.2.min.js";
+  script.onload = callback;
+  script.onerror = () => { document.getElementById("plot3d").textContent = "Could not load Plotly from the CDN (check your connection)."; };
+  document.head.appendChild(script);
+}
+
+
+
+// Cached table of log(k!) so Binomial PMFs for n in the thousands stay fast.
+const logFactTable = [0];
+function logFact(n) {
+  while (logFactTable.length <= n) logFactTable.push(logFactTable[logFactTable.length - 1] + Math.log(logFactTable.length));
+  return logFactTable[n];
+}
+function binomPmfFast(k, n, p) {
+  if (k < 0 || k > n) return 0;
+  if (p <= 0) return k === 0 ? 1 : 0;
+  if (p >= 1) return k === n ? 1 : 0;
+  return Math.exp(logFact(n) - logFact(k) - logFact(n - k) + k * Math.log(p) + (n - k) * Math.log(1 - p));
+}
+function normalPdf(x, mu, sigma) { return Math.exp(-0.5 * ((x - mu) / sigma) ** 2) / (sigma * Math.sqrt(2 * Math.PI)); }
+
+
+/* =====================================================================
+   SECTION E. GENERIC LESSON ENGINE (the lesson config below plugs into it)
+   ===================================================================== */
+function startLesson(cfg) {
+  const params = {};
+  cfg.params.forEach(p => { params[p.key] = p.value; });
+  let samples = null;
+  let showOverlay = true;
+
+  function refresh() {
+    const dist = cfg.dist(params);
+    const cdf = cumulative(dist.probs);
+    const a = Number(document.getElementById("calcA").value);
+    const b = Number(document.getElementById("calcB").value);
+    let prob = 0;
+    dist.xs.forEach((x, i) => { if (x >= a && x <= b) prob += dist.probs[i]; });
+    document.getElementById("calcResult").textContent = fmt(prob, 5);
+
+    const series = [{ kind: "bar", xs: dist.xs, ys: dist.probs, color: "var(--main)", label: "Theory" }];
+    if (cfg.overlay && showOverlay) {
+      const o = cfg.overlay(params, dist);
+      series.push({ kind: "line", xs: o.xs, ys: o.ys, color: "var(--third)", label: o.label });
+    }
+    if (samples) {
+      const counts = new Map();
+      for (const s of samples) counts.set(s, (counts.get(s) || 0) + 1);
+      const freq = dist.xs.map(x => (counts.get(x) || 0) / samples.length);
+      series.push({ kind: "points", xs: dist.xs, ys: freq, color: "var(--sim)", label: "Samples" });
+    }
+    drawChart(document.getElementById("pmfChart"), { title: cfg.title(params), xlabel: cfg.xlabel,
+      ylabel: "P(X = k)", series, shade: [a, b], xrange: cfg.xrange ? cfg.xrange(params, dist) : undefined,
+      logx: cfg.logx });
+    drawChart(document.getElementById("cdfChart"), { title: "CDF", xlabel: cfg.xlabel, ylabel: "P(X <= k)",
+      series: [{ kind: "step", xs: dist.xs, ys: cdf, color: "var(--main)" }], yrange: [0, 1],
+      xrange: cfg.xrange ? cfg.xrange(params, dist) : undefined });
+    const m = discreteMoments(dist.xs, dist.probs);
+    showReadouts({ Mean: m.mean, Variance: m.variance, Std: m.std, Skewness: m.skew });
+    if (cfg.exampleUpdate) cfg.exampleUpdate();
+  }
+
+  const box = document.getElementById("sliders");
+  cfg.params.forEach(p => addSlider(box, { label: p.label, min: p.min, max: p.max, step: p.step, value: p.value,
+    onChange: v => { params[p.key] = v; samples = null; if (cfg.onParams) cfg.onParams(params); refresh(); } }));
+  if (cfg.overlay) {
+    const row = document.createElement("div");
+    row.innerHTML = `<label><input type="checkbox" id="overlayToggle" checked> show ${cfg.overlayName}</label>`;
+    box.appendChild(row);
+    row.querySelector("input").addEventListener("change", ev => { showOverlay = ev.target.checked; refresh(); });
+  }
+  if (cfg.extraControls) cfg.extraControls(box, params, () => { samples = null; refresh(); });
+  document.getElementById("calcA").value = cfg.calc[0];
+  document.getElementById("calcB").value = cfg.calc[1];
+  document.getElementById("calcA").addEventListener("input", refresh);
+  document.getElementById("calcB").addEventListener("input", refresh);
+  document.getElementById("drawBtn").addEventListener("click", () => {
+    const dist = cfg.dist(params);
+    const count = Math.min(100000, Math.max(10, Number(document.getElementById("sampleN").value)));
+    samples = sampleDiscrete(dist.xs, cumulative(dist.probs), count);
+    const mean = samples.reduce((acc, v) => acc + v, 0) / count;
+    document.getElementById("sampleInfo").textContent = ` ${count} samples, sample mean = ${fmt(mean, 3)}`;
+    refresh();
+  });
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    samples = null; document.getElementById("sampleInfo").textContent = ""; refresh(); });
+  if (cfg.exampleInit) cfg.exampleInit();
+  refresh();
+  if (cfg.plot3d) loadPlotlyThen(() => Plotly.newPlot("plot3d", cfg.plot3d.data, cfg.plot3d.layout, { responsive: true }));
+}
+
+function setupNav(id, target) {
+  const link = document.getElementById(id);
+  if (target) { link.href = target; link.classList.remove("disabled"); }
+}
+
+setupNav("prevLink", null);
+setupNav("nextLink", "01_02_geometric_negative_binomial.html");
+window.addEventListener("DOMContentLoaded", () => {
+
+  function binomDist(n, p) {
+    const xs = [], probs = [];
+    for (let k = 0; k <= n; k++) { xs.push(k); probs.push(binomPmfFast(k, n, p)); }
+    return { xs, probs };
+  }
+
+  // ---- worked example: online store ----
+  function exampleUpdate() {
+    const n = Number(document.getElementById("exN").value);
+    const p = Number(document.getElementById("exP").value) / 100;
+    const threshold = Number(document.getElementById("exT").value);
+    const risk = Number(document.getElementById("exRisk").value) / 100;
+    const dist = binomDist(n, p);
+    const cdf = cumulative(dist.probs);
+    const mean = n * p, sd = Math.sqrt(n * p * (1 - p));
+    let tail = 0;
+    dist.xs.forEach((x, i) => { if (x >= threshold) tail += dist.probs[i]; });
+    let stock = 0;
+    while (stock < n && 1 - cdf[stock] > risk) stock++;          // smallest c with P(X > c) <= risk
+    showExample({ "Mean orders": mean, "SD": sd, ["P(X >= " + threshold + ")"]: tail, "Stock level": stock });
+    const lo = Math.max(0, Math.floor(mean - 5 * sd)), hi = Math.min(n, Math.ceil(mean + 5 * sd));
+    const xs = dist.xs.slice(lo, hi + 1), ys = dist.probs.slice(lo, hi + 1);
+    drawChart(document.getElementById("exChart"), { title: "Orders per day: P(X >= " + threshold + ") shaded",
+      xlabel: "orders per day", ylabel: "P(X = k)", series: [{ kind: "bar", xs, ys, color: "var(--main)" }],
+      shade: [threshold, hi] });
+    document.getElementById("exText").textContent =
+      `Stocking ${stock} units keeps the stock-out probability at ${(1 - cdf[stock]).toFixed(3)} (target ${risk}). ` +
+      `Planning for the mean (${mean.toFixed(0)}) would run out on about ${(100 * (1 - cdf[Math.floor(mean)])).toFixed(0)}% of days.`;
+  }
+  function showExample(values) {
+    const box = document.getElementById("exOut");
+    box.innerHTML = "";
+    for (const [name, value] of Object.entries(values)) {
+      const cell = document.createElement("div");
+      cell.className = "readout";
+      cell.innerHTML = `<div class="name">${name}</div><div class="value">${Number.isInteger(value) ? value : fmt(value)}</div>`;
+      box.appendChild(cell);
+    }
+  }
+
+  // ---- 3D: PMF surface over (k, p) for n = 20 ----
+  const ks = [], ps = [], z = [];
+  for (let k = 0; k <= 20; k++) ks.push(k);
+  for (let i = 1; i < 50; i++) ps.push(i / 50);
+  for (const p of ps) z.push(ks.map(k => binomPmfFast(k, 20, p)));
+
+  startLesson({
+    params: [
+      { key: "n", label: "n", min: 1, max: 100, step: 1, value: 20 },
+      { key: "p", label: "p", min: 0.01, max: 0.99, step: 0.01, value: 0.3 }],
+    dist: q => binomDist(q.n, q.p),
+    title: q => `Binomial PMF (n=${q.n}, p=${q.p})`,
+    xlabel: "k (successes)",
+    calc: [3, 8],
+    overlay: (q, dist) => {
+      const mu = q.n * q.p, sigma = Math.sqrt(q.n * q.p * (1 - q.p));
+      return { xs: dist.xs, ys: dist.xs.map(x => normalPdf(x, mu, sigma)), label: "Normal approx." };
+    },
+    overlayName: "Normal approximation",
+    exampleInit: () => ["exN", "exP", "exT", "exRisk"].forEach(id => document.getElementById(id).addEventListener("input", exampleUpdate)),
+    exampleUpdate,
+    plot3d: {
+      data: [{ type: "surface", x: ks, y: ps, z, colorscale: "Viridis" }],
+      layout: { margin: { l: 0, r: 0, t: 30, b: 0 }, title: { text: "Binomial PMF over (k, p), n = 20" },
+        scene: { xaxis: { title: "k" }, yaxis: { title: "p" }, zaxis: { title: "P(X = k)" } } } },
+  });
+
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, { delimiters: [
+      { left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
+  }
+});
+</script>
+</body>
+</html>

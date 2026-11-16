@@ -26,3 +26,10 @@
 | Finite-population correction | Factor (N-n)/(N-1) that shrinks the variance when sampling without replacement. | [01_04](html/01_04_hypergeometric.html) |
 | Fisher exact test | Exact test for a 2x2 table based on the Hypergeometric distribution. | [01_04](html/01_04_hypergeometric.html) |
 | Acceptance sampling | Inspecting a sample to decide whether to accept a lot. | [01_04](html/01_04_hypergeometric.html) |
+| Discrete uniform | All outcomes in a finite set equally likely. | [01_05](html/01_05_uniform_categorical_multinomial.html) |
+| Categorical distribution | One draw from k classes with probabilities p_1..p_k. | [01_05](html/01_05_uniform_categorical_multinomial.html) |
+| Multinomial distribution | Counts of each of k classes in n independent categorical draws. | [01_05](html/01_05_uniform_categorical_multinomial.html) |
+| Softmax | Maps scores to probabilities: p_j = exp(z_j) / sum exp(z_i). | [01_05](html/01_05_uniform_categorical_multinomial.html) |
+| One-hot encoding | Vector with a single 1 marking the class. | [01_05](html/01_05_uniform_categorical_multinomial.html) |
+| Cross-entropy loss | Negative log-probability the model assigns to the true class. | [01_05](html/01_05_uniform_categorical_multinomial.html) |
+| Chi-square statistic | Sum of (observed - expected)^2 / expected over categories. | [01_05](html/01_05_uniform_categorical_multinomial.html) |

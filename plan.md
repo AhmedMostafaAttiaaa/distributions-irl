@@ -106,7 +106,7 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 - Second example: is a die fair? (600 rolls).
 - Used in: classifier outputs (softmax = categorical), cross-entropy loss, bag-of-words / Naive Bayes, LLM next-token sampling (preview), survey analysis.
 - HTML: probability sliders that renormalize; draw n samples; 3-category simplex 3D view.
-- NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
 
 ### 01_06 zipf_power_laws
 - Content: Zipf / zeta distribution; power laws and log-log plots; heavy tails in discrete data; why the mean/variance may not exist for small exponents; rank-frequency vs frequency-count views.

@@ -11,7 +11,7 @@ This is the shared to-do list for all devices. Follow the session protocol in `C
 | # | Module | Status | Device | Started | Finished |
 |---|--------|--------|--------|---------|----------|
 | P0 | Repo scaffold | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
-| 00 | Foundations | 🟨 | LAPTOP-1 | 2026-11-16 | |
+| 00 | Foundations | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
 | 01 | Discrete distributions | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
 | 02 | Continuous distributions | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
 | 03 | Multivariate distributions | ⬜ | | | |

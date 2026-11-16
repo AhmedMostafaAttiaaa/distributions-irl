@@ -27,3 +27,11 @@
 | Gamma function | Extension of the factorial: Gamma(n) = (n-1)!. | [02_03](html/02_03_exponential_gamma_erlang.html) |
 | Hazard rate | Instantaneous failure rate; constant for the Exponential. | [02_03](html/02_03_exponential_gamma_erlang.html) |
 | Survival function | S(x) = P(X > x) = 1 - F(x). | [02_03](html/02_03_exponential_gamma_erlang.html) |
+| Beta distribution | Distribution on [0, 1] with shape parameters alpha and beta; used for unknown probabilities. | [02_04](html/02_04_beta.html) |
+| Conjugate prior | A prior whose posterior is in the same family: Beta prior + Binomial data gives a Beta posterior. | [02_04](html/02_04_beta.html) |
+| Posterior | Belief about a parameter after seeing data: prior times likelihood, renormalized. | [02_04](html/02_04_beta.html) |
+| Credible interval | Interval containing the parameter with a stated posterior probability. | [02_04](html/02_04_beta.html) |
+| Shrinkage | Pulling an extreme observed rate toward the prior mean, strongest with little data. | [02_04](html/02_04_beta.html) |
+| Pseudo-count | Prior parameters read as already-seen successes (alpha - 1) and failures (beta - 1). | [02_04](html/02_04_beta.html) |
+| Order statistic | The k-th smallest of n values; for Uniform(0,1) it is Beta(k, n-k+1). | [02_04](html/02_04_beta.html) |
+| Beta function | B(a, b) = Gamma(a) Gamma(b) / Gamma(a+b), the normalizing constant of the Beta. | [02_04](html/02_04_beta.html) |

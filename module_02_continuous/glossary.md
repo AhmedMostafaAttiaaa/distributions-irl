@@ -55,3 +55,13 @@
 | Lorenz curve | Share of the total held by the bottom fraction of the population. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
 | Scale invariance | P(X > cx | X > x) = c^(-alpha) for a Pareto, independent of x. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
 | Stable distribution | Distribution closed under sums up to scale and shift (Normal, Cauchy). | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
+| Laplace distribution | Double-exponential distribution f(x) = exp(-|x-mu|/b)/(2b); likelihood of absolute (L1) errors. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
+| L1 loss (MAE) | Sum of absolute errors; minimized by the median; the Laplace negative log-likelihood. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
+| Robust estimator | Estimator little affected by outliers, such as the median. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
+| Logistic distribution | Bell-like distribution whose CDF is the sigmoid; variance pi^2 s^2 / 3. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
+| Sigmoid / logit | Sigmoid 1/(1+e^-z) maps log-odds to a probability; the logit is its inverse. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
+| Latent-variable model | A hidden continuous variable plus noise crossing a threshold decides a binary outcome. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
+| Gumbel distribution | Limit law of maxima of light-tailed variables; F(x) = exp(-exp(-(x-mu)/beta)). | [02_07](html/02_07_laplace_logistic_gumbel.html) |
+| Return level / return period | Value exceeded with probability 1/T per year; T is the return period. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
+| Gumbel-max trick | argmax(score + Gumbel noise) samples a Categorical with softmax probabilities. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
+| Laplace mechanism | Adding Laplace noise to a query answer to achieve differential privacy. | [02_07](html/02_07_laplace_logistic_gumbel.html) |

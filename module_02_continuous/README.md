@@ -12,6 +12,7 @@ The continuous families used in statistics, data science and ML, with extra plai
 | 02_04 Beta | [notebook](notebooks/02_04_beta.ipynb) | [page](html/02_04_beta.html) | done |
 | 02_05 Weibull | [notebook](notebooks/02_05_weibull.ipynb) | [page](html/02_05_weibull.html) | done |
 | 02_06 Heavy Tails: Pareto and Cauchy | [notebook](notebooks/02_06_heavy_tails_pareto_cauchy.ipynb) | [page](html/02_06_heavy_tails_pareto_cauchy.html) | done |
+| 02_07 Laplace, Logistic and Gumbel | [notebook](notebooks/02_07_laplace_logistic_gumbel.ipynb) | [page](html/02_07_laplace_logistic_gumbel.html) | done |
 
 ## How to open
 

@@ -14,6 +14,7 @@ The continuous families used in statistics, data science and ML, with extra plai
 | 02_06 Heavy Tails: Pareto and Cauchy | [notebook](notebooks/02_06_heavy_tails_pareto_cauchy.ipynb) | [page](html/02_06_heavy_tails_pareto_cauchy.html) | done |
 | 02_07 Laplace, Logistic and Gumbel | [notebook](notebooks/02_07_laplace_logistic_gumbel.ipynb) | [page](html/02_07_laplace_logistic_gumbel.html) | done |
 | 02_08 Student's t, Chi-square and F | [notebook](notebooks/02_08_t_chisquare_f.ipynb) | [page](html/02_08_t_chisquare_f.html) | done |
+| 02_09 Von Mises | [notebook](notebooks/02_09_von_mises.ipynb) | [page](html/02_09_von_mises.html) | done |
 
 ## How to open
 

@@ -75,3 +75,13 @@
 | p-value | Probability, under the null hypothesis, of a statistic at least as extreme as observed. | [02_08](html/02_08_t_chisquare_f.html) |
 | Confidence interval | Range computed from data that covers the true parameter in a stated share of repeated samples. | [02_08](html/02_08_t_chisquare_f.html) |
 | Coverage | Actual share of intervals containing the true value. | [02_08](html/02_08_t_chisquare_f.html) |
+| Circular data | Angles, directions or cyclic times where 0 and 360 degrees (or 24:00 and 00:00) are the same point. | [02_09](html/02_09_von_mises.html) |
+| Circular mean | Angle of the average of the unit vectors (cos, sin) of the data. | [02_09](html/02_09_von_mises.html) |
+| Mean resultant length (R) | Length of the average unit vector; 1 means all directions agree, 0 means evenly spread. | [02_09](html/02_09_von_mises.html) |
+| Circular variance | 1 - R. | [02_09](html/02_09_von_mises.html) |
+| Von Mises distribution | Circular analogue of the Normal with mean direction mu and concentration kappa. | [02_09](html/02_09_von_mises.html) |
+| Concentration (kappa) | Tightness around the mean direction; kappa = 0 is uniform; large kappa is Normal with variance 1/kappa. | [02_09](html/02_09_von_mises.html) |
+| Bessel function I0 | Normalizing constant of the von Mises: I0(kappa) = (1 / 2 pi) integral of exp(kappa cos theta). | [02_09](html/02_09_von_mises.html) |
+| Rayleigh test | Test of uniformity of directions based on n R^2, approximately Exponential(1) under the null. | [02_09](html/02_09_von_mises.html) |
+| Von Mises-Fisher distribution | Generalization of the von Mises to directions on a sphere. | [02_09](html/02_09_von_mises.html) |
+| Wrapped Normal | Normal distribution wrapped around the circle; very close to the von Mises. | [02_09](html/02_09_von_mises.html) |

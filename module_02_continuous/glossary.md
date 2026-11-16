@@ -65,3 +65,13 @@
 | Return level / return period | Value exceeded with probability 1/T per year; T is the return period. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
 | Gumbel-max trick | argmax(score + Gumbel noise) samples a Categorical with softmax probabilities. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
 | Laplace mechanism | Adding Laplace noise to a query answer to achieve differential privacy. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
+| Sampling distribution | Distribution of a statistic (mean, variance, ratio) over repeated samples. | [02_08](html/02_08_t_chisquare_f.html) |
+| Degrees of freedom | Number of independent pieces of information; n - 1 for the sample variance. | [02_08](html/02_08_t_chisquare_f.html) |
+| Chi-square distribution | Sum of squares of independent standard normals; Gamma(nu/2, scale 2). | [02_08](html/02_08_t_chisquare_f.html) |
+| Student t distribution | Standard normal divided by sqrt(chi-square/nu); heavier tails than the Normal. | [02_08](html/02_08_t_chisquare_f.html) |
+| F distribution | Ratio of two independent chi-squares each divided by its degrees of freedom. | [02_08](html/02_08_t_chisquare_f.html) |
+| Standard error | Estimated SD of a statistic, s / sqrt(n) for the mean. | [02_08](html/02_08_t_chisquare_f.html) |
+| Critical value | Quantile that bounds the rejection region of a test. | [02_08](html/02_08_t_chisquare_f.html) |
+| p-value | Probability, under the null hypothesis, of a statistic at least as extreme as observed. | [02_08](html/02_08_t_chisquare_f.html) |
+| Confidence interval | Range computed from data that covers the true parameter in a stated share of repeated samples. | [02_08](html/02_08_t_chisquare_f.html) |
+| Coverage | Actual share of intervals containing the true value. | [02_08](html/02_08_t_chisquare_f.html) |

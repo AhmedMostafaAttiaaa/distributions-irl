@@ -144,7 +144,7 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 - [x] 02_05 weibull — reliability, hazard rate (infant mortality / wear-out). *Main:* hard-drive lifetimes (survival at 3 years, MTTF, warranty period). *Extra:* wind speed; bearing failure with shape > 1. NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
 - [x] 02_06 heavy_tails_pareto_cauchy — power-law tails, infinite moments, 80/20 rule. *Main:* wealth / file-size Pareto (share of top 1%, 80-20). *Extra:* Cauchy running mean never settles; tail risk (P(loss > x)) Normal vs Pareto. NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
 - [x] 02_07 laplace_logistic_gumbel — L1 loss, sigmoid, extremes. *Main:* regression errors with outliers (Laplace vs Normal, MAE vs MSE). *Extra:* logistic latent-threshold origin of the sigmoid; yearly maximum rainfall Gumbel, 100-year return level, Gumbel-max trick preview. NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
-- [ ] 02_08 t_chisquare_f — sampling distributions and how they relate. *Main:* small-sample quality test (t, n=8). *Extra:* chi-square test for a variance; F test for two variances; z^2 ~ chi-square, t -> Normal. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- [x] 02_08 t_chisquare_f — sampling distributions and how they relate. *Main:* small-sample quality test (t, n=8). *Extra:* chi-square test for a variance; F test for two variances; z^2 ~ chi-square, t -> Normal. NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
 - [ ] 02_09 von_mises — circular data, circular mean, concentration. *Main:* wind direction. *Extra:* hour-of-day activity; compass bearings of animal movement. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
 - [ ] 02_10 continuous_summary_chooser — comparison table, decision flowchart, relationship map, mixed practice, 5 short scenarios; HTML chooser. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
 

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02_08 Student's t, Chi-square and F | Probability Distributions Book</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+/* ---------- Theme: colorblind-safe Okabe-Ito colors, light and dark ---------- */
+:root {
+  --bg: #ffffff; --panel: #f6f7f9; --text: #1b1f24; --muted: #5b636d; --border: #d8dce1;
+  --main: #0072B2;      /* theoretical curve */
+  --sim: #E69F00;       /* simulated samples */
+  --highlight: #D55E00; --third: #009E73; /* shaded region */
+  --grid: #e3e6ea;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14171a; --panel: #1d2126; --text: #e8eaed; --muted: #9aa3ad; --border: #343a41;
+    --main: #56B4E9; --sim: #E69F00; --highlight: #F08A4B; --third: #2FD0A0; --grid: #2b3036;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 980px; margin: 0 auto; padding: 0 16px 48px; }
+h1 { font-size: 1.7rem; margin: 20px 0 4px; }
+h2 { font-size: 1.2rem; margin: 28px 0 10px; }
+p, li { color: var(--text); }
+.muted { color: var(--muted); }
+
+/* ---------- Navigation bar ---------- */
+nav.topnav { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap;
+  padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--panel); }
+nav.topnav a { color: var(--main); text-decoration: none; font-weight: 600; }
+nav.topnav a:hover { text-decoration: underline; }
+nav.topnav .disabled { color: var(--muted); }
+
+/* ---------- Cards and layout ---------- */
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 720px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+/* ---------- Sliders ---------- */
+.slider-row { display: grid; grid-template-columns: 90px 1fr 70px; align-items: center; gap: 10px; margin: 6px 0; }
+.slider-row label { font-weight: 600; }
+.slider-row output { text-align: right; font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; accent-color: var(--main); }
+input[type=number] { width: 80px; padding: 4px 6px; background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px; }
+button { background: var(--main); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px;
+  font: inherit; font-weight: 600; cursor: pointer; }
+button.secondary { background: transparent; color: var(--main); border: 1px solid var(--main); }
+@media (prefers-color-scheme: dark) { button { color: #0b0d0f; } }
+
+/* ---------- Readouts ---------- */
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.readout { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
+.readout .name { color: var(--muted); font-size: 0.8rem; }
+.readout .value { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- Charts (SVG) ---------- */
+svg.chart { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+svg.chart text { fill: var(--muted); font-size: 12px; font-family: inherit; }
+svg.chart .title { fill: var(--text); font-size: 14px; font-weight: 600; }
+svg.chart .gridline { stroke: var(--grid); stroke-width: 1; }
+svg.chart .axisline { stroke: var(--muted); stroke-width: 1; }
+.plot3d { width: 100%; height: 420px; }
+.cards3 .card h3 { margin: 0 0 6px; font-size: 1rem; }
+footer { margin-top: 36px; padding-top: 12px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+footer a { color: var(--main); }
+
+.plain { border-left: 4px solid var(--main); }</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="../../index.html">Book index</a>
+  <a class="disabled" href="#" id="prevLink">&larr; Previous lesson</a>
+  <a class="disabled" href="#" id="nextLink">Next lesson &rarr;</a>
+</nav>
+<main>
+<h1>02_08 Student's t, Chi-square and F</h1>
+<p class="muted">Sampling distributions: how means, variances and variance ratios fluctuate from sample to sample.</p>
+
+<section class="card"><h2 style="margin-top:0">Key ideas</h2><p>$\chi^2_\nu=\sum_{i=1}^\nu Z_i^2$ (mean $\nu$, variance $2\nu$); $t_\nu=\dfrac{Z}{\sqrt{\chi^2_\nu/\nu}}$ (variance $\frac{\nu}{\nu-2}$); $F_{d_1,d_2}=\dfrac{\chi^2_{d_1}/d_1}{\chi^2_{d_2}/d_2}$.
+For Normal data: $\frac{\bar X-\mu}{s/\sqrt n}\sim t_{n-1}$, $\frac{(n-1)s^2}{\sigma^2}\sim\chi^2_{n-1}$, $\frac{s_1^2}{s_2^2}\sim F_{n_1-1,n_2-1}$. Also $Z^2\sim\chi^2_1$, $t_\nu^2\sim F_{1,\nu}$.</p></section>
+<section class="card plain"><h2 style="margin-top:0">In plain words</h2><ul>
+<li><strong>The t is a Normal with an uncertain scale.</strong> When the SD is estimated from few values, the standardized mean lands in the tails more often than a Normal says, so critical values are larger (2.78 instead of 1.96 for 4 d.f.).</li>
+<li><strong>Chi-square describes variance estimates; F compares two of them.</strong> Both are built from squared Normals, so they are positive and right-skewed.</li>
+<li><strong>With many observations all three converge</strong> to Normal-like shapes (t becomes Normal as d.f. grows). Use the coverage button in Example 1 to see why small samples need the t.</li></ul></section>
+
+<section>
+  <h2>Explore the distribution</h2>
+  <div class="card" id="sliders"></div>
+  <div class="grid2">
+    <div class="card"><svg class="chart" id="pmfChart" viewBox="0 0 480 300"></svg></div>
+    <div class="card"><svg class="chart" id="cdfChart" viewBox="0 0 480 300"></svg></div>
+  </div>
+</section>
+
+<section>
+  <h2>Summary numbers</h2>
+  <div class="readouts" id="readouts"></div>
+  <div class="card"><strong>Probability calculator:</strong>
+    P( <input type="number" id="calcA" value="0" step="any"> &le; X &le; <input type="number" id="calcB" value="1" step="any"> )
+    = <strong id="calcResult"></strong> <span class="muted">(the area under the curve is shaded)</span><br>
+    <strong>Quantile calculator:</strong> the value x with P(X &le; x) = <input type="number" id="quantP" value="0.95" min="0.0001" max="0.9999" step="0.01">
+    is <strong id="quantResult"></strong></div>
+</section>
+
+<section>
+  <h2>Draw samples</h2>
+  <div class="card">N = <input type="number" id="sampleN" value="2000" min="10" max="100000" step="10">
+    <button id="drawBtn">Draw N samples</button> <button id="clearBtn" class="secondary">Clear</button>
+    <span class="muted" id="sampleInfo"></span></div>
+</section>
+
+<section>
+  <h2>Worked examples</h2>
+  <div class="card" id="examplePanel">
+<h3>Example 1: small-sample t test and confidence interval</h3>
+<p>n = <input type="number" id="e1n" value="8" min="2" max="500">, sample mean <input type="number" id="e1m" value="502.05" step="0.1">, sample SD <input type="number" id="e1s" value="3.871" step="0.1" min="0.01">,
+claimed mean <input type="number" id="e1mu" value="500" step="0.1">, confidence level <input type="number" id="e1c" value="95" min="50" max="99.9"> %.</p>
+<div class="readouts" id="e1Out"></div>
+<svg class="chart" id="e1Chart" viewBox="0 0 480 300"></svg>
+<p id="e1Text" class="muted"></p>
+<p><button id="covBtn">Simulate 20,000 intervals with n above</button> <span class="muted" id="covInfo"></span></p>
+
+<h3>Example 2: chi-square test for a variance</h3>
+<p>n = <input type="number" id="e2n" value="20" min="2" max="500">, sample SD <input type="number" id="e2s" value="4.1" step="0.1" min="0.01">, claimed maximum SD <input type="number" id="e2sig" value="3" step="0.1" min="0.01">.</p>
+<div class="readouts" id="e2Out"></div>
+<svg class="chart" id="e2Chart" viewBox="0 0 480 300"></svg>
+
+<h3>Example 3: F test for two variances</h3>
+<p>Machine A: n = <input type="number" id="e3n1" value="12" min="2"> SD <input type="number" id="e3s1" value="3.2" step="0.1" min="0.01">.
+Machine B: n = <input type="number" id="e3n2" value="15" min="2"> SD <input type="number" id="e3s2" value="5.1" step="0.1" min="0.01">. Is B more variable?</p>
+<div class="readouts" id="e3Out"></div>
+<svg class="chart" id="e3Chart" viewBox="0 0 480 300"></svg>
+</div>
+</section>
+
+<section>
+  <h2>Where it is used</h2>
+  <div class="grid3 cards3">
+    <div class="card"><h3>Statistics</h3><p>t-tests and intervals for means, chi-square tests (variance, goodness of fit, independence), F-tests and ANOVA.</p></div>
+    <div class="card"><h3>Data science</h3><p>A/B tests on continuous metrics (Welch t), nested model comparison, quality-control variance charts.</p></div>
+    <div class="card"><h3>ML and AI</h3><p>Student-t likelihoods and priors for robust models, t-SNE kernel, Bayesian predictive distributions.</p></div>
+  </div>
+</section>
+<section id="section3d"><h2>3D view</h2><div class="card"><div id="plot3d" class="plot3d"></div></div><p class="muted">Rotate with the mouse. Plotly (gl3d bundle) is loaded from a CDN only on this page type.</p></section>
+<footer>Matching notebook: <a href="../notebooks/02_08_t_chisquare_f.ipynb">notebooks/02_08_t_chisquare_f.ipynb</a></footer>
+</main>
+<script>
+"use strict";
+/* =====================================================================
+   SECTION A. MATH HELPERS (small, readable, no libraries)
+   ===================================================================== */
+
+// log(n!) using a running sum; fine for the sizes used in these lessons.
+function logFactorial(n) {
+  let total = 0;
+  for (let i = 2; i <= n; i++) total += Math.log(i);
+  return total;
+}
+
+// Binomial PMF computed in log space so large n does not overflow.
+function binomPmf(k, n, p) {
+  if (k < 0 || k > n) return 0;
+  if (p === 0) return k === 0 ? 1 : 0;
+  if (p === 1) return k === n ? 1 : 0;
+  const logChoose = logFactorial(n) - logFactorial(k) - logFactorial(n - k);
+  return Math.exp(logChoose + k * Math.log(p) + (n - k) * Math.log(1 - p));
+}
+
+// Turn an array of probabilities into running totals (the CDF).
+function cumulative(probs) {
+  const out = [];
+  let running = 0;
+  for (const p of probs) { running += p; out.push(running); }
+  return out;
+}
+
+// Mean, variance, std and skewness of a discrete distribution given as (xs, probs).
+function discreteMoments(xs, probs) {
+  let mean = 0;
+  for (let i = 0; i < xs.length; i++) mean += xs[i] * probs[i];
+  let variance = 0, third = 0;
+  for (let i = 0; i < xs.length; i++) {
+    const d = xs[i] - mean;
+    variance += d * d * probs[i];
+    third += d * d * d * probs[i];
+  }
+  const std = Math.sqrt(variance);
+  const skew = std > 0 ? third / (std * std * std) : 0;
+  return { mean, variance, std, skew };
+}
+
+// Sample from a discrete distribution by inverting the CDF (xs sorted ascending).
+function sampleDiscrete(xs, cdf, count) {
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    const u = Math.random();
+    let j = 0;
+    while (j < cdf.length - 1 && cdf[j] < u) j++;
+    out.push(xs[j]);
+  }
+  return out;
+}
+
+// Format a number for display.
+function fmt(x, digits = 4) { return Number.isFinite(x) ? x.toFixed(digits) : "n/a"; }
+
+/* =====================================================================
+   SECTION B. UI HELPERS: sliders and readouts
+   ===================================================================== */
+
+// Add a labelled slider to a container. Calls onChange(value) whenever it moves.
+function addSlider(container, { label, min, max, step, value, onChange }) {
+  const row = document.createElement("div");
+  row.className = "slider-row";
+  const name = document.createElement("label");
+  name.textContent = label;
+  const input = document.createElement("input");
+  Object.assign(input, { type: "range", min, max, step, value });
+  const out = document.createElement("output");
+  out.textContent = value;
+  input.addEventListener("input", () => { out.textContent = input.value; onChange(Number(input.value)); });
+  row.append(name, input, out);
+  container.appendChild(row);
+  return { get: () => Number(input.value) };
+}
+
+// Fill the readouts grid from an object like { Mean: 1.2, Variance: 3.4 }.
+function showReadouts(values) {
+  const box = document.getElementById("readouts");
+  box.innerHTML = "";
+  for (const [name, value] of Object.entries(values)) {
+    const cell = document.createElement("div");
+    cell.className = "readout";
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${typeof value === "string" ? value : fmt(value)}</div>`;
+    box.appendChild(cell);
+  }
+}
+
+/* =====================================================================
+   SECTION C. SVG CHART HELPERS
+   drawChart(svgElement, spec) where spec is:
+     { title, xlabel, ylabel,
+       series: [ { kind: "bar" | "line" | "step" | "points", xs, ys, color, label } ],
+       shade: [a, b]   // optional: highlight x values between a and b
+       xrange, yrange  // optional fixed ranges
+     }
+   ===================================================================== */
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function svgEl(name, attrs, text) {
+  const node = document.createElementNS(SVG_NS, name);
+  for (const [key, value] of Object.entries(attrs || {})) node.setAttribute(key, value);
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+// Pick about 5 round tick values between lo and hi.
+function niceTicks(lo, hi) {
+  const span = hi - lo || 1;
+  const rawStep = span / 5;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const options = [1, 2, 5, 10];
+  let step = magnitude;
+  for (const o of options) { if (o * magnitude >= rawStep) { step = o * magnitude; break; } }
+  const ticks = [];
+  for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) ticks.push(Number(t.toPrecision(10)));
+  return ticks;
+}
+
+function drawChart(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right;
+  const plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+
+  // Work out the data ranges from all series.
+  let xmin = Infinity, xmax = -Infinity, ymax = 0;
+  for (const s of spec.series) {
+    for (const x of s.xs) { xmin = Math.min(xmin, x); xmax = Math.max(xmax, x); }
+    for (const y of s.ys) ymax = Math.max(ymax, y);
+  }
+  if (spec.xrange) [xmin, xmax] = spec.xrange;
+  if (spec.yrange) ymax = spec.yrange[1];
+  ymax = ymax * 1.08 || 1;
+  const hasBars = spec.series.some(s => s.kind === "bar");
+  const pad = (hasBars && !spec.series.some(s => s.width)) ? 0.7 : 0;               // keep the first and last bar inside the axes
+  const x0 = xmin - pad, x1 = xmax + pad || 1;
+  const sx = x => margin.left + (x - x0) / (x1 - x0) * plotW;
+  const sy = y => margin.top + plotH - y / ymax * plotH;
+
+  // Title, grid and axes.
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (const t of niceTicks(0, ymax)) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(t), y2: sy(t), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(t) + 4, "text-anchor": "end" }, String(t)));
+  }
+  for (const t of niceTicks(x0, x1)) {
+    svg.appendChild(svgEl("text", { x: sx(t), y: H - margin.bottom + 16, "text-anchor": "middle" }, String(t)));
+  }
+  svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(0), y2: sy(0), class: "axisline" }));
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  const yl = svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || "");
+  svg.appendChild(yl);
+
+  // Shaded region for the probability calculator.
+  if (spec.shade) {
+    const [a, b] = spec.shade;
+    svg.appendChild(svgEl("rect", { x: sx(a - (hasBars ? 0.5 : 0)), y: margin.top,
+      width: Math.max(0, sx(b + (hasBars ? 0.5 : 0)) - sx(a - (hasBars ? 0.5 : 0))), height: plotH,
+      fill: "var(--highlight)", opacity: 0.15 }));
+  }
+
+  // Area under a curve between a and b (continuous distributions): spec.fillUnder = [a, b]
+  if (spec.fillUnder) {
+    const curve = spec.series.find(s => s.kind === "line");
+    const regions = Array.isArray(spec.fillUnder[0]) ? spec.fillUnder : [spec.fillUnder];   // one [a, b] or several
+    for (const [a, b] of regions) {
+      const heightAt = x => {                          // curve height at x (linear interpolation; at a vertical edge take the top)
+        const exact = curve.ys.filter((_, i) => curve.xs[i] === x);
+        if (exact.length) return Math.max(...exact);
+        for (let i = 1; i < curve.xs.length; i++) {
+          if (x <= curve.xs[i] && curve.xs[i] > curve.xs[i - 1]) {
+            return curve.ys[i - 1] + (curve.ys[i] - curve.ys[i - 1]) * (x - curve.xs[i - 1]) / (curve.xs[i] - curve.xs[i - 1]);
+          }
+        }
+        return 0;
+      };
+      const left = Math.max(a, curve.xs[0]), right = Math.min(b, curve.xs[curve.xs.length - 1]);
+      let points = `${sx(left)},${sy(0)} ${sx(left)},${sy(heightAt(left))}`;
+      curve.xs.forEach((x, i) => { if (x > left && x < right) points += ` ${sx(x)},${sy(curve.ys[i])}`; });
+      points += ` ${sx(right)},${sy(heightAt(right))} ${sx(right)},${sy(0)}`;
+      svg.appendChild(svgEl("polygon", { points, fill: "var(--highlight)", opacity: 0.35 }));
+    }
+  }
+
+  // Draw each series.
+  const legendItems = [];
+  for (const s of spec.series) {
+    const color = s.color || "var(--main)";
+    if (s.kind === "bar") {
+      const barW = s.width ? Math.max(1, plotW / (x1 - x0) * s.width) : Math.max(1, plotW / (x1 - x0) * 0.8);   // s.width is in data units (histograms)
+      s.xs.forEach((x, i) => {
+        const inside = spec.shade && x >= spec.shade[0] && x <= spec.shade[1];
+        svg.appendChild(svgEl("rect", { x: sx(x) - barW / 2, y: sy(s.ys[i]), width: barW,
+          height: Math.max(0, sy(0) - sy(s.ys[i])), fill: inside ? "var(--highlight)" : color,
+          opacity: s.opacity || 0.9 }));
+      });
+    } else if (s.kind === "points") {
+      s.xs.forEach((x, i) => svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 3, fill: color })));
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => {
+        if (s.kind === "step" && i > 0) d += ` L${sx(x)},${sy(s.ys[i - 1])}`;
+        d += (i === 0 ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`;
+      });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) legendItems.push({ label: s.label, color });
+  }
+  legendItems.forEach((item, i) => {
+    const lx = W - margin.right - 130, ly = margin.top + 6 + i * 16;
+    svg.appendChild(svgEl("rect", { x: lx, y: ly - 8, width: 12, height: 10, fill: item.color }));
+    svg.appendChild(svgEl("text", { x: lx + 18, y: ly + 1 }, item.label));
+  });
+}
+
+// Log-log scatter/line chart for power laws. spec: { title, xlabel, ylabel, series: [{kind: "points"|"line", xs, ys, color, label}] }
+// Axes show decades (1, 10, 100, ...); all x and y values must be positive.
+function drawLogLog(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right, plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+  let xlo = Infinity, xhi = -Infinity, ylo = Infinity, yhi = -Infinity;
+  for (const s of spec.series) {
+    s.xs.forEach((x, i) => {
+      if (x > 0 && s.ys[i] > 0) {
+        xlo = Math.min(xlo, Math.log10(x)); xhi = Math.max(xhi, Math.log10(x));
+        ylo = Math.min(ylo, Math.log10(s.ys[i])); yhi = Math.max(yhi, Math.log10(s.ys[i]));
+      }
+    });
+  }
+  xlo = Math.floor(xlo); xhi = Math.max(Math.ceil(xhi), xlo + 1);
+  ylo = Math.floor(ylo); yhi = Math.max(Math.ceil(yhi), ylo + 1);
+  const sx = x => margin.left + (Math.log10(x) - xlo) / (xhi - xlo) * plotW;
+  const sy = y => margin.top + plotH - (Math.log10(y) - ylo) / (yhi - ylo) * plotH;
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (let e = ylo; e <= yhi; e++) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(Math.pow(10, e)), y2: sy(Math.pow(10, e)), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(Math.pow(10, e)) + 4, "text-anchor": "end" }, "1e" + e));
+  }
+  for (let e = xlo; e <= xhi; e++) {
+    svg.appendChild(svgEl("line", { x1: sx(Math.pow(10, e)), x2: sx(Math.pow(10, e)), y1: margin.top, y2: margin.top + plotH, class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: sx(Math.pow(10, e)), y: H - margin.bottom + 16, "text-anchor": "middle" }, "1e" + e));
+  }
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  svg.appendChild(svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || ""));
+  spec.series.forEach((s, idx) => {
+    const color = s.color || "var(--main)";
+    if (s.kind === "points") {
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 2.2, fill: color })); });
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) d += (d === "" ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`; });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) {
+      svg.appendChild(svgEl("rect", { x: W - margin.right - 130, y: margin.top + idx * 16 - 2, width: 12, height: 10, fill: color }));
+      svg.appendChild(svgEl("text", { x: W - margin.right - 112, y: margin.top + idx * 16 + 7 }, s.label));
+    }
+  });
+}
+
+/* =====================================================================
+   SECTION D. OPTIONAL 3D (Plotly gl3d partial bundle, loaded on demand)
+   ===================================================================== */
+function loadPlotlyThen(callback) {
+  if (window.Plotly) { callback(); return; }
+  const script = document.createElement("script");
+  script.src = "https://cdn.plot.ly/plotly-gl3d-2.35.2.min.js";
+  script.onload = callback;
+  script.onerror = () => { document.getElementById("plot3d").textContent = "Could not load Plotly from the CDN (check your connection)."; };
+  document.head.appendChild(script);
+}
+
+
+
+/* =====================================================================
+   SECTION M. SPECIAL FUNCTIONS for continuous distributions (Numerical Recipes style, plain loops)
+   ===================================================================== */
+function lgamma(z) {                      // log Gamma(z), Lanczos approximation, z > 0
+  const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  let y = z, tmp = z + 5.5;
+  tmp -= (z + 0.5) * Math.log(tmp);
+  let series = 1.000000000190015;
+  for (let j = 0; j < 6; j++) series += c[j] / ++y;
+  return -tmp + Math.log(2.5066282746310005 * series / z);
+}
+function gammaP(a, x) {                   // regularized lower incomplete gamma P(a, x)
+  if (x <= 0) return 0;
+  if (x < a + 1) {
+    let sum = 1 / a, term = sum;
+    for (let n = 1; n < 1000; n++) { term *= x / (a + n); sum += term; if (Math.abs(term) < Math.abs(sum) * 1e-14) break; }
+    return sum * Math.exp(-x + a * Math.log(x) - lgamma(a));
+  }
+  let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+  for (let i = 1; i < 1000; i++) {
+    const an = -i * (i - a);
+    b += 2;
+    d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+    c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+    d = 1 / d;
+    const delta = d * c;
+    h *= delta;
+    if (Math.abs(delta - 1) < 1e-14) break;
+  }
+  return 1 - Math.exp(-x + a * Math.log(x) - lgamma(a)) * h;
+}
+function betaI(x, a, b) {                 // regularized incomplete beta I_x(a, b)
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const front = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  const cf = (xx, aa, bb) => {
+    let c = 1, d = 1 - (aa + bb) * xx / (aa + 1);
+    if (Math.abs(d) < 1e-300) d = 1e-300;
+    d = 1 / d;
+    let h = d;
+    for (let m = 1; m < 1000; m++) {
+      const m2 = 2 * m;
+      let an = m * (bb - m) * xx / ((aa + m2 - 1) * (aa + m2));
+      d = 1 + an * d; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = 1 + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d; h *= d * c;
+      an = -(aa + m) * (aa + bb + m) * xx / ((aa + m2) * (aa + m2 + 1));
+      d = 1 + an * d; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = 1 + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d;
+      const delta = d * c;
+      h *= delta;
+      if (Math.abs(delta - 1) < 1e-14) break;
+    }
+    return h;
+  };
+  if (x < (a + 1) / (a + b + 2)) return front * cf(x, a, b) / a;
+  return 1 - front * cf(1 - x, b, a) / b;
+}
+function erf(x) { const v = gammaP(0.5, x * x); return x >= 0 ? v : -v; }
+function normPdf(x, mu = 0, sigma = 1) { return Math.exp(-0.5 * ((x - mu) / sigma) ** 2) / (sigma * Math.sqrt(2 * Math.PI)); }
+function normCdf(x, mu = 0, sigma = 1) { return 0.5 * (1 + erf((x - mu) / (sigma * Math.SQRT2))); }
+// Invert any increasing function by bisection (used for quantiles when no formula exists).
+function bisect(f, target, lo, hi) {
+  for (let i = 0; i < 200; i++) { const mid = (lo + hi) / 2; if (f(mid) < target) lo = mid; else hi = mid; }
+  return (lo + hi) / 2;
+}
+function linspace(a, b, n) { const out = []; for (let i = 0; i < n; i++) out.push(a + (b - a) * i / (n - 1)); return out; }
+
+
+function chiPdf(x, v) { return x <= 0 ? 0 : Math.exp((v / 2 - 1) * Math.log(x) - x / 2 - (v / 2) * Math.log(2) - lgamma(v / 2)); }
+function chiCdf(x, v) { return x <= 0 ? 0 : gammaP(v / 2, x / 2); }
+function chiPpf(p, v) { return bisect(t => chiCdf(t, v), p, 0, v + 40 * Math.sqrt(2 * v) + 100); }
+function tPdf(x, v) { return Math.exp(lgamma((v + 1) / 2) - lgamma(v / 2)) / Math.sqrt(v * Math.PI) * Math.pow(1 + x * x / v, -(v + 1) / 2); }
+function tCdf(x, v) { const tail = 0.5 * betaI(v / (v + x * x), v / 2, 0.5); return x >= 0 ? 1 - tail : tail; }
+function tPpf(p, v) { return bisect(t => tCdf(t, v), p, -1e4, 1e4); }
+function fPdf(x, a, b) { return x <= 0 ? 0 : Math.exp(lgamma((a + b) / 2) - lgamma(a / 2) - lgamma(b / 2) + (a / 2) * Math.log(a / b) + (a / 2 - 1) * Math.log(x) - ((a + b) / 2) * Math.log(1 + a * x / b)); }
+function fCdf(x, a, b) { return x <= 0 ? 0 : betaI(a * x / (a * x + b), a / 2, b / 2); }
+function fPpf(p, a, b) { return bisect(t => fCdf(t, a, b), p, 0, 1e5); }
+
+
+/* =====================================================================
+   SECTION E. GENERIC CONTINUOUS ENGINE
+   cfg.dist(q) -> { xs, ys }  (pdf on a grid);  optional cfg.cdfFn(x, q), cfg.ppfFn(p, q), cfg.moments(q)
+   ===================================================================== */
+function startContinuous(cfg) {
+  const params = {};
+  cfg.params.forEach(p => { params[p.key] = p.value; });
+  let samples = null;
+  let overlayOn = true;
+
+  function gridCdf(d) {                      // cumulative trapezoid rule on the pdf grid
+    const cdf = [0];
+    for (let i = 1; i < d.xs.length; i++) cdf.push(cdf[i - 1] + 0.5 * (d.ys[i] + d.ys[i - 1]) * (d.xs[i] - d.xs[i - 1]));
+    return cdf;
+  }
+  function interp(xs, ys, x) {               // linear interpolation, flat outside the grid
+    if (x <= xs[0]) return ys[0];
+    if (x >= xs[xs.length - 1]) return ys[ys.length - 1];
+    let lo = 0, hi = xs.length - 1;
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (xs[mid] <= x) lo = mid; else hi = mid; }
+    return ys[lo] + (ys[hi] - ys[lo]) * (x - xs[lo]) / (xs[hi] - xs[lo]);
+  }
+  function model() {
+    const d = cfg.dist(params);
+    const cdfGrid = gridCdf(d);
+    const total = cdfGrid[cdfGrid.length - 1] || 1;
+    const F = cfg.cdfFn ? (x => cfg.cdfFn(x, params)) : (x => interp(d.xs, cdfGrid, x) / (cfg.normalize === false ? 1 : total));
+    const Q = cfg.ppfFn ? (p => cfg.ppfFn(p, params)) : (p => interp(cdfGrid.map(v => v / (cfg.normalize === false ? 1 : total)), d.xs, p));
+    let m = cfg.moments ? cfg.moments(params) : null;
+    if (!m) {                                  // numerical moments from the grid
+      let mean = 0, second = 0, third = 0;
+      for (let i = 1; i < d.xs.length; i++) {
+        const w = 0.5 * (d.ys[i] + d.ys[i - 1]) * (d.xs[i] - d.xs[i - 1]) / total, xm = 0.5 * (d.xs[i] + d.xs[i - 1]);
+        mean += w * xm;
+      }
+      for (let i = 1; i < d.xs.length; i++) {
+        const w = 0.5 * (d.ys[i] + d.ys[i - 1]) * (d.xs[i] - d.xs[i - 1]) / total, xm = 0.5 * (d.xs[i] + d.xs[i - 1]);
+        second += w * (xm - mean) ** 2; third += w * (xm - mean) ** 3;
+      }
+      const sd = Math.sqrt(second);
+      m = { Mean: mean, Variance: second, Std: sd, Skewness: sd > 0 ? third / (sd ** 3) : 0 };
+    }
+    return { d, F, Q, m };
+  }
+
+  function refresh() {
+    const { d, F, Q, m } = model();
+    const a = Number(document.getElementById("calcA").value), b = Number(document.getElementById("calcB").value);
+    document.getElementById("calcResult").textContent = fmt(F(b) - F(a), 5);
+    const pq = Math.min(0.9999, Math.max(0.0001, Number(document.getElementById("quantP").value)));
+    document.getElementById("quantResult").textContent = fmt(Q(pq), 4);
+    const range = cfg.xrange(params, d);
+    const series = [];
+    if (samples) {                              // density histogram of the samples
+      const bins = 30, lo = range[0], hi = range[1], w = (hi - lo) / bins, counts = new Array(bins).fill(0);
+      for (const s of samples) { const i = Math.floor((s - lo) / w); if (i >= 0 && i < bins) counts[i]++; }
+      series.push({ kind: "bar", xs: counts.map((_, i) => lo + (i + 0.5) * w), ys: counts.map(c => c / samples.length / w),
+                    color: "var(--sim)", width: w * 0.95, opacity: 0.55, label: "Samples" });
+    }
+    series.push({ kind: "line", xs: d.xs, ys: d.ys, color: "var(--main)", label: "Theory" });
+    if (cfg.overlay && overlayOn) { const o = cfg.overlay(params, d); if (o) series.push({ kind: "line", xs: o.xs, ys: o.ys, color: "var(--third)", label: o.label }); }
+    drawChart(document.getElementById("pmfChart"), { title: cfg.title(params), xlabel: cfg.xlabel, ylabel: "density f(x)",
+      series, fillUnder: [a, b], xrange: range, yrange: cfg.yrange ? cfg.yrange(params, d) : undefined });
+    const cdfYs = d.xs.map(x => F(x));
+    drawChart(document.getElementById("cdfChart"), { title: "CDF  F(x) = P(X <= x)", xlabel: cfg.xlabel, ylabel: "F(x)",
+      series: [{ kind: "line", xs: d.xs, ys: cdfYs, color: "var(--main)" }], yrange: [0, 1], xrange: range });
+    showReadouts(Object.assign({}, m, { Median: Q(0.5) }));
+    if (cfg.exampleUpdate) cfg.exampleUpdate();
+  }
+
+  const box = document.getElementById("sliders");
+  cfg.params.forEach(p => addSlider(box, { label: p.label, min: p.min, max: p.max, step: p.step, value: p.value,
+    onChange: v => { params[p.key] = v; samples = null; refresh(); } }));
+  if (cfg.overlay) {
+    const row = document.createElement("div");
+    row.innerHTML = `<label><input type="checkbox" checked> show ${cfg.overlayName}</label>`;
+    box.appendChild(row);
+    row.querySelector("input").addEventListener("change", ev => { overlayOn = ev.target.checked; refresh(); });
+  }
+  if (cfg.extraControls) cfg.extraControls(box, params, () => { samples = null; refresh(); });
+  document.getElementById("calcA").value = cfg.calc[0];
+  document.getElementById("calcB").value = cfg.calc[1];
+  document.getElementById("quantP").value = 0.95;
+  ["calcA", "calcB", "quantP"].forEach(id => document.getElementById(id).addEventListener("input", refresh));
+  document.getElementById("drawBtn").addEventListener("click", () => {
+    const { d, Q } = model();
+    const count = Math.min(100000, Math.max(10, Number(document.getElementById("sampleN").value)));
+    samples = [];
+    for (let i = 0; i < count; i++) samples.push(Q(Math.min(0.99999, Math.max(0.00001, Math.random()))));
+    document.getElementById("sampleInfo").textContent = ` ${count} samples, sample mean = ${fmt(samples.reduce((x, y) => x + y, 0) / count, 3)}`;
+    refresh();
+  });
+  document.getElementById("clearBtn").addEventListener("click", () => { samples = null; document.getElementById("sampleInfo").textContent = ""; refresh(); });
+  if (cfg.exampleInit) cfg.exampleInit();
+  refresh();
+  if (cfg.plot3d) loadPlotlyThen(() => Plotly.newPlot("plot3d", cfg.plot3d.data, cfg.plot3d.layout, { responsive: true }));
+}
+function setupNav(id, target) {
+  const link = document.getElementById(id);
+  if (target) { link.href = target; link.classList.remove("disabled"); }
+}
+function showExample(values, boxId = "exOut") {
+  const box = document.getElementById(boxId);
+  box.innerHTML = "";
+  for (const [name, value] of Object.entries(values)) {
+    const cell = document.createElement("div");
+    cell.className = "readout";
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${typeof value === "string" ? value : (Number.isInteger(value) ? value : (Math.abs(value) < 1e-3 && value !== 0 ? value.toExponential(2) : fmt(value, 4)))}</div>`;
+    box.appendChild(cell);
+  }
+}
+
+setupNav("prevLink", "02_07_laplace_logistic_gumbel.html");
+setupNav("nextLink", "02_09_von_mises.html");
+window.addEventListener("DOMContentLoaded", () => {
+
+  let mode = "Student t";
+  const val = id => Number(document.getElementById(id).value);
+  const curve = (f, lo, hi) => { const xs = linspace(lo, hi, 500); return { xs, ys: xs.map(f) }; };
+
+  function example1() {
+    const n = val("e1n"), m = val("e1m"), s = val("e1s"), mu = val("e1mu"), level = val("e1c") / 100, df = n - 1, se = s / Math.sqrt(n);
+    const tc = tPpf(1 - (1 - level) / 2, df), zc = bisect(z => normCdf(z), 1 - (1 - level) / 2, -10, 10), T = (m - mu) / se, p = 2 * (1 - tCdf(Math.abs(T), df));
+    showExample({ "SE": se, "t critical": tc, "t interval": (m - tc * se).toFixed(2) + " to " + (m + tc * se).toFixed(2), "z interval (too narrow)": (m - zc * se).toFixed(2) + " to " + (m + zc * se).toFixed(2), "T statistic": T, "p-value (two-sided)": p }, "e1Out");
+    const c = curve(x => tPdf(x, df), -6, 6);
+    drawChart(document.getElementById("e1Chart"), { title: `t distribution (${df} d.f.): rejection regions shaded`, xlabel: "t",
+      ylabel: "density", series: [{ kind: "line", xs: c.xs, ys: c.ys, color: "var(--main)", label: "t" }, { kind: "line", xs: c.xs, ys: c.xs.map(x => normPdf(x)), color: "var(--sim)", label: "Normal" },
+        { kind: "points", xs: [Math.max(-6, Math.min(6, T))], ys: [tPdf(T, df)], color: "var(--highlight)", label: "observed T" }], fillUnder: [[-6, -tc], [tc, 6]] });
+    document.getElementById("e1Text").textContent = p < 1 - level ? "Reject H0: the mean differs from the claimed value." : "Do not reject H0 at this level (with small n the test has little power).";
+  }
+  function coverage() {
+    const n = val("e1n"), df = n - 1, level = val("e1c") / 100, tc = tPpf(1 - (1 - level) / 2, df), zc = bisect(z => normCdf(z), 1 - (1 - level) / 2, -10, 10);
+    let hitT = 0, hitZ = 0; const N = 20000;
+    for (let i = 0; i < N; i++) {
+      let sum = 0, sq = 0;
+      for (let j = 0; j < n; j++) { const x = normalSample(); sum += x; sq += x * x; }
+      const mean = sum / n, sd = Math.sqrt(Math.max(0, (sq - n * mean * mean) / (n - 1))), half = sd / Math.sqrt(n);
+      if (Math.abs(mean) <= tc * half) hitT++;
+      if (Math.abs(mean) <= zc * half) hitZ++;
+    }
+    document.getElementById("covInfo").textContent = ` coverage with the t multiplier ${tc.toFixed(3)}: ${(100 * hitT / N).toFixed(1)}%; with the z multiplier ${zc.toFixed(3)}: ${(100 * hitZ / N).toFixed(1)}% (target ${(level * 100).toFixed(0)}%)`;
+  }
+  function normalSample() { let u = 0, v = 0; while (u === 0) u = Math.random(); while (v === 0) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  function example2() {
+    const n = val("e2n"), s = val("e2s"), sig = val("e2sig"), df = n - 1, chi = df * s * s / (sig * sig);
+    const crit = chiPpf(0.95, df), p = 1 - chiCdf(chi, df), lo = Math.sqrt(df * s * s / chiPpf(0.975, df)), hi = Math.sqrt(df * s * s / chiPpf(0.025, df));
+    showExample({ "chi-square": chi, "5% critical": crit, "p-value (upper)": p, "95% CI for sigma": lo.toFixed(2) + " to " + hi.toFixed(2) }, "e2Out");
+    const top = Math.max(chiPpf(0.999, df), chi * 1.2), c = curve(x => chiPdf(x, df), 0.01, top);
+    drawChart(document.getElementById("e2Chart"), { title: `Chi-square (${df} d.f.): rejection region shaded`, xlabel: "statistic", ylabel: "density",
+      series: [{ kind: "line", xs: c.xs, ys: c.ys, color: "var(--main)" }, { kind: "points", xs: [chi], ys: [chiPdf(chi, df)], color: "var(--highlight)" }], fillUnder: [crit, top] });
+  }
+  function example3() {
+    const n1 = val("e3n1"), s1 = val("e3s1"), n2 = val("e3n2"), s2 = val("e3s2"), d1 = n2 - 1, d2 = n1 - 1, F = s2 * s2 / (s1 * s1);
+    const crit = fPpf(0.95, d1, d2), p = 1 - fCdf(F, d1, d2);
+    showExample({ "F = sB^2 / sA^2": F, "5% critical": crit, "p-value (one-sided)": p, "degrees of freedom": d1 + ", " + d2 }, "e3Out");
+    const top = Math.max(fPpf(0.99, d1, d2), F * 1.3), c = curve(x => fPdf(x, d1, d2), 0.01, top);
+    drawChart(document.getElementById("e3Chart"), { title: `F(${d1}, ${d2}): rejection region shaded`, xlabel: "F", ylabel: "density",
+      series: [{ kind: "line", xs: c.xs, ys: c.ys, color: "var(--main)" }, { kind: "points", xs: [F], ys: [fPdf(F, d1, d2)], color: "var(--highlight)" }], fillUnder: [crit, top] });
+  }
+  function examples() { example1(); example2(); example3(); }
+
+  // 3D: Student t PDF over (x, nu)
+  const xsg = linspace(-5, 5, 80), nus = linspace(1, 30, 30), z = [];
+  for (const v of nus) z.push(xsg.map(x => tPdf(x, v)));
+
+  const NAMES = { "Student t": "t", "Chi-square": "chi", "F": "F" };
+  startContinuous({
+    params: [
+      { key: "nu", label: "d.f. nu (or d1)", min: 1, max: 60, step: 1, value: 5 },
+      { key: "d2", label: "d.f. d2 (F only)", min: 1, max: 60, step: 1, value: 10 }],
+    dist: q => {
+      if (mode === "Student t") { const xs = linspace(-6, 6, 500); return { xs, ys: xs.map(x => tPdf(x, q.nu)) }; }
+      if (mode === "Chi-square") { const hi = chiPpf(0.995, q.nu), xs = linspace(hi / 800, hi, 500); return { xs, ys: xs.map(x => chiPdf(x, q.nu)), ymax: Math.min(Math.max(...xs.map(x => chiPdf(x, q.nu)).slice(8)) * 1.2, 1.5) }; }
+      const hi = Math.min(fPpf(0.99, q.nu, q.d2), 10), xs = linspace(hi / 800, hi, 500); return { xs, ys: xs.map(x => fPdf(x, q.nu, q.d2)) };
+    },
+    cdfFn: (x, q) => mode === "Student t" ? tCdf(x, q.nu) : (mode === "Chi-square" ? chiCdf(x, q.nu) : fCdf(x, q.nu, q.d2)),
+    ppfFn: (p, q) => mode === "Student t" ? tPpf(p, q.nu) : (mode === "Chi-square" ? chiPpf(p, q.nu) : fPpf(p, q.nu, q.d2)),
+    moments: q => {
+      if (mode === "Student t") return { Mean: q.nu > 1 ? 0 : "undefined", Variance: q.nu > 2 ? q.nu / (q.nu - 2) : "infinite", Std: q.nu > 2 ? Math.sqrt(q.nu / (q.nu - 2)) : "infinite", Skewness: q.nu > 3 ? 0 : "undefined" };
+      if (mode === "Chi-square") return { Mean: q.nu, Variance: 2 * q.nu, Std: Math.sqrt(2 * q.nu), Skewness: Math.sqrt(8 / q.nu) };
+      const a = q.nu, b = q.d2, v = b > 4 ? 2 * b * b * (a + b - 2) / (a * (b - 2) ** 2 * (b - 4)) : "infinite";
+      return { Mean: b > 2 ? b / (b - 2) : "undefined", Variance: v, Std: typeof v === "number" ? Math.sqrt(v) : "infinite", Skewness: b > 6 ? (2 * a + b - 2) * Math.sqrt(8 * (b - 4)) / ((b - 6) * Math.sqrt(a * (a + b - 2))) : "undefined" };
+    },
+    title: q => mode === "Student t" ? `Student t PDF (nu=${q.nu})` : (mode === "Chi-square" ? `Chi-square PDF (nu=${q.nu})` : `F PDF (d1=${q.nu}, d2=${q.d2})`),
+    xlabel: "x",
+    xrange: (q, d) => [d.xs[0], d.xs[d.xs.length - 1]],
+    yrange: (q, d) => d.ymax ? [0, d.ymax] : undefined,
+    overlay: (q, d) => { if (mode === "Student t") return { xs: d.xs, ys: d.xs.map(x => normPdf(x)), label: "Standard Normal" };
+      if (mode === "Chi-square") return { xs: d.xs, ys: d.xs.map(x => normPdf(x, q.nu, Math.sqrt(2 * q.nu))), label: "Normal(nu, 2nu)" }; return null; },
+    overlayName: "Normal comparison (t and chi-square)",
+    calc: [-1, 1],
+    extraControls: (box, q, redraw) => {
+      const row = document.createElement("div");
+      row.innerHTML = `<label>Distribution: <select id="modeSel"><option>Student t</option><option>Chi-square</option><option>F</option></select></label>`;
+      box.appendChild(row);
+      row.querySelector("select").addEventListener("change", ev => { mode = ev.target.value; document.getElementById("calcA").value = mode === "Student t" ? -1 : 1; document.getElementById("calcB").value = mode === "Student t" ? 1 : 5; redraw(); });
+    },
+    exampleInit: () => { document.querySelectorAll("#examplePanel input").forEach(el => el.addEventListener("input", examples)); document.getElementById("covBtn").addEventListener("click", coverage); },
+    exampleUpdate: examples,
+    plot3d: { data: [{ type: "surface", x: xsg, y: nus, z, colorscale: "Viridis" }],
+      layout: { margin: { l: 0, r: 0, t: 30, b: 0 }, title: { text: "Student t PDF over (x, nu)" },
+        scene: { xaxis: { title: "x" }, yaxis: { title: "nu" }, zaxis: { title: "density" } } } },
+  });
+
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, { delimiters: [
+      { left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
+  }
+});
+</script>
+</body>
+</html>

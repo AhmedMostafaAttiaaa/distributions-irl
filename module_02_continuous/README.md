@@ -15,6 +15,7 @@ The continuous families used in statistics, data science and ML, with extra plai
 | 02_07 Laplace, Logistic and Gumbel | [notebook](notebooks/02_07_laplace_logistic_gumbel.ipynb) | [page](html/02_07_laplace_logistic_gumbel.html) | done |
 | 02_08 Student's t, Chi-square and F | [notebook](notebooks/02_08_t_chisquare_f.ipynb) | [page](html/02_08_t_chisquare_f.html) | done |
 | 02_09 Von Mises | [notebook](notebooks/02_09_von_mises.ipynb) | [page](html/02_09_von_mises.html) | done |
+| 02_10 Continuous Summary and Chooser | [notebook](notebooks/02_10_continuous_summary_chooser.ipynb) | [page](html/02_10_continuous_summary_chooser.html) | done |
 
 ## How to open
 

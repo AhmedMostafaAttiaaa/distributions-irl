@@ -85,3 +85,9 @@
 | Rayleigh test | Test of uniformity of directions based on n R^2, approximately Exponential(1) under the null. | [02_09](html/02_09_von_mises.html) |
 | Von Mises-Fisher distribution | Generalization of the von Mises to directions on a sphere. | [02_09](html/02_09_von_mises.html) |
 | Wrapped Normal | Normal distribution wrapped around the circle; very close to the von Mises. | [02_09](html/02_09_von_mises.html) |
+| Distribution chooser | Decision procedure that picks a continuous distribution from the support and the way the quantity is generated. | [02_10](html/02_10_continuous_summary_chooser.html) |
+| Family tree | Relationships among distributions: transformations, sums, ratios and limits. | [02_10](html/02_10_continuous_summary_chooser.html) |
+| Support | The set of values a random variable can take. | [02_10](html/02_10_continuous_summary_chooser.html) |
+| Tail weight | How fast the survival function decays; heavy tails keep producing extreme values. | [02_10](html/02_10_continuous_summary_chooser.html) |
+| Excess kurtosis | Kurtosis minus 3; positive values flag heavier tails than the Normal. | [02_10](html/02_10_continuous_summary_chooser.html) |
+| Negative log-likelihood loss | Loss equal to minus the log of the model density: MSE (Normal), MAE (Laplace), cross-entropy. | [02_10](html/02_10_continuous_summary_chooser.html) |

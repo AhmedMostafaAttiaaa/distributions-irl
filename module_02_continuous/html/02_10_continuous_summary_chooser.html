@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02_10 Continuous Summary and Chooser | Probability Distributions Book</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+/* ---------- Theme: colorblind-safe Okabe-Ito colors, light and dark ---------- */
+:root {
+  --bg: #ffffff; --panel: #f6f7f9; --text: #1b1f24; --muted: #5b636d; --border: #d8dce1;
+  --main: #0072B2;      /* theoretical curve */
+  --sim: #E69F00;       /* simulated samples */
+  --highlight: #D55E00; --third: #009E73; /* shaded region */
+  --grid: #e3e6ea;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14171a; --panel: #1d2126; --text: #e8eaed; --muted: #9aa3ad; --border: #343a41;
+    --main: #56B4E9; --sim: #E69F00; --highlight: #F08A4B; --third: #2FD0A0; --grid: #2b3036;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 980px; margin: 0 auto; padding: 0 16px 48px; }
+h1 { font-size: 1.7rem; margin: 20px 0 4px; }
+h2 { font-size: 1.2rem; margin: 28px 0 10px; }
+p, li { color: var(--text); }
+.muted { color: var(--muted); }
+
+/* ---------- Navigation bar ---------- */
+nav.topnav { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap;
+  padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--panel); }
+nav.topnav a { color: var(--main); text-decoration: none; font-weight: 600; }
+nav.topnav a:hover { text-decoration: underline; }
+nav.topnav .disabled { color: var(--muted); }
+
+/* ---------- Cards and layout ---------- */
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 720px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+/* ---------- Sliders ---------- */
+.slider-row { display: grid; grid-template-columns: 90px 1fr 70px; align-items: center; gap: 10px; margin: 6px 0; }
+.slider-row label { font-weight: 600; }
+.slider-row output { text-align: right; font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; accent-color: var(--main); }
+input[type=number] { width: 80px; padding: 4px 6px; background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px; }
+button { background: var(--main); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px;
+  font: inherit; font-weight: 600; cursor: pointer; }
+button.secondary { background: transparent; color: var(--main); border: 1px solid var(--main); }
+@media (prefers-color-scheme: dark) { button { color: #0b0d0f; } }
+
+/* ---------- Readouts ---------- */
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.readout { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
+.readout .name { color: var(--muted); font-size: 0.8rem; }
+.readout .value { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- Charts (SVG) ---------- */
+svg.chart { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+svg.chart text { fill: var(--muted); font-size: 12px; font-family: inherit; }
+svg.chart .title { fill: var(--text); font-size: 14px; font-weight: 600; }
+svg.chart .gridline { stroke: var(--grid); stroke-width: 1; }
+svg.chart .axisline { stroke: var(--muted); stroke-width: 1; }
+.plot3d { width: 100%; height: 420px; }
+.cards3 .card h3 { margin: 0 0 6px; font-size: 1rem; }
+footer { margin-top: 36px; padding-top: 12px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+footer a { color: var(--main); }
+
+.chooser button.secondary { text-align: left; } .map { width: 100%; max-width: 780px; height: auto; display: block; margin: 0 auto; }
+.plain { border-left: 4px solid var(--main); }</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="../../index.html">Book index</a>
+  <a href="02_09_von_mises.html">&larr; Previous lesson</a>
+  <a class="disabled" href="#">Next lesson &rarr;</a>
+</nav>
+<main>
+<h1>02_10 Continuous Summary and Chooser</h1>
+<p class="muted">Answer a few questions about how your quantity is generated, and get the distribution to use.</p>
+
+<section class="card"><h2 style="margin-top:0">Key ideas</h2>
+<p>Choose from the <em>story</em> and the <em>support</em>, not from the histogram alone. Real line and bell: Normal. Positive and skewed by multiplication: Lognormal. Waiting times: Exponential and Gamma. Lifetimes with aging: Weibull. Proportions: Beta. Heavy tails: Pareto and Cauchy. Absolute errors: Laplace. Latent threshold: Logistic. Maxima: Gumbel. Sampling distributions: t, chi-square, F. Directions: von Mises.</p></section>
+<section class="card plain"><h2 style="margin-top:0">In plain words</h2>
+<ul><li><strong>Ask four questions:</strong> what values are possible, how is the quantity produced (sum, product, waiting, maximum), how heavy is the tail, and do the mean and variance exist?</li>
+<li><strong>Many families are connected</strong> (see the map): sums of Exponentials are Gamma, squares of Normals are chi-square, a Normal over a root chi-square is t. Click an arrow to read the link.</li></ul></section>
+
+<section>
+  <h2>Which distribution should I use?</h2>
+  <div class="card chooser">
+    <div id="question"></div>
+    <p class="muted" id="pathLine"></p>
+    <button id="restartBtn" class="secondary" hidden>Start over</button>
+  </div>
+  <div class="card" id="resultCard" hidden>
+    <h3 style="margin-top:0">Live preview: <span id="resultName"></span></h3>
+    <p class="muted">scipy: <code id="resultScipy"></code> &nbsp; <span id="resultNote"></span></p>
+    <div id="resultSliders"></div>
+    <div class="grid2">
+      <div><svg class="chart" id="miniChart" viewBox="0 0 480 300"></svg></div>
+      <div><div class="readouts" id="readouts"></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Family map</h2>
+  <p class="muted">Click an arrow to read how two distributions are related; click a box to preview that distribution.</p>
+  <div class="card"><svg class="map" id="mapSvg" viewBox="0 0 780 460"></svg>
+  <p id="mapInfo" class="muted">Select an arrow.</p></div>
+</section>
+
+<section>
+  <h2>Comparison table</h2>
+  <div class="card" style="overflow-x:auto">
+  <table style="border-collapse:collapse;width:100%;font-size:0.9rem">
+  <thead><tr><th align="left">Distribution</th><th align="left">Support</th><th align="left">Use when</th><th align="left">Mean</th></tr></thead>
+  <tbody>
+  <tr><td>Uniform</td><td>[a, b]</td><td>no preference in a range</td><td>(a+b)/2</td></tr>
+  <tr><td>Normal</td><td>real</td><td>sums, averages, errors</td><td>&mu;</td></tr>
+  <tr><td>Lognormal</td><td>x &gt; 0</td><td>multiplicative, skewed</td><td>e<sup>&mu;+&sigma;&sup2;/2</sup></td></tr>
+  <tr><td>Exponential</td><td>x &ge; 0</td><td>time to next event</td><td>1/&lambda;</td></tr>
+  <tr><td>Gamma</td><td>x &gt; 0</td><td>time to k-th event</td><td>k&theta;</td></tr>
+  <tr><td>Beta</td><td>[0, 1]</td><td>probabilities</td><td>&alpha;/(&alpha;+&beta;)</td></tr>
+  <tr><td>Weibull</td><td>x &ge; 0</td><td>lifetimes with aging</td><td>&lambda;&Gamma;(1+1/k)</td></tr>
+  <tr><td>Pareto</td><td>x &ge; x<sub>m</sub></td><td>power-law tails</td><td>&alpha;x<sub>m</sub>/(&alpha;-1), &alpha;&gt;1</td></tr>
+  <tr><td>Cauchy</td><td>real</td><td>heaviest tails</td><td>does not exist</td></tr>
+  <tr><td>Laplace</td><td>real</td><td>absolute errors</td><td>&mu;</td></tr>
+  <tr><td>Logistic</td><td>real</td><td>sigmoid, latent threshold</td><td>&mu;</td></tr>
+  <tr><td>Gumbel</td><td>real</td><td>maxima</td><td>&mu;+0.5772&beta;</td></tr>
+  <tr><td>Student t / &chi;&sup2; / F</td><td>real / x &ge; 0</td><td>sampling distributions</td><td>0 / &nu; / d<sub>2</sub>/(d<sub>2</sub>-2)</td></tr>
+  <tr><td>Von Mises</td><td>circle</td><td>directions, time of day</td><td>direction &mu;</td></tr>
+  </tbody></table></div>
+</section>
+
+<section>
+  <h2>Where it is used</h2>
+  <div class="grid3 cards3">
+    <div class="card"><h3>Statistics</h3><p>Choosing the likelihood of a model and the reference distribution of a test.</p></div>
+    <div class="card"><h3>Data science</h3><p>Describing skewed, bounded and circular data; medians and percentiles; return levels.</p></div>
+    <div class="card"><h3>ML and AI</h3><p>Losses as negative log-likelihoods, priors, latent variables and noise models.</p></div>
+  </div>
+</section>
+
+<footer>Matching notebook: <a href="../notebooks/02_10_continuous_summary_chooser.ipynb">notebooks/02_10_continuous_summary_chooser.ipynb</a></footer>
+</main>
+<script>
+"use strict";
+/* =====================================================================
+   SECTION A. MATH HELPERS (small, readable, no libraries)
+   ===================================================================== */
+
+// log(n!) using a running sum; fine for the sizes used in these lessons.
+function logFactorial(n) {
+  let total = 0;
+  for (let i = 2; i <= n; i++) total += Math.log(i);
+  return total;
+}
+
+// Binomial PMF computed in log space so large n does not overflow.
+function binomPmf(k, n, p) {
+  if (k < 0 || k > n) return 0;
+  if (p === 0) return k === 0 ? 1 : 0;
+  if (p === 1) return k === n ? 1 : 0;
+  const logChoose = logFactorial(n) - logFactorial(k) - logFactorial(n - k);
+  return Math.exp(logChoose + k * Math.log(p) + (n - k) * Math.log(1 - p));
+}
+
+// Turn an array of probabilities into running totals (the CDF).
+function cumulative(probs) {
+  const out = [];
+  let running = 0;
+  for (const p of probs) { running += p; out.push(running); }
+  return out;
+}
+
+// Mean, variance, std and skewness of a discrete distribution given as (xs, probs).
+function discreteMoments(xs, probs) {
+  let mean = 0;
+  for (let i = 0; i < xs.length; i++) mean += xs[i] * probs[i];
+  let variance = 0, third = 0;
+  for (let i = 0; i < xs.length; i++) {
+    const d = xs[i] - mean;
+    variance += d * d * probs[i];
+    third += d * d * d * probs[i];
+  }
+  const std = Math.sqrt(variance);
+  const skew = std > 0 ? third / (std * std * std) : 0;
+  return { mean, variance, std, skew };
+}
+
+// Sample from a discrete distribution by inverting the CDF (xs sorted ascending).
+function sampleDiscrete(xs, cdf, count) {
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    const u = Math.random();
+    let j = 0;
+    while (j < cdf.length - 1 && cdf[j] < u) j++;
+    out.push(xs[j]);
+  }
+  return out;
+}
+
+// Format a number for display.
+function fmt(x, digits = 4) { return Number.isFinite(x) ? x.toFixed(digits) : "n/a"; }
+
+/* =====================================================================
+   SECTION B. UI HELPERS: sliders and readouts
+   ===================================================================== */
+
+// Add a labelled slider to a container. Calls onChange(value) whenever it moves.
+function addSlider(container, { label, min, max, step, value, onChange }) {
+  const row = document.createElement("div");
+  row.className = "slider-row";
+  const name = document.createElement("label");
+  name.textContent = label;
+  const input = document.createElement("input");
+  Object.assign(input, { type: "range", min, max, step, value });
+  const out = document.createElement("output");
+  out.textContent = value;
+  input.addEventListener("input", () => { out.textContent = input.value; onChange(Number(input.value)); });
+  row.append(name, input, out);
+  container.appendChild(row);
+  return { get: () => Number(input.value) };
+}
+
+// Fill the readouts grid from an object like { Mean: 1.2, Variance: 3.4 }.
+function showReadouts(values) {
+  const box = document.getElementById("readouts");
+  box.innerHTML = "";
+  for (const [name, value] of Object.entries(values)) {
+    const cell = document.createElement("div");
+    cell.className = "readout";
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${typeof value === "string" ? value : fmt(value)}</div>`;
+    box.appendChild(cell);
+  }
+}
+
+/* =====================================================================
+   SECTION C. SVG CHART HELPERS
+   drawChart(svgElement, spec) where spec is:
+     { title, xlabel, ylabel,
+       series: [ { kind: "bar" | "line" | "step" | "points", xs, ys, color, label } ],
+       shade: [a, b]   // optional: highlight x values between a and b
+       xrange, yrange  // optional fixed ranges
+     }
+   ===================================================================== */
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function svgEl(name, attrs, text) {
+  const node = document.createElementNS(SVG_NS, name);
+  for (const [key, value] of Object.entries(attrs || {})) node.setAttribute(key, value);
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+// Pick about 5 round tick values between lo and hi.
+function niceTicks(lo, hi) {
+  const span = hi - lo || 1;
+  const rawStep = span / 5;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const options = [1, 2, 5, 10];
+  let step = magnitude;
+  for (const o of options) { if (o * magnitude >= rawStep) { step = o * magnitude; break; } }
+  const ticks = [];
+  for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) ticks.push(Number(t.toPrecision(10)));
+  return ticks;
+}
+
+function drawChart(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right;
+  const plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+
+  // Work out the data ranges from all series.
+  let xmin = Infinity, xmax = -Infinity, ymax = 0;
+  for (const s of spec.series) {
+    for (const x of s.xs) { xmin = Math.min(xmin, x); xmax = Math.max(xmax, x); }
+    for (const y of s.ys) ymax = Math.max(ymax, y);
+  }
+  if (spec.xrange) [xmin, xmax] = spec.xrange;
+  if (spec.yrange) ymax = spec.yrange[1];
+  ymax = ymax * 1.08 || 1;
+  const hasBars = spec.series.some(s => s.kind === "bar");
+  const pad = (hasBars && !spec.series.some(s => s.width)) ? 0.7 : 0;               // keep the first and last bar inside the axes
+  const x0 = xmin - pad, x1 = xmax + pad || 1;
+  const sx = x => margin.left + (x - x0) / (x1 - x0) * plotW;
+  const sy = y => margin.top + plotH - y / ymax * plotH;
+
+  // Title, grid and axes.
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (const t of niceTicks(0, ymax)) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(t), y2: sy(t), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(t) + 4, "text-anchor": "end" }, String(t)));
+  }
+  for (const t of niceTicks(x0, x1)) {
+    svg.appendChild(svgEl("text", { x: sx(t), y: H - margin.bottom + 16, "text-anchor": "middle" }, String(t)));
+  }
+  svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(0), y2: sy(0), class: "axisline" }));
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  const yl = svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || "");
+  svg.appendChild(yl);
+
+  // Shaded region for the probability calculator.
+  if (spec.shade) {
+    const [a, b] = spec.shade;
+    svg.appendChild(svgEl("rect", { x: sx(a - (hasBars ? 0.5 : 0)), y: margin.top,
+      width: Math.max(0, sx(b + (hasBars ? 0.5 : 0)) - sx(a - (hasBars ? 0.5 : 0))), height: plotH,
+      fill: "var(--highlight)", opacity: 0.15 }));
+  }
+
+  // Area under a curve between a and b (continuous distributions): spec.fillUnder = [a, b]
+  if (spec.fillUnder) {
+    const curve = spec.series.find(s => s.kind === "line");
+    const regions = Array.isArray(spec.fillUnder[0]) ? spec.fillUnder : [spec.fillUnder];   // one [a, b] or several
+    for (const [a, b] of regions) {
+      const heightAt = x => {                          // curve height at x (linear interpolation; at a vertical edge take the top)
+        const exact = curve.ys.filter((_, i) => curve.xs[i] === x);
+        if (exact.length) return Math.max(...exact);
+        for (let i = 1; i < curve.xs.length; i++) {
+          if (x <= curve.xs[i] && curve.xs[i] > curve.xs[i - 1]) {
+            return curve.ys[i - 1] + (curve.ys[i] - curve.ys[i - 1]) * (x - curve.xs[i - 1]) / (curve.xs[i] - curve.xs[i - 1]);
+          }
+        }
+        return 0;
+      };
+      const left = Math.max(a, curve.xs[0]), right = Math.min(b, curve.xs[curve.xs.length - 1]);
+      let points = `${sx(left)},${sy(0)} ${sx(left)},${sy(heightAt(left))}`;
+      curve.xs.forEach((x, i) => { if (x > left && x < right) points += ` ${sx(x)},${sy(curve.ys[i])}`; });
+      points += ` ${sx(right)},${sy(heightAt(right))} ${sx(right)},${sy(0)}`;
+      svg.appendChild(svgEl("polygon", { points, fill: "var(--highlight)", opacity: 0.35 }));
+    }
+  }
+
+  // Draw each series.
+  const legendItems = [];
+  for (const s of spec.series) {
+    const color = s.color || "var(--main)";
+    if (s.kind === "bar") {
+      const barW = s.width ? Math.max(1, plotW / (x1 - x0) * s.width) : Math.max(1, plotW / (x1 - x0) * 0.8);   // s.width is in data units (histograms)
+      s.xs.forEach((x, i) => {
+        const inside = spec.shade && x >= spec.shade[0] && x <= spec.shade[1];
+        svg.appendChild(svgEl("rect", { x: sx(x) - barW / 2, y: sy(s.ys[i]), width: barW,
+          height: Math.max(0, sy(0) - sy(s.ys[i])), fill: inside ? "var(--highlight)" : color,
+          opacity: s.opacity || 0.9 }));
+      });
+    } else if (s.kind === "points") {
+      s.xs.forEach((x, i) => svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 3, fill: color })));
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => {
+        if (s.kind === "step" && i > 0) d += ` L${sx(x)},${sy(s.ys[i - 1])}`;
+        d += (i === 0 ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`;
+      });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) legendItems.push({ label: s.label, color });
+  }
+  legendItems.forEach((item, i) => {
+    const lx = W - margin.right - 130, ly = margin.top + 6 + i * 16;
+    svg.appendChild(svgEl("rect", { x: lx, y: ly - 8, width: 12, height: 10, fill: item.color }));
+    svg.appendChild(svgEl("text", { x: lx + 18, y: ly + 1 }, item.label));
+  });
+}
+
+// Log-log scatter/line chart for power laws. spec: { title, xlabel, ylabel, series: [{kind: "points"|"line", xs, ys, color, label}] }
+// Axes show decades (1, 10, 100, ...); all x and y values must be positive.
+function drawLogLog(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right, plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+  let xlo = Infinity, xhi = -Infinity, ylo = Infinity, yhi = -Infinity;
+  for (const s of spec.series) {
+    s.xs.forEach((x, i) => {
+      if (x > 0 && s.ys[i] > 0) {
+        xlo = Math.min(xlo, Math.log10(x)); xhi = Math.max(xhi, Math.log10(x));
+        ylo = Math.min(ylo, Math.log10(s.ys[i])); yhi = Math.max(yhi, Math.log10(s.ys[i]));
+      }
+    });
+  }
+  xlo = Math.floor(xlo); xhi = Math.max(Math.ceil(xhi), xlo + 1);
+  ylo = Math.floor(ylo); yhi = Math.max(Math.ceil(yhi), ylo + 1);
+  const sx = x => margin.left + (Math.log10(x) - xlo) / (xhi - xlo) * plotW;
+  const sy = y => margin.top + plotH - (Math.log10(y) - ylo) / (yhi - ylo) * plotH;
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (let e = ylo; e <= yhi; e++) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(Math.pow(10, e)), y2: sy(Math.pow(10, e)), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(Math.pow(10, e)) + 4, "text-anchor": "end" }, "1e" + e));
+  }
+  for (let e = xlo; e <= xhi; e++) {
+    svg.appendChild(svgEl("line", { x1: sx(Math.pow(10, e)), x2: sx(Math.pow(10, e)), y1: margin.top, y2: margin.top + plotH, class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: sx(Math.pow(10, e)), y: H - margin.bottom + 16, "text-anchor": "middle" }, "1e" + e));
+  }
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  svg.appendChild(svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || ""));
+  spec.series.forEach((s, idx) => {
+    const color = s.color || "var(--main)";
+    if (s.kind === "points") {
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 2.2, fill: color })); });
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) d += (d === "" ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`; });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) {
+      svg.appendChild(svgEl("rect", { x: W - margin.right - 130, y: margin.top + idx * 16 - 2, width: 12, height: 10, fill: color }));
+      svg.appendChild(svgEl("text", { x: W - margin.right - 112, y: margin.top + idx * 16 + 7 }, s.label));
+    }
+  });
+}
+
+/* =====================================================================
+   SECTION D. OPTIONAL 3D (Plotly gl3d partial bundle, loaded on demand)
+   ===================================================================== */
+function loadPlotlyThen(callback) {
+  if (window.Plotly) { callback(); return; }
+  const script = document.createElement("script");
+  script.src = "https://cdn.plot.ly/plotly-gl3d-2.35.2.min.js";
+  script.onload = callback;
+  script.onerror = () => { document.getElementById("plot3d").textContent = "Could not load Plotly from the CDN (check your connection)."; };
+  document.head.appendChild(script);
+}
+
+
+
+/* =====================================================================
+   SECTION M. SPECIAL FUNCTIONS for continuous distributions (Numerical Recipes style, plain loops)
+   ===================================================================== */
+function lgamma(z) {                      // log Gamma(z), Lanczos approximation, z > 0
+  const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  let y = z, tmp = z + 5.5;
+  tmp -= (z + 0.5) * Math.log(tmp);
+  let series = 1.000000000190015;
+  for (let j = 0; j < 6; j++) series += c[j] / ++y;
+  return -tmp + Math.log(2.5066282746310005 * series / z);
+}
+function gammaP(a, x) {                   // regularized lower incomplete gamma P(a, x)
+  if (x <= 0) return 0;
+  if (x < a + 1) {
+    let sum = 1 / a, term = sum;
+    for (let n = 1; n < 1000; n++) { term *= x / (a + n); sum += term; if (Math.abs(term) < Math.abs(sum) * 1e-14) break; }
+    return sum * Math.exp(-x + a * Math.log(x) - lgamma(a));
+  }
+  let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+  for (let i = 1; i < 1000; i++) {
+    const an = -i * (i - a);
+    b += 2;
+    d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+    c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+    d = 1 / d;
+    const delta = d * c;
+    h *= delta;
+    if (Math.abs(delta - 1) < 1e-14) break;
+  }
+  return 1 - Math.exp(-x + a * Math.log(x) - lgamma(a)) * h;
+}
+function betaI(x, a, b) {                 // regularized incomplete beta I_x(a, b)
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const front = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  const cf = (xx, aa, bb) => {
+    let c = 1, d = 1 - (aa + bb) * xx / (aa + 1);
+    if (Math.abs(d) < 1e-300) d = 1e-300;
+    d = 1 / d;
+    let h = d;
+    for (let m = 1; m < 1000; m++) {
+      const m2 = 2 * m;
+      let an = m * (bb - m) * xx / ((aa + m2 - 1) * (aa + m2));
+      d = 1 + an * d; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = 1 + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d; h *= d * c;
+      an = -(aa + m) * (aa + bb + m) * xx / ((aa + m2) * (aa + m2 + 1));
+      d = 1 + an * d; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = 1 + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d;
+      const delta = d * c;
+      h *= delta;
+      if (Math.abs(delta - 1) < 1e-14) break;
+    }
+    return h;
+  };
+  if (x < (a + 1) / (a + b + 2)) return front * cf(x, a, b) / a;
+  return 1 - front * cf(1 - x, b, a) / b;
+}
+function erf(x) { const v = gammaP(0.5, x * x); return x >= 0 ? v : -v; }
+function normPdf(x, mu = 0, sigma = 1) { return Math.exp(-0.5 * ((x - mu) / sigma) ** 2) / (sigma * Math.sqrt(2 * Math.PI)); }
+function normCdf(x, mu = 0, sigma = 1) { return 0.5 * (1 + erf((x - mu) / (sigma * Math.SQRT2))); }
+// Invert any increasing function by bisection (used for quantiles when no formula exists).
+function bisect(f, target, lo, hi) {
+  for (let i = 0; i < 200; i++) { const mid = (lo + hi) / 2; if (f(mid) < target) lo = mid; else hi = mid; }
+  return (lo + hi) / 2;
+}
+function linspace(a, b, n) { const out = []; for (let i = 0; i < n; i++) out.push(a + (b - a) * i / (n - 1)); return out; }
+
+
+const T = Math;
+const CATALOG = {
+  uniform: { name: "Uniform", scipy: "stats.uniform(loc=a, scale=b-a)", story: "Every value in an interval is equally likely (no preference).",
+    params: [{ key: "a", min: -5, max: 5, step: 0.5, value: 0 }, { key: "w", min: 0.5, max: 10, step: 0.5, value: 4 }],
+    pdf: (x, q) => (x >= q.a && x <= q.a + q.w) ? 1 / q.w : 0, range: q => [q.a - 0.2 * q.w, q.a + 1.2 * q.w], mean: q => q.a + q.w / 2, sd: q => q.w / T.sqrt(12), note: "mean (a+b)/2, variance (b-a)^2/12" },
+  normal: { name: "Normal", scipy: "stats.norm(loc=mu, scale=sigma)", story: "Sums or averages of many small effects; symmetric bell.",
+    params: [{ key: "mu", min: -5, max: 5, step: 0.5, value: 0 }, { key: "sigma", min: 0.3, max: 4, step: 0.1, value: 1 }],
+    pdf: (x, q) => normPdf(x, q.mu, q.sigma), range: q => [q.mu - 4 * q.sigma, q.mu + 4 * q.sigma], mean: q => q.mu, sd: q => q.sigma, note: "68-95-99.7 rule; z = (x - mu) / sigma" },
+  lognormal: { name: "Lognormal", scipy: "stats.lognorm(s=sigma, scale=exp(mu))", story: "Positive, right-skewed quantity built by multiplying many factors; its log is Normal.",
+    params: [{ key: "mu", min: -1, max: 2, step: 0.1, value: 0 }, { key: "sigma", min: 0.1, max: 1.5, step: 0.05, value: 0.6 }],
+    pdf: (x, q) => x <= 0 ? 0 : T.exp(-0.5 * ((T.log(x) - q.mu) / q.sigma) ** 2) / (x * q.sigma * T.sqrt(2 * T.PI)), range: q => [0.001, T.exp(q.mu + 3.5 * q.sigma)],
+    mean: q => T.exp(q.mu + q.sigma ** 2 / 2), sd: q => T.sqrt((T.exp(q.sigma ** 2) - 1) * T.exp(2 * q.mu + q.sigma ** 2)), note: "median e^mu < mean e^(mu+sigma^2/2)" },
+  exponential: { name: "Exponential", scipy: "stats.expon(scale=1/lambda)", story: "Waiting time until the next event of a random (Poisson) process; memoryless.",
+    params: [{ key: "rate", min: 0.2, max: 4, step: 0.1, value: 1 }],
+    pdf: (x, q) => x < 0 ? 0 : q.rate * T.exp(-q.rate * x), range: q => [0, 5 / q.rate], mean: q => 1 / q.rate, sd: q => 1 / q.rate, note: "mean = SD = 1/lambda" },
+  gamma: { name: "Gamma (Erlang for integer k)", scipy: "stats.gamma(a=k, scale=theta)", story: "Waiting time for the k-th event, or a flexible positive skewed amount.",
+    params: [{ key: "k", min: 0.5, max: 15, step: 0.5, value: 3 }, { key: "theta", min: 0.2, max: 4, step: 0.1, value: 1 }],
+    pdf: (x, q) => x <= 0 ? 0 : T.exp((q.k - 1) * T.log(x) - x / q.theta - lgamma(q.k) - q.k * T.log(q.theta)), range: q => [0.01, q.k * q.theta + 5 * T.sqrt(q.k) * q.theta + 1],
+    mean: q => q.k * q.theta, sd: q => T.sqrt(q.k) * q.theta, note: "sum of k Exponentials; chi-square is Gamma(nu/2, 2)" },
+  beta: { name: "Beta", scipy: "stats.beta(a=alpha, b=beta)", story: "Uncertainty about a probability or proportion between 0 and 1.",
+    params: [{ key: "a", min: 0.5, max: 20, step: 0.5, value: 3 }, { key: "b", min: 0.5, max: 20, step: 0.5, value: 7 }],
+    pdf: (x, q) => (x <= 0 || x >= 1) ? 0 : T.exp((q.a - 1) * T.log(x) + (q.b - 1) * T.log(1 - x) + lgamma(q.a + q.b) - lgamma(q.a) - lgamma(q.b)), range: () => [0.003, 0.997],
+    mean: q => q.a / (q.a + q.b), sd: q => T.sqrt(q.a * q.b / ((q.a + q.b) ** 2 * (q.a + q.b + 1))), note: "conjugate prior for Binomial data" },
+  weibull: { name: "Weibull", scipy: "stats.weibull_min(c=k, scale=lambda)", story: "Lifetime whose failure risk falls (k < 1), stays flat (k = 1) or rises (k > 1) with age.",
+    params: [{ key: "k", min: 0.5, max: 6, step: 0.1, value: 1.5 }, { key: "l", min: 0.5, max: 5, step: 0.1, value: 2 }],
+    pdf: (x, q) => x <= 0 ? 0 : (q.k / q.l) * T.pow(x / q.l, q.k - 1) * T.exp(-T.pow(x / q.l, q.k)), range: q => [0.01, q.l * T.pow(6, 1 / q.k)],
+    mean: q => q.l * T.exp(lgamma(1 + 1 / q.k)), sd: q => q.l * T.sqrt(T.exp(lgamma(1 + 2 / q.k)) - T.exp(2 * lgamma(1 + 1 / q.k))), note: "63.2% fail by x = lambda for any k" },
+  pareto: { name: "Pareto", scipy: "stats.pareto(b=alpha, scale=x_m)", story: "Heavy power-law tail: a few huge values dominate (wealth, file sizes, 80/20).",
+    params: [{ key: "alpha", min: 0.8, max: 6, step: 0.1, value: 2.5 }],
+    pdf: (x, q) => x < 1 ? 0 : q.alpha / T.pow(x, q.alpha + 1), range: q => [1, 1 + 8 / q.alpha],
+    mean: q => q.alpha > 1 ? q.alpha / (q.alpha - 1) : NaN, sd: q => q.alpha > 2 ? T.sqrt(q.alpha / ((q.alpha - 1) ** 2 * (q.alpha - 2))) : NaN, note: "mean needs alpha > 1, variance alpha > 2 (x_m = 1 here)" },
+  cauchy: { name: "Cauchy", scipy: "stats.cauchy(loc=x0, scale=gamma)", story: "Bell-shaped but so heavy-tailed that no mean or variance exists; ratio of two Normals.",
+    params: [{ key: "x0", min: -5, max: 5, step: 0.5, value: 0 }, { key: "g", min: 0.3, max: 4, step: 0.1, value: 1 }],
+    pdf: (x, q) => 1 / (T.PI * q.g * (1 + ((x - q.x0) / q.g) ** 2)), range: q => [q.x0 - 10 * q.g, q.x0 + 10 * q.g], mean: () => NaN, sd: () => NaN, note: "averages never settle; use the median" },
+  laplace: { name: "Laplace", scipy: "stats.laplace(loc=mu, scale=b)", story: "Absolute errors: sharp peak, fat tails; the model behind L1 loss and the median.",
+    params: [{ key: "mu", min: -5, max: 5, step: 0.5, value: 0 }, { key: "b", min: 0.3, max: 3, step: 0.1, value: 1 }],
+    pdf: (x, q) => T.exp(-T.abs(x - q.mu) / q.b) / (2 * q.b), range: q => [q.mu - 7 * q.b, q.mu + 7 * q.b], mean: q => q.mu, sd: q => q.b * T.SQRT2, note: "variance 2 b^2; difference of two Exponentials" },
+  logistic: { name: "Logistic", scipy: "stats.logistic(loc=mu, scale=s)", story: "Latent-threshold noise whose CDF is the sigmoid: the origin of logistic regression.",
+    params: [{ key: "mu", min: -5, max: 5, step: 0.5, value: 0 }, { key: "s", min: 0.3, max: 3, step: 0.1, value: 1 }],
+    pdf: (x, q) => { const e = T.exp(-(x - q.mu) / q.s); return e / (q.s * (1 + e) ** 2); }, range: q => [q.mu - 9 * q.s, q.mu + 9 * q.s], mean: q => q.mu, sd: q => q.s * T.PI / T.sqrt(3), note: "F(x) = sigmoid((x - mu) / s)" },
+  gumbel: { name: "Gumbel (maximum)", scipy: "stats.gumbel_r(loc=mu, scale=beta)", story: "The biggest of many values (yearly maximum rainfall, flood levels); return levels.",
+    params: [{ key: "mu", min: -3, max: 6, step: 0.5, value: 0 }, { key: "b", min: 0.3, max: 3, step: 0.1, value: 1 }],
+    pdf: (x, q) => { const z = (x - q.mu) / q.b; return T.exp(-z - T.exp(-z)) / q.b; }, range: q => [q.mu - 3 * q.b, q.mu + 9 * q.b], mean: q => q.mu + 0.5772 * q.b, sd: q => q.b * T.PI / T.sqrt(6), note: "T-year level: mu - beta ln(-ln(1 - 1/T))" },
+  t: { name: "Student t", scipy: "stats.t(df=nu)", story: "Standardized mean of a small sample with estimated SD: Normal with extra tail weight.",
+    params: [{ key: "nu", min: 1, max: 40, step: 1, value: 4 }],
+    pdf: (x, q) => T.exp(lgamma((q.nu + 1) / 2) - lgamma(q.nu / 2)) / T.sqrt(q.nu * T.PI) * T.pow(1 + x * x / q.nu, -(q.nu + 1) / 2), range: () => [-6, 6],
+    mean: q => q.nu > 1 ? 0 : NaN, sd: q => q.nu > 2 ? T.sqrt(q.nu / (q.nu - 2)) : NaN, note: "t with 1 d.f. is the Cauchy; large nu is Normal" },
+  chisq: { name: "Chi-square", scipy: "stats.chi2(df=nu)", story: "Sum of nu squared standard normals: distribution of sample variances and goodness-of-fit statistics.",
+    params: [{ key: "nu", min: 1, max: 30, step: 1, value: 5 }],
+    pdf: (x, q) => x <= 0 ? 0 : T.exp((q.nu / 2 - 1) * T.log(x) - x / 2 - (q.nu / 2) * T.log(2) - lgamma(q.nu / 2)), range: q => [0.05, q.nu + 6 * T.sqrt(2 * q.nu) + 3], mean: q => q.nu, sd: q => T.sqrt(2 * q.nu), note: "mean nu, variance 2 nu" },
+  f: { name: "F", scipy: "stats.f(dfn=d1, dfd=d2)", story: "Ratio of two sample variances (equal true variances), ANOVA and regression F-tests.",
+    params: [{ key: "d1", min: 1, max: 40, step: 1, value: 5 }, { key: "d2", min: 3, max: 60, step: 1, value: 10 }],
+    pdf: (x, q) => x <= 0 ? 0 : T.exp(lgamma((q.d1 + q.d2) / 2) - lgamma(q.d1 / 2) - lgamma(q.d2 / 2) + (q.d1 / 2) * T.log(q.d1 / q.d2) + (q.d1 / 2 - 1) * T.log(x) - ((q.d1 + q.d2) / 2) * T.log(1 + q.d1 * x / q.d2)), range: () => [0.02, 5],
+    mean: q => q.d2 > 2 ? q.d2 / (q.d2 - 2) : NaN, sd: q => q.d2 > 4 ? T.sqrt(2 * q.d2 ** 2 * (q.d1 + q.d2 - 2) / (q.d1 * (q.d2 - 2) ** 2 * (q.d2 - 4))) : NaN, note: "t squared is F(1, nu)" },
+  vonmises: { name: "Von Mises", scipy: "stats.vonmises(kappa, loc=mu)", story: "The Normal of the circle: directions, times of day, phases (angle in degrees here).",
+    params: [{ key: "kappa", min: 0, max: 20, step: 0.5, value: 3 }],
+    pdf: (x, q) => { let i0 = 0, term = 1; for (let j = 0; j < 80; j++) { i0 += term; term *= (q.kappa / 2) ** 2 / ((j + 1) * (j + 1)); } return T.exp(q.kappa * T.cos(x * T.PI / 180)) / (2 * T.PI * i0) * T.PI / 180; },
+    range: () => [-180, 180], mean: () => 0, sd: q => q.kappa > 0.1 ? 180 / T.PI / T.sqrt(q.kappa) : NaN, note: "kappa = 0 uniform; large kappa Normal with variance 1/kappa" },
+};
+
+const TREE = {
+  start: { q: "What kind of quantity is it?", options: [
+    { label: "A direction or a time of day (a value on a circle)", result: "vonmises" },
+    { label: "A proportion or probability between 0 and 1", result: "beta" },
+    { label: "A positive amount (time, size, lifetime, money)", next: "positive" },
+    { label: "Any real value (may be negative)", next: "real" },
+    { label: "A test statistic or sampling distribution", next: "statistic" }] },
+  positive: { q: "How is the positive quantity produced?", options: [
+    { label: "Waiting time until the next random event", result: "exponential" },
+    { label: "Waiting time until the k-th event, or a flexible skewed amount", result: "gamma" },
+    { label: "A lifetime whose failure risk changes with age", result: "weibull" },
+    { label: "Built by multiplying many factors (log is bell-shaped)", result: "lognormal" },
+    { label: "A few giant values dominate (80/20, power law)", result: "pareto" },
+    { label: "Every value in a range equally likely", result: "uniform" }] },
+  real: { q: "What does the distribution of the real value look like?", options: [
+    { label: "Sum or average of many small effects, symmetric bell", result: "normal" },
+    { label: "Sharp peak with outliers; absolute errors", result: "laplace" },
+    { label: "Latent threshold / sigmoid CDF (binary outcome origin)", result: "logistic" },
+    { label: "The maximum of many values (floods, records)", result: "gumbel" },
+    { label: "Symmetric, extremely heavy tails, no mean", result: "cauchy" },
+    { label: "Every value in an interval equally likely", result: "uniform" }] },
+  statistic: { q: "Which statistic?", options: [
+    { label: "Standardized mean with unknown sigma (small sample)", result: "t" },
+    { label: "Sum of squares / sample variance / goodness of fit", result: "chisq" },
+    { label: "Ratio of two variances (ANOVA, F-test)", result: "f" }] },
+};
+
+const NODES = {
+  lognormal: [60, 40, "Lognormal"], normal: [260, 40, "Normal"], gumbel: [470, 40, "Gumbel"], logistic: [680, 40, "Logistic"],
+  t: [500, 170, "Student t"], cauchy: [700, 170, "Cauchy"],
+  uniform: [60, 215, "Uniform"], exponential: [230, 215, "Exponential"], gamma: [400, 300, "Gamma"], chisq: [570, 300, "Chi-square"], f: [720, 300, "F"],
+  pareto: [60, 330, "Pareto"], weibull: [230, 330, "Weibull"], laplace: [60, 420, "Laplace"], beta: [400, 410, "Beta"],
+};
+const EDGES = [
+  ["uniform", "exponential", "-ln U", "If U is Uniform(0,1) then -ln(U)/lambda is Exponential(lambda) (inverse transform)."],
+  ["exponential", "gamma", "sum", "The sum of k independent Exponentials is Gamma (Erlang) with shape k."],
+  ["gamma", "chisq", "k = nu/2", "Chi-square is a Gamma with shape nu/2 and scale 2."],
+  ["gamma", "beta", "X/(X+Y)", "For independent Gammas with the same scale, X/(X+Y) is Beta."],
+  ["exponential", "weibull", "power", "If X is Weibull then (X/lambda)^k is Exponential(1); Weibull with k = 1 is the Exponential."],
+  ["exponential", "pareto", "exp", "If X is Pareto then ln(X/x_m) is Exponential(alpha)."],
+  ["exponential", "laplace", "difference", "The difference of two independent Exponentials is Laplace."],
+  ["normal", "lognormal", "exp", "If Y is Normal then exp(Y) is Lognormal."],
+  ["normal", "chisq", "squares", "The sum of nu squared standard normals is chi-square with nu degrees of freedom."],
+  ["chisq", "t", "Z / sqrt", "Z divided by sqrt(chi-square/nu) is Student t."],
+  ["chisq", "f", "ratio", "A ratio of two scaled chi-squares is F."],
+  ["t", "cauchy", "nu = 1", "Student t with 1 degree of freedom is the Cauchy (also the ratio of two standard Normals)."],
+  ["t", "normal", "nu large", "As the degrees of freedom grow, Student t converges to the standard Normal."],
+  ["gumbel", "logistic", "difference", "The difference of two independent Gumbels is Logistic."],
+  ["exponential", "gumbel", "maximum", "The maximum of n Exponentials minus ln n converges to the Gumbel."],
+];
+
+function drawMap() {
+  const svg = document.getElementById("mapSvg");
+  svg.innerHTML = "";
+  svg.appendChild(svgEl("defs", {})).innerHTML = '<marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--muted)"/></marker>';
+  EDGES.forEach((e, i) => {
+    const [x1, y1] = NODES[e[0]], [x2, y2] = NODES[e[1]], dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy);
+    const ux = dx / len, uy = dy / len, padX = Math.abs(ux) > 0.1 ? 55 / Math.abs(ux) : 1e9, padY = Math.abs(uy) > 0.1 ? 18 / Math.abs(uy) : 1e9, pad = Math.min(padX, padY, len / 2.5);
+    const ax = x1 + ux * pad, ay = y1 + uy * pad, bx = x2 - ux * pad, by = y2 - uy * pad;
+    const g = svgEl("g", { style: "cursor:pointer" });
+    g.appendChild(svgEl("line", { x1: ax, y1: ay, x2: bx, y2: by, stroke: "var(--muted)", "stroke-width": 1.8, "marker-end": "url(#arrow)" }));
+    g.appendChild(svgEl("line", { x1: ax, y1: ay, x2: bx, y2: by, stroke: "transparent", "stroke-width": 14 }));
+    g.appendChild(svgEl("text", { x: (ax + bx) / 2, y: (ay + by) / 2 - 4, "text-anchor": "middle", style: "fill:var(--highlight);font-size:10px" }, e[2]));
+    g.addEventListener("click", () => { document.getElementById("mapInfo").textContent = `${CATALOG[e[0]].name} -> ${CATALOG[e[1]].name}: ${e[3]}`; });
+    svg.appendChild(g);
+  });
+  Object.entries(NODES).forEach(([key, [x, y, label]]) => {
+    const g = svgEl("g", { style: "cursor:pointer" });
+    g.appendChild(svgEl("rect", { x: x - 50, y: y - 16, width: 100, height: 32, rx: 8, fill: "var(--bg)", stroke: "var(--main)", "stroke-width": 2 }));
+    g.appendChild(svgEl("text", { x, y: y + 4, "text-anchor": "middle", style: "fill:var(--text);font-size:12px;font-weight:600" }, label));
+    g.addEventListener("click", () => showResult(key));
+    svg.appendChild(g);
+  });
+}
+
+let path = [], current = null;
+const values = {};
+function renderQuestion(key) {
+  const node = TREE[key], box = document.getElementById("question");
+  box.innerHTML = `<p><strong>${node.q}</strong></p>`;
+  node.options.forEach(opt => {
+    const b = document.createElement("button");
+    b.className = "secondary"; b.style.margin = "4px 6px 4px 0"; b.textContent = opt.label;
+    b.addEventListener("click", () => { path.push(opt.label); if (opt.result) showResult(opt.result); else renderQuestion(opt.next); });
+    box.appendChild(b);
+  });
+  document.getElementById("pathLine").textContent = path.length ? "Your answers: " + path.join("  >  ") : "";
+}
+function showResult(key) {
+  current = key;
+  const d = CATALOG[key];
+  document.getElementById("question").innerHTML = `<p><strong>Recommended: ${d.name}</strong></p><p>${d.story}</p>`;
+  document.getElementById("resultCard").hidden = false;
+  document.getElementById("restartBtn").hidden = false;
+  document.getElementById("resultName").textContent = d.name;
+  document.getElementById("resultScipy").textContent = d.scipy;
+  document.getElementById("resultNote").textContent = d.note;
+  const box = document.getElementById("resultSliders");
+  box.innerHTML = "";
+  values[key] = {};
+  d.params.forEach(p => { values[key][p.key] = p.value; addSlider(box, { label: p.key, min: p.min, max: p.max, step: p.step, value: p.value, onChange: v => { values[key][p.key] = v; drawResult(); } }); });
+  drawResult();
+  document.getElementById("resultCard").scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+function drawResult() {
+  const d = CATALOG[current], q = values[current], [lo, hi] = d.range(q), xs = linspace(lo, hi, 400);
+  let ys = xs.map(x => d.pdf(x, q));
+  const ymax = Math.max(...ys.slice(Math.floor(ys.length * 0.02))) * 1.15;
+  drawChart(document.getElementById("miniChart"), { title: d.name + " PDF", xlabel: "x", ylabel: "density", series: [{ kind: "line", xs, ys: ys.map(v => Math.min(v, ymax)), color: "var(--main)" }], yrange: [0, ymax] });
+  const fmtMaybe = v => Number.isFinite(v) ? v : "none (does not exist or infinite)";
+  showReadouts({ Mean: fmtMaybe(d.mean(q)), SD: fmtMaybe(d.sd(q)) });
+}
+function restart() { path = []; current = null; document.getElementById("resultCard").hidden = true; document.getElementById("restartBtn").hidden = true; renderQuestion("start"); }
+
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("restartBtn").addEventListener("click", restart);
+  renderQuestion("start");
+  drawMap();
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, { delimiters: [
+      { left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
+  }
+});
+</script>
+</body>
+</html>

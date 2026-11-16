@@ -302,7 +302,7 @@ function drawChart(svg, spec) {
   if (spec.yrange) ymax = spec.yrange[1];
   ymax = ymax * 1.08 || 1;
   const hasBars = spec.series.some(s => s.kind === "bar");
-  const pad = hasBars ? 0.7 : 0;               // keep the first and last bar inside the axes
+  const pad = (hasBars && !spec.series.some(s => s.width)) ? 0.7 : 0;               // keep the first and last bar inside the axes
   const x0 = xmin - pad, x1 = xmax + pad || 1;
   const sx = x => margin.left + (x - x0) / (x1 - x0) * plotW;
   const sy = y => margin.top + plotH - y / ymax * plotH;
@@ -329,12 +329,35 @@ function drawChart(svg, spec) {
       fill: "var(--highlight)", opacity: 0.15 }));
   }
 
+  // Area under a curve between a and b (continuous distributions): spec.fillUnder = [a, b]
+  if (spec.fillUnder) {
+    const curve = spec.series.find(s => s.kind === "line");
+    const regions = Array.isArray(spec.fillUnder[0]) ? spec.fillUnder : [spec.fillUnder];   // one [a, b] or several
+    for (const [a, b] of regions) {
+      const heightAt = x => {                          // curve height at x (linear interpolation; at a vertical edge take the top)
+        const exact = curve.ys.filter((_, i) => curve.xs[i] === x);
+        if (exact.length) return Math.max(...exact);
+        for (let i = 1; i < curve.xs.length; i++) {
+          if (x <= curve.xs[i] && curve.xs[i] > curve.xs[i - 1]) {
+            return curve.ys[i - 1] + (curve.ys[i] - curve.ys[i - 1]) * (x - curve.xs[i - 1]) / (curve.xs[i] - curve.xs[i - 1]);
+          }
+        }
+        return 0;
+      };
+      const left = Math.max(a, curve.xs[0]), right = Math.min(b, curve.xs[curve.xs.length - 1]);
+      let points = `${sx(left)},${sy(0)} ${sx(left)},${sy(heightAt(left))}`;
+      curve.xs.forEach((x, i) => { if (x > left && x < right) points += ` ${sx(x)},${sy(curve.ys[i])}`; });
+      points += ` ${sx(right)},${sy(heightAt(right))} ${sx(right)},${sy(0)}`;
+      svg.appendChild(svgEl("polygon", { points, fill: "var(--highlight)", opacity: 0.35 }));
+    }
+  }
+
   // Draw each series.
   const legendItems = [];
   for (const s of spec.series) {
     const color = s.color || "var(--main)";
     if (s.kind === "bar") {
-      const barW = Math.max(1, plotW / (x1 - x0) * 0.8);
+      const barW = s.width ? Math.max(1, plotW / (x1 - x0) * s.width) : Math.max(1, plotW / (x1 - x0) * 0.8);   // s.width is in data units (histograms)
       s.xs.forEach((x, i) => {
         const inside = spec.shade && x >= spec.shade[0] && x <= spec.shade[1];
         svg.appendChild(svgEl("rect", { x: sx(x) - barW / 2, y: sy(s.ys[i]), width: barW,

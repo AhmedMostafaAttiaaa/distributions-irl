@@ -26,3 +26,12 @@
 | BIC | Bayesian information criterion p ln n - 2 log-likelihood; lower is better; used to choose the number of components. | [03_03](html/03_03_gaussian_mixtures.html) |
 | Law of total variance | Variance = average within-group variance + variance of the group means. | [03_03](html/03_03_gaussian_mixtures.html) |
 | Label switching | Components have no natural order, so fitted groups can be permuted between runs. | [03_03](html/03_03_gaussian_mixtures.html) |
+| Copula | A joint distribution on the unit square with Uniform marginals that carries only the dependence. | [03_04](html/03_04_copulas.html) |
+| Sklar theorem | Any joint CDF is H(x, y) = C(F(x), G(y)) for marginals F, G and a copula C. | [03_04](html/03_04_copulas.html) |
+| Gaussian copula | Copula of the multivariate Normal: Phi_rho(Phi^-1(u), Phi^-1(v)); no tail dependence. | [03_04](html/03_04_copulas.html) |
+| Student-t copula | Copula with positive tail dependence: extremes cluster. | [03_04](html/03_04_copulas.html) |
+| Clayton copula | Archimedean copula with lower-tail dependence 2^(-1/theta). | [03_04](html/03_04_copulas.html) |
+| Kendall tau | Rank correlation based on concordant and discordant pairs; invariant to monotone transforms. | [03_04](html/03_04_copulas.html) |
+| Spearman correlation | Pearson correlation of the ranks. | [03_04](html/03_04_copulas.html) |
+| Tail dependence | Probability that one variable is extreme given the other is: lim P(V < q | U < q). | [03_04](html/03_04_copulas.html) |
+| Pseudo-observations | Ranks divided by n + 1, used to fit a copula. | [03_04](html/03_04_copulas.html) |

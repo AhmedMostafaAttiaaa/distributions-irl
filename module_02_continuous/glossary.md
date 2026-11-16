@@ -18,3 +18,12 @@
 | Median vs mean (skew) | For a Lognormal mode < median < mean, due to the long right tail. | [02_02](html/02_02_lognormal.html) |
 | Percentile / SLO | A value exceeded by a given share of cases; service-level objectives are set on p95 and p99. | [02_02](html/02_02_lognormal.html) |
 | AIC | Akaike information criterion 2k - 2 log-likelihood; lower is better. | [02_02](html/02_02_lognormal.html) |
+| Exponential distribution | Waiting time between events of a Poisson process; f(x) = lambda exp(-lambda x), mean = SD = 1/lambda. | [02_03](html/02_03_exponential_gamma_erlang.html) |
+| Rate vs scale | Rate lambda is events per unit time; scale 1/lambda is the mean wait (what scipy uses). | [02_03](html/02_03_exponential_gamma_erlang.html) |
+| Memorylessness | P(X > s+t | X > s) = P(X > t): the past does not change the future wait. | [02_03](html/02_03_exponential_gamma_erlang.html) |
+| Poisson process | Events at a constant rate with independent increments; counts are Poisson, gaps Exponential. | [02_03](html/02_03_exponential_gamma_erlang.html) |
+| Erlang distribution | Time until the k-th event of a Poisson process; Gamma with integer shape. | [02_03](html/02_03_exponential_gamma_erlang.html) |
+| Gamma distribution | Flexible positive skewed family with shape k and scale theta; mean k theta. | [02_03](html/02_03_exponential_gamma_erlang.html) |
+| Gamma function | Extension of the factorial: Gamma(n) = (n-1)!. | [02_03](html/02_03_exponential_gamma_erlang.html) |
+| Hazard rate | Instantaneous failure rate; constant for the Exponential. | [02_03](html/02_03_exponential_gamma_erlang.html) |
+| Survival function | S(x) = P(X > x) = 1 - F(x). | [02_03](html/02_03_exponential_gamma_erlang.html) |

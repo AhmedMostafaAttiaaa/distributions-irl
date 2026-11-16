@@ -8,6 +8,7 @@ The continuous families used in statistics, data science and ML, with extra plai
 |---|---|---|---|
 | 02_01 Uniform and Normal | [notebook](notebooks/02_01_uniform_normal.ipynb) | [page](html/02_01_uniform_normal.html) | done |
 | 02_02 Lognormal | [notebook](notebooks/02_02_lognormal.ipynb) | [page](html/02_02_lognormal.html) | done |
+| 02_03 Exponential, Gamma and Erlang | [notebook](notebooks/02_03_exponential_gamma_erlang.ipynb) | [page](html/02_03_exponential_gamma_erlang.html) | done |
 
 ## How to open
 

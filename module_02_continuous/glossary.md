@@ -46,3 +46,12 @@
 | Weakest link (series system) | A system that fails with its first part; the minimum of Weibulls is Weibull with scale lambda n^(-1/k). | [02_05](html/02_05_weibull.html) |
 | Rayleigh distribution | Weibull with shape 2, used for wind speed and noise magnitude. | [02_05](html/02_05_weibull.html) |
 | Censoring | Units that have not failed by the end of observation; they carry partial information. | [02_05](html/02_05_weibull.html) |
+| Heavy tail | Tail that decays more slowly than any exponential, so extreme values remain common. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
+| Pareto distribution | Power-law tail S(x) = (x_m/x)^alpha for x >= x_m. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
+| Tail index (alpha) | Exponent of a power-law tail; smaller means heavier; moments of order >= alpha are infinite. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
+| Cauchy distribution | Bell-shaped distribution with no mean or variance; ratio of two standard Normals. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
+| 80/20 rule (Pareto principle) | About 80 % of the total comes from 20 % of the population; alpha = 1.16 for a Pareto. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
+| Gini coefficient | Inequality measure from 0 to 1; 1/(2 alpha - 1) for a Pareto. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
+| Lorenz curve | Share of the total held by the bottom fraction of the population. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
+| Scale invariance | P(X > cx | X > x) = c^(-alpha) for a Pareto, independent of x. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
+| Stable distribution | Distribution closed under sums up to scale and shift (Normal, Cauchy). | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |

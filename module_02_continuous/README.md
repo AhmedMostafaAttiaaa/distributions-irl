@@ -11,6 +11,7 @@ The continuous families used in statistics, data science and ML, with extra plai
 | 02_03 Exponential, Gamma and Erlang | [notebook](notebooks/02_03_exponential_gamma_erlang.ipynb) | [page](html/02_03_exponential_gamma_erlang.html) | done |
 | 02_04 Beta | [notebook](notebooks/02_04_beta.ipynb) | [page](html/02_04_beta.html) | done |
 | 02_05 Weibull | [notebook](notebooks/02_05_weibull.ipynb) | [page](html/02_05_weibull.html) | done |
+| 02_06 Heavy Tails: Pareto and Cauchy | [notebook](notebooks/02_06_heavy_tails_pareto_cauchy.ipynb) | [page](html/02_06_heavy_tails_pareto_cauchy.html) | done |
 
 ## How to open
 

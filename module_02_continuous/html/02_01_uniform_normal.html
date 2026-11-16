@@ -241,7 +241,7 @@ function showReadouts(values) {
   for (const [name, value] of Object.entries(values)) {
     const cell = document.createElement("div");
     cell.className = "readout";
-    cell.innerHTML = `<div class="name">${name}</div><div class="value">${fmt(value)}</div>`;
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${typeof value === "string" ? value : fmt(value)}</div>`;
     box.appendChild(cell);
   }
 }
@@ -567,7 +567,7 @@ function startContinuous(cfg) {
                     color: "var(--sim)", width: w * 0.95, opacity: 0.55, label: "Samples" });
     }
     series.push({ kind: "line", xs: d.xs, ys: d.ys, color: "var(--main)", label: "Theory" });
-    if (cfg.overlay && overlayOn) { const o = cfg.overlay(params, d); series.push({ kind: "line", xs: o.xs, ys: o.ys, color: "var(--third)", label: o.label }); }
+    if (cfg.overlay && overlayOn) { const o = cfg.overlay(params, d); if (o) series.push({ kind: "line", xs: o.xs, ys: o.ys, color: "var(--third)", label: o.label }); }
     drawChart(document.getElementById("pmfChart"), { title: cfg.title(params), xlabel: cfg.xlabel, ylabel: "density f(x)",
       series, fillUnder: [a, b], xrange: range, yrange: cfg.yrange ? cfg.yrange(params, d) : undefined });
     const cdfYs = d.xs.map(x => F(x));
@@ -614,7 +614,7 @@ function showExample(values, boxId = "exOut") {
   for (const [name, value] of Object.entries(values)) {
     const cell = document.createElement("div");
     cell.className = "readout";
-    cell.innerHTML = `<div class="name">${name}</div><div class="value">${typeof value === "string" ? value : (Number.isInteger(value) ? value : fmt(value, 4))}</div>`;
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${typeof value === "string" ? value : (Number.isInteger(value) ? value : (Math.abs(value) < 1e-3 && value !== 0 ? value.toExponential(2) : fmt(value, 4)))}</div>`;
     box.appendChild(cell);
   }
 }

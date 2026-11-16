@@ -11,7 +11,7 @@ This is the shared to-do list for all devices. Follow the session protocol in `C
 | # | Module | Status | Device | Started | Finished |
 |---|--------|--------|--------|---------|----------|
 | P0 | Repo scaffold | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
-| 00 | Foundations | ⬜ | | | |
+| 00 | Foundations | 🟨 | LAPTOP-1 | 2026-11-16 | |
 | 01 | Discrete distributions | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
 | 02 | Continuous distributions | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
 | 03 | Multivariate distributions | ⬜ | | | |
@@ -45,9 +45,9 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 
 ---
 
-## Module 00 — Foundations `(draft)`
+## Module 00 — Foundations
 
-**Goal:** the vocabulary every later module uses. **Data:** synthetic only.
+**Goal:** the vocabulary every later module uses. **Data:** synthetic only. **Module 00 decision:** to keep the lessons short, each has one main worked example (all five steps of CLAUDE.md §5) plus one shorter extra example; derivations are compact with an "In plain words" cell.
 
 - [ ] 00_01 random_variables — discrete vs continuous, PMF/PDF/CDF, quantiles/PPF, survival function. *Example:* dice and waiting-time measurements. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
 - [ ] 00_02 expectation_moments — expectation, variance, moments, skewness, kurtosis, MGF. *Example:* expected profit of a raffle / insurance policy. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐

@@ -12,6 +12,7 @@ How the common discrete distributions are generated, their full math, how to com
 | 01_04 Hypergeometric | [notebook](notebooks/01_04_hypergeometric.ipynb) | [page](html/01_04_hypergeometric.html) | done |
 | 01_05 Uniform, Categorical and Multinomial | [notebook](notebooks/01_05_uniform_categorical_multinomial.ipynb) | [page](html/01_05_uniform_categorical_multinomial.html) | done |
 | 01_06 Zipf and Power Laws | [notebook](notebooks/01_06_zipf_power_laws.ipynb) | [page](html/01_06_zipf_power_laws.html) | done |
+| 01_07 Discrete Summary and Chooser | [notebook](notebooks/01_07_discrete_summary_chooser.ipynb) | [page](html/01_07_discrete_summary_chooser.html) | done |
 
 ## How to open
 

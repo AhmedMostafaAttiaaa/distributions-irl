@@ -40,3 +40,6 @@
 | Rank-frequency plot | Counts plotted against rank, usually on log-log axes. | [01_06](html/01_06_zipf_power_laws.html) |
 | Hapax legomenon | A word that occurs exactly once in a text. | [01_06](html/01_06_zipf_power_laws.html) |
 | Harmonic number | H_N = 1 + 1/2 + ... + 1/N. | [01_06](html/01_06_zipf_power_laws.html) |
+| Overdispersion check | Variance-to-mean ratio used to choose between Poisson and Negative Binomial. | [01_07](html/01_07_discrete_summary_chooser.html) |
+| Underdispersed | Variance smaller than the mean, as for Binomial and Hypergeometric. | [01_07](html/01_07_discrete_summary_chooser.html) |
+| Distribution chooser | Decision procedure that picks a distribution from how the data are generated. | [01_07](html/01_07_discrete_summary_chooser.html) |

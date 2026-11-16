@@ -121,7 +121,7 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 - 3D: optional side-by-side PMF surfaces.
 - **Worked example:** 5 short real scenarios. For each, identify the distribution, justify it, and compute one probability.
 - HTML: an interactive chooser (answer yes/no questions → recommended distribution with a live mini plot) plus the relationship map.
-- NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
 
 ### Module 01 wrap-up
 - [ ] `module_01_discrete/README.md` and `glossary.md` complete

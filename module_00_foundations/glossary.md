@@ -33,3 +33,13 @@
 | z-score | (X - mu) / sigma: mean 0, variance 1, unit free. | [00_04](html/00_04_transformations.html) |
 | Probability integral transform | F(X) is Uniform(0,1) for a continuous CDF F. | [00_04](html/00_04_transformations.html) |
 | Jensen inequality | E[g(X)] >= g(E[X]) for convex g. | [00_04](html/00_04_transformations.html) |
+| Conditional probability | P(A | B) = P(A and B) / P(B). | [00_05](html/00_05_bayes_theorem.html) |
+| Law of total probability | P(A) = sum of P(A | Bi) P(Bi) over a partition. | [00_05](html/00_05_bayes_theorem.html) |
+| Bayes theorem | P(B | A) = P(A | B) P(B) / P(A): posterior proportional to likelihood times prior. | [00_05](html/00_05_bayes_theorem.html) |
+| Prior / posterior | Belief before / after seeing the evidence. | [00_05](html/00_05_bayes_theorem.html) |
+| Likelihood ratio | P(evidence | true) / P(evidence | false); multiplies the odds. | [00_05](html/00_05_bayes_theorem.html) |
+| Sensitivity (recall) | P(positive | sick): true positive rate. | [00_05](html/00_05_bayes_theorem.html) |
+| Specificity | P(negative | healthy): true negative rate. | [00_05](html/00_05_bayes_theorem.html) |
+| PPV (precision) and NPV | P(sick | positive) and P(healthy | negative). | [00_05](html/00_05_bayes_theorem.html) |
+| Base-rate fallacy | Ignoring how rare a condition is when interpreting a test result. | [00_05](html/00_05_bayes_theorem.html) |
+| Natural frequencies | Counts out of a fixed population (e.g. 10,000 people), easier to reason with than probabilities. | [00_05](html/00_05_bayes_theorem.html) |

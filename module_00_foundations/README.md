@@ -10,6 +10,7 @@ The vocabulary every later module uses: random variables, expectation and moment
 | 00_02 Expectation, Variance, Moments and the MGF | [notebook](notebooks/00_02_expectation_moments.ipynb) | [page](html/00_02_expectation_moments.html) | done |
 | 00_03 Joint, Marginal and Conditional Distributions | [notebook](notebooks/00_03_joint_conditional.ipynb) | [page](html/00_03_joint_conditional.html) | done |
 | 00_04 Transformations of Random Variables | [notebook](notebooks/00_04_transformations.ipynb) | [page](html/00_04_transformations.html) | done |
+| 00_05 Conditional Probability and Bayes Theorem | [notebook](notebooks/00_05_bayes_theorem.ipynb) | [page](html/00_05_bayes_theorem.html) | done |
 
 ## How to open
 

@@ -35,3 +35,14 @@
 | Pseudo-count | Prior parameters read as already-seen successes (alpha - 1) and failures (beta - 1). | [02_04](html/02_04_beta.html) |
 | Order statistic | The k-th smallest of n values; for Uniform(0,1) it is Beta(k, n-k+1). | [02_04](html/02_04_beta.html) |
 | Beta function | B(a, b) = Gamma(a) Gamma(b) / Gamma(a+b), the normalizing constant of the Beta. | [02_04](html/02_04_beta.html) |
+| Weibull distribution | Lifetime distribution with shape k and scale lambda; survival exp(-(x/lambda)^k). | [02_05](html/02_05_weibull.html) |
+| Hazard rate | Instantaneous failure risk at age t among units still working: h(t) = f(t)/S(t). | [02_05](html/02_05_weibull.html) |
+| Infant mortality | Falling hazard (Weibull shape k < 1): survivors become safer. | [02_05](html/02_05_weibull.html) |
+| Wear-out | Rising hazard (Weibull shape k > 1): risk grows with age. | [02_05](html/02_05_weibull.html) |
+| Bathtub curve | Hazard that falls, stays flat, then rises over a product life. | [02_05](html/02_05_weibull.html) |
+| Characteristic life | The Weibull scale lambda: 63.2 % of units fail by this age for any shape. | [02_05](html/02_05_weibull.html) |
+| MTTF | Mean time to failure, lambda Gamma(1 + 1/k) for the Weibull. | [02_05](html/02_05_weibull.html) |
+| Weibull plot | Plot of ln(-ln(1-F)) against ln(x); a straight line with slope k means Weibull. | [02_05](html/02_05_weibull.html) |
+| Weakest link (series system) | A system that fails with its first part; the minimum of Weibulls is Weibull with scale lambda n^(-1/k). | [02_05](html/02_05_weibull.html) |
+| Rayleigh distribution | Weibull with shape 2, used for wind speed and noise magnitude. | [02_05](html/02_05_weibull.html) |
+| Censoring | Units that have not failed by the end of observation; they carry partial information. | [02_05](html/02_05_weibull.html) |

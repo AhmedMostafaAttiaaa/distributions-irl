@@ -13,7 +13,7 @@ This is the shared to-do list for all devices. Follow the session protocol in `C
 | P0 | Repo scaffold | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
 | 00 | Foundations | ⬜ | | | |
 | 01 | Discrete distributions | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
-| 02 | Continuous distributions | ⬜ | | | |
+| 02 | Continuous distributions | 🟨 | LAPTOP-1 | 2026-11-16 | |
 | 03 | Multivariate distributions | ⬜ | | | |
 | 04 | Relationships between distributions | ⬜ | | | |
 | 05 | Sampling & limit theorems | ⬜ | | | |

@@ -13,7 +13,7 @@ This is the shared to-do list for all devices. Follow the session protocol in `C
 | P0 | Repo scaffold | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
 | 00 | Foundations | ⬜ | | | |
 | 01 | Discrete distributions | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
-| 02 | Continuous distributions | 🟨 | LAPTOP-1 | 2026-11-16 | |
+| 02 | Continuous distributions | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
 | 03 | Multivariate distributions | ⬜ | | | |
 | 04 | Relationships between distributions | ⬜ | | | |
 | 05 | Sampling & limit theorems | ⬜ | | | |
@@ -149,9 +149,9 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 - [x] 02_10 continuous_summary_chooser — comparison table, decision flowchart, relationship map, mixed practice, 5 short scenarios; HTML chooser. NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
 
 ### Module 02 wrap-up
-- [ ] `module_02_continuous/README.md` and `glossary.md` complete
-- [ ] Root `index.html` links to all 10 lesson pages; prev/next links verified
-- [ ] Status ✅ in the overview table; committed and pushed
+- [x] `module_02_continuous/README.md` and `glossary.md` complete
+- [x] Root `index.html` links to all 10 lesson pages; prev/next links verified
+- [x] Status ✅ in the overview table; committed and pushed
 
 ---
 

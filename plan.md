@@ -12,7 +12,7 @@ This is the shared to-do list for all devices. Follow the session protocol in `C
 |---|--------|--------|--------|---------|----------|
 | P0 | Repo scaffold | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
 | 00 | Foundations | ⬜ | | | |
-| 01 | Discrete distributions | ⬜ | | | |
+| 01 | Discrete distributions | 🟨 | LAPTOP-1 | 2026-11-16 | |
 | 02 | Continuous distributions | ⬜ | | | |
 | 03 | Multivariate distributions | ⬜ | | | |
 | 04 | Relationships between distributions | ⬜ | | | |
@@ -57,7 +57,7 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 
 ---
 
-## Module 01 — Discrete distributions  ← **TODAY'S TARGET**
+## Module 01 — Discrete distributions
 
 **Goal:** master every common discrete distribution: how it's generated, its full math, how to compute with it, and where it shows up in stats / DS / ML.
 **3D theme:** PMF as 3D bars or a surface over (k, parameter) for every lesson.

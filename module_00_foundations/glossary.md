@@ -19,3 +19,11 @@
 | Moment generating function (MGF) | M(t) = E[exp(tX)]; its k-th derivative at 0 is E[X^k]. | [00_02](html/00_02_expectation_moments.html) |
 | Linearity of expectation | E[aX + bY] = aE[X] + bE[Y], with or without independence. | [00_02](html/00_02_expectation_moments.html) |
 | Law of Large Numbers | The sample mean converges to E[X]. | [00_02](html/00_02_expectation_moments.html) |
+| Joint distribution | Distribution of two or more variables together. | [00_03](html/00_03_joint_conditional.html) |
+| Marginal distribution | Distribution of one variable obtained by summing or integrating out the others. | [00_03](html/00_03_joint_conditional.html) |
+| Conditional distribution | Distribution of one variable given a value of another: joint divided by marginal. | [00_03](html/00_03_joint_conditional.html) |
+| Independence | Joint equals the product of the marginals; knowing one variable tells nothing about the other. | [00_03](html/00_03_joint_conditional.html) |
+| Covariance | E[XY] - E[X]E[Y]; linear co-movement. | [00_03](html/00_03_joint_conditional.html) |
+| Correlation | Covariance divided by the product of SDs, between -1 and 1. | [00_03](html/00_03_joint_conditional.html) |
+| Bivariate Normal | Joint Normal with elliptical contours; conditionals are Normal with linear mean. | [00_03](html/00_03_joint_conditional.html) |
+| Regression to the mean | Predictions are fewer SDs from the mean than the predictor, when correlation is below 1. | [00_03](html/00_03_joint_conditional.html) |

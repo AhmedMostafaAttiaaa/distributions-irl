@@ -10,7 +10,7 @@ This is the shared to-do list for all devices. Follow the session protocol in `C
 
 | # | Module | Status | Device | Started | Finished |
 |---|--------|--------|--------|---------|----------|
-| P0 | Repo scaffold | 🟨 | LAPTOP-1 | 2026-11-16 | |
+| P0 | Repo scaffold | ✅ | LAPTOP-1 | 2026-11-16 | 2026-11-16 |
 | 00 | Foundations | ⬜ | | | |
 | 01 | Discrete distributions | ⬜ | | | |
 | 02 | Continuous distributions | ⬜ | | | |
@@ -33,15 +33,15 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 
 ## Phase 0 — Repo scaffold (do once, before any module)
 
-- [ ] Git identity set locally (`CLAUDE.md` §11 Authorship); `.claude/settings.json` present with attribution off
-- [ ] Folder structure per `CLAUDE.md` §3
-- [ ] `README.md`: project overview, how to set up the env, how to open notebooks and HTML pages
-- [ ] `requirements.txt` (base deps) and `.gitignore` (.venv, checkpoints, `__pycache__`, large data)
-- [ ] `common/style.py`: colorblind-safe palette + rcParams
-- [ ] `templates/lesson_template.ipynb` with all §4 section headers as markdown cells
-- [ ] `templates/lesson_template.html`: layout, CSS (light/dark), nav bar, slider component, vanilla-JS SVG bar/line chart helpers, histogram helper, KaTeX include, optional Plotly gl3d loader
-- [ ] `index.html` skeleton: book title, list of modules (unbuilt ones greyed out), same styling as the template
-- [ ] Commit `scaffold: repo structure and templates` and push
+- [x] Git identity set locally (`CLAUDE.md` §11 Authorship); `.claude/settings.json` present with attribution off
+- [x] Folder structure per `CLAUDE.md` §3
+- [x] `README.md`: project overview, how to set up the env, how to open notebooks and HTML pages
+- [x] `requirements.txt` (base deps) and `.gitignore` (.venv, checkpoints, `__pycache__`, large data)
+- [x] `common/style.py`: colorblind-safe palette + rcParams
+- [x] `templates/lesson_template.ipynb` with all §4 section headers as markdown cells
+- [x] `templates/lesson_template.html`: layout, CSS (light/dark), nav bar, slider component, vanilla-JS SVG bar/line chart helpers, histogram helper, KaTeX include, optional Plotly gl3d loader
+- [x] `index.html` skeleton: book title, list of modules (unbuilt ones greyed out), same styling as the template
+- [x] Commit `scaffold: repo structure and templates` and push
 
 ---
 

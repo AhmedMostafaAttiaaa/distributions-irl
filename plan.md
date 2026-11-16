@@ -88,7 +88,7 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 - **Real data:** goals per match from a public football season CSV (e.g. football-data.co.uk, English Premier League). Fit λ, compare observed vs Poisson frequencies, plot both. Document the source in `data/README.md` and add `download_data.py`.
 - Used in: web traffic & server load, defect counts, Poisson regression (GLM), event rates in A/B tests, the count likelihood in recommender models.
 - HTML: λ slider; Binomial-vs-Poisson comparison toggle (n slider); call-center calculator.
-- NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
 
 ### 01_04 hypergeometric
 - Content: sampling without replacement; PMF derivation by counting; mean and variance with the finite-population correction; when Binomial is a good approximation (n ≪ N); link to Fisher's exact test.

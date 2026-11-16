@@ -15,3 +15,9 @@
 | Negative Binomial distribution | Number of trials (or failures) until the r-th success; sum of r Geometrics. | [01_02](html/01_02_geometric_negative_binomial.html) |
 | Overdispersion | Variance larger than the mean, which Poisson cannot represent. | [01_02](html/01_02_geometric_negative_binomial.html) |
 | Gamma-Poisson mixture | Poisson counts with a Gamma-distributed rate; gives a Negative Binomial. | [01_02](html/01_02_geometric_negative_binomial.html) |
+| Poisson distribution | Count of independent events at a constant rate in a fixed window; mean = variance = lambda. | [01_03](html/01_03_poisson.html) |
+| Rate (lambda) | Average number of events per window; scales with window length. | [01_03](html/01_03_poisson.html) |
+| Poisson process | Events at a constant rate with independent increments; gaps are Exponential. | [01_03](html/01_03_poisson.html) |
+| Thinning | Keeping each Poisson event with probability q gives Poisson(q lambda). | [01_03](html/01_03_poisson.html) |
+| Chi-square goodness of fit | Test comparing observed counts with expected counts from a fitted model. | [01_03](html/01_03_poisson.html) |
+| Dispersion | Variance relative to the mean; Poisson has ratio 1. | [01_03](html/01_03_poisson.html) |

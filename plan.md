@@ -79,7 +79,7 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 - Second example: insurance claim counts with variance > mean, fitting NB vs Poisson.
 - Used in: churn/retention ("how many periods until a customer leaves"), retry/backoff modeling, overdispersed count regression, RNA-seq counts.
 - HTML: toggle Geometric / NegBin; sliders p, r; memorylessness demo.
-- NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- NB ☑ EX ☑ 3D ☑ HTML ☑ GIT ☑
 
 ### 01_03 poisson
 - Content: Poisson as the limit of Binomial (n → ∞, np = λ), derived step by step; mean = variance = λ; sum of Poissons; Poisson process link to Exponential (preview of 02); goodness of fit by eye and with a chi-square preview.

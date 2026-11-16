@@ -27,3 +27,9 @@
 | Correlation | Covariance divided by the product of SDs, between -1 and 1. | [00_03](html/00_03_joint_conditional.html) |
 | Bivariate Normal | Joint Normal with elliptical contours; conditionals are Normal with linear mean. | [00_03](html/00_03_joint_conditional.html) |
 | Regression to the mean | Predictions are fewer SDs from the mean than the predictor, when correlation is below 1. | [00_03](html/00_03_joint_conditional.html) |
+| Transformation | A new random variable Y = g(X) computed from X. | [00_04](html/00_04_transformations.html) |
+| Change of variables | f_Y(y) = f_X(g^-1(y)) |d g^-1 / dy| for monotone g. | [00_04](html/00_04_transformations.html) |
+| Jacobian factor | The stretching factor |dx/dy| that keeps the total area 1. | [00_04](html/00_04_transformations.html) |
+| z-score | (X - mu) / sigma: mean 0, variance 1, unit free. | [00_04](html/00_04_transformations.html) |
+| Probability integral transform | F(X) is Uniform(0,1) for a continuous CDF F. | [00_04](html/00_04_transformations.html) |
+| Jensen inequality | E[g(X)] >= g(E[X]) for convex g. | [00_04](html/00_04_transformations.html) |

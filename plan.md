@@ -130,20 +130,28 @@ Per-lesson checkbox key used below: **NB** notebook done & executes clean · **E
 
 ---
 
-## Module 02 — Continuous distributions `(draft)`
+## Module 02 — Continuous distributions
 
-**3D theme:** PDF over (x, parameter). **Data:** synthetic plus small real sets (e.g. seaborn `tips`, latency/income samples). Decide per lesson.
+**Goal:** the continuous families used everywhere in statistics, DS and ML, each with extra explanation and several worked examples.
+**3D theme:** PDF over (x, parameter) for every lesson (static mplot3d + interactive Plotly).
+**Data:** synthetic with realistic numbers, plus real data from seaborn `tips` (02_01, 02_02; downloaded by `download_data.py`, no seaborn network call inside notebooks).
+**Module 02 decisions (beyond CLAUDE.md §4/§5):** to explain more, every derivation block is followed by a short "In plain words" cell, and every lesson has **three** worked examples: a main example with 3 to 4 questions (hand, code + assert, simulation, shaded plots, decision) and **two shorter examples** from other domains (each with hand formula, assert and a plot). HTML pages get a continuous engine (PDF/CDF lines, shaded area, density histogram of samples, numerically integrated moments).
 
-- [ ] 02_01 uniform_normal — z-scores, 68-95-99.7 rule. *Example:* exam scores / manufacturing tolerances.
-- [ ] 02_02 lognormal — *Example:* house prices or response latencies.
-- [ ] 02_03 exponential_gamma_erlang — waiting times, the Poisson-process link. *Example:* time between customer arrivals.
-- [ ] 02_04 beta — probabilities of probabilities. *Example:* uncertainty about a conversion rate.
-- [ ] 02_05 weibull — reliability. *Example:* time to failure of hard drives.
-- [ ] 02_06 heavy_tails_pareto_cauchy — *Example:* wealth distribution; why the sample mean of a Cauchy never settles.
-- [ ] 02_07 laplace_logistic_gumbel — *Example:* L1 errors; the sigmoid's origin; maximum yearly rainfall.
-- [ ] 02_08 t_chisquare_f — sampling distributions. *Example:* small-sample quality test.
-- [ ] 02_09 von_mises — circular data. *Example:* wind direction / hour-of-day activity.
-- [ ] 02_10 continuous_summary_chooser
+- [ ] 02_01 uniform_normal — Uniform(a,b) and Normal: density vs probability, z-scores, 68-95-99.7, standard normal table logic, CLT preview, Q-Q plot. *Main:* exam scores N(70,10) (P(>85), P(60 to 80), top-10% cutoff). *Extra:* shaft diameter tolerance (defect rate, process capability); bus waiting time (Uniform). *Real data:* tips `total_bill` Q-Q plot (not normal, motivates 02_02). NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- [ ] 02_02 lognormal — multiplicative effects, median vs mean, skew. *Main:* API response latency (median, p95, p99, SLO). *Extra:* household income / house prices; product of growth factors (CLT on logs). *Real data:* tips `total_bill` fitted by Normal vs Lognormal. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- [ ] 02_03 exponential_gamma_erlang — waiting times, memorylessness, Poisson-process link, Erlang/Gamma as sums. *Main:* customer arrivals 12/hour (gap < 2 min, > 10 min, wait for the 5th customer). *Extra:* battery lifetime with a warranty; time between earthquakes/server crashes. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- [ ] 02_04 beta — probabilities of probabilities, conjugacy preview, order statistics. *Main:* uncertainty about a conversion rate (30 of 1000, prior Beta(1,1) and Beta(2,38); P(rate > 3%), credible interval). *Extra:* batting average / click-through shrinkage; median of 5 uniforms is Beta(3,3). NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- [ ] 02_05 weibull — reliability, hazard rate (infant mortality / wear-out). *Main:* hard-drive lifetimes (survival at 3 years, MTTF, warranty period). *Extra:* wind speed; bearing failure with shape > 1. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- [ ] 02_06 heavy_tails_pareto_cauchy — power-law tails, infinite moments, 80/20 rule. *Main:* wealth / file-size Pareto (share of top 1%, 80-20). *Extra:* Cauchy running mean never settles; tail risk (P(loss > x)) Normal vs Pareto. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- [ ] 02_07 laplace_logistic_gumbel — L1 loss, sigmoid, extremes. *Main:* regression errors with outliers (Laplace vs Normal, MAE vs MSE). *Extra:* logistic latent-threshold origin of the sigmoid; yearly maximum rainfall Gumbel, 100-year return level, Gumbel-max trick preview. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- [ ] 02_08 t_chisquare_f — sampling distributions and how they relate. *Main:* small-sample quality test (t, n=8). *Extra:* chi-square test for a variance; F test for two variances; z^2 ~ chi-square, t -> Normal. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- [ ] 02_09 von_mises — circular data, circular mean, concentration. *Main:* wind direction. *Extra:* hour-of-day activity; compass bearings of animal movement. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+- [ ] 02_10 continuous_summary_chooser — comparison table, decision flowchart, relationship map, mixed practice, 5 short scenarios; HTML chooser. NB ☐ EX ☐ 3D ☐ HTML ☐ GIT ☐
+
+### Module 02 wrap-up
+- [ ] `module_02_continuous/README.md` and `glossary.md` complete
+- [ ] Root `index.html` links to all 10 lesson pages; prev/next links verified
+- [ ] Status ✅ in the overview table; committed and pushed
 
 ---
 

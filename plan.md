@@ -10,7 +10,7 @@ This is the shared to-do list for all devices. Follow the session protocol in `C
 
 | # | Module | Status | Device | Started | Finished |
 |---|--------|--------|--------|---------|----------|
-| P0 | Repo scaffold | ⬜ | | | |
+| P0 | Repo scaffold | 🟨 | LAPTOP-1 | 2026-11-16 | |
 | 00 | Foundations | ⬜ | | | |
 | 01 | Discrete distributions | ⬜ | | | |
 | 02 | Continuous distributions | ⬜ | | | |

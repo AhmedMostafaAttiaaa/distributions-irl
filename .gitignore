@@ -4,3 +4,8 @@ __pycache__/
 *.pyc
 .DS_Store
 # data files larger than 25 MB go here, one per line
+
+# private project files (kept locally, not shared)
+CLAUDE.md
+plan.md
+.claude/

@@ -7,6 +7,7 @@ The continuous families used in statistics, data science and ML, with extra plai
 | Lesson | Notebook | Interactive page | Status |
 |---|---|---|---|
 | 02_01 Uniform and Normal | [notebook](notebooks/02_01_uniform_normal.ipynb) | [page](html/02_01_uniform_normal.html) | done |
+| 02_02 Lognormal | [notebook](notebooks/02_02_lognormal.ipynb) | [page](html/02_02_lognormal.html) | done |
 
 ## How to open
 

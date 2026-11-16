@@ -18,3 +18,11 @@
 | Laplace smoothing | Adding one pseudo-count to each category (Dirichlet(1,...,1) prior). | [03_02](html/03_02_dirichlet_multinomial.html) |
 | Topic model (LDA) | Documents are mixtures of topics with Dirichlet-distributed proportions. | [03_02](html/03_02_dirichlet_multinomial.html) |
 | Overdispersion factor | (n + alpha_0) / (1 + alpha_0): Dirichlet-Multinomial variance relative to Multinomial. | [03_02](html/03_02_dirichlet_multinomial.html) |
+| Mixture model | Density that is a weighted sum of component densities; data come from a hidden group chosen at random. | [03_03](html/03_03_gaussian_mixtures.html) |
+| Mixing weights | Probabilities pi_k of each component; non-negative and summing to 1. | [03_03](html/03_03_gaussian_mixtures.html) |
+| Responsibility | P(group k | x): the posterior probability that a point came from component k. | [03_03](html/03_03_gaussian_mixtures.html) |
+| EM algorithm | Expectation-Maximization: alternate computing responsibilities (E) and weighted parameter updates (M); likelihood never decreases. | [03_03](html/03_03_gaussian_mixtures.html) |
+| Soft vs hard clustering | Probabilities of membership versus assigning each point to its most likely group. | [03_03](html/03_03_gaussian_mixtures.html) |
+| BIC | Bayesian information criterion p ln n - 2 log-likelihood; lower is better; used to choose the number of components. | [03_03](html/03_03_gaussian_mixtures.html) |
+| Law of total variance | Variance = average within-group variance + variance of the group means. | [03_03](html/03_03_gaussian_mixtures.html) |
+| Label switching | Components have no natural order, so fitted groups can be permuted between runs. | [03_03](html/03_03_gaussian_mixtures.html) |

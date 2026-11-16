@@ -8,6 +8,7 @@ Distributions of several variables together: the multivariate Normal, the Dirich
 |---|---|---|---|
 | 03_01 The Multivariate Normal | [notebook](notebooks/03_01_multivariate_normal.ipynb) | [page](html/03_01_multivariate_normal.html) | done |
 | 03_02 The Dirichlet and Dirichlet-Multinomial | [notebook](notebooks/03_02_dirichlet_multinomial.ipynb) | [page](html/03_02_dirichlet_multinomial.html) | done |
+| 03_03 Gaussian Mixtures and the EM Algorithm | [notebook](notebooks/03_03_gaussian_mixtures.ipynb) | [page](html/03_03_gaussian_mixtures.html) | done |
 
 ## How to open
 

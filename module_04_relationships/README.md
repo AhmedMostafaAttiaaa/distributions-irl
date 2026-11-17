@@ -7,6 +7,7 @@ How the distributions of Modules 01 to 03 are built from each other (sums, trans
 | Lesson | Notebook | Interactive page | Status |
 |---|---|---|---|
 | 04_01 The Family Tree of Distributions | [notebook](notebooks/04_01_relationship_map.ipynb) | [page](html/04_01_relationship_map.html) | done |
+| 04_02 Limits and approximations | [notebook](notebooks/04_02_limits_and_approximations.ipynb) | [page](html/04_02_limits_and_approximations.html) | done |
 
 ## How to open
 

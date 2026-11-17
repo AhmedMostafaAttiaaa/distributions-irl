@@ -12,3 +12,10 @@
 | Overdispersion | Variance larger than the mean, produced by mixing Poisson rates. | [04_01](html/04_01_relationship_map.html) |
 | Total variation distance | Half the sum of absolute differences between two PMFs; 0 means identical. | [04_01](html/04_01_relationship_map.html) |
 | Kolmogorov-Smirnov test | Test comparing a sample with a distribution through the largest CDF gap. | [04_01](html/04_01_relationship_map.html) |
+| Le Cam bound | Total variation distance between Binomial(n,p) and Poisson(np) is at most n p^2 | [04_02](html/04_02_limits_and_approximations.html) |
+| Berry-Esseen bound | Kolmogorov distance of a standardized sum from the Normal is at most C rho / (sigma^3 sqrt(n)), C <= 0.4748 | [04_02](html/04_02_limits_and_approximations.html) |
+| Kolmogorov distance | Largest gap between two CDFs | [04_02](html/04_02_limits_and_approximations.html) |
+| Total variation distance | Half the sum of absolute pmf differences; bounds the error of any event probability | [04_02](html/04_02_limits_and_approximations.html) |
+| Continuity correction | Adding 0.5 when approximating a discrete count by a Normal | [04_02](html/04_02_limits_and_approximations.html) |
+| Wilson-Hilferty | Cube-root Normal approximation for chi-square and Gamma | [04_02](html/04_02_limits_and_approximations.html) |
+| Finite-population correction | Variance factor (N-n)/(N-1) separating Hypergeometric from Binomial | [04_02](html/04_02_limits_and_approximations.html) |

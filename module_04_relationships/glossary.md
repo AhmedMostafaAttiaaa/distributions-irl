@@ -18,3 +18,6 @@
 | Continuity correction | Adding 0.5 when approximating a discrete count by a Normal | [04_02](html/04_02_limits_and_approximations.html) |
 | Wilson-Hilferty | Cube-root Normal approximation for chi-square and Gamma | [04_02](html/04_02_limits_and_approximations.html) |
 | Finite-population correction | Variance factor (N-n)/(N-1) separating Hypergeometric from Binomial | [04_02](html/04_02_limits_and_approximations.html) |
+| Skewness | Third standardized moment; the main driver of the error of Normal approximations | [04_02](html/04_02_limits_and_approximations.html) |
+| Sampling fraction | n / N, the share of the population in the sample; small values make Hypergeometric close to Binomial | [04_02](html/04_02_limits_and_approximations.html) |
+| Inverse-CDF method | If U is uniform on (0,1) then F^-1(U) has CDF F; the basis of the transformation recipes | [04_01](html/04_01_relationship_map.html) |

@@ -16,6 +16,7 @@ What happens to averages and other statistics when we collect more data: the law
 | 05_01 The law of large numbers | [notebook](notebooks/05_01_law_of_large_numbers.ipynb) | [page](html/05_01_law_of_large_numbers.html) | done |
 | 05_02 The central limit theorem | [notebook](notebooks/05_02_central_limit_theorem.ipynb) | [page](html/05_02_central_limit_theorem.html) | done |
 | 05_03 Sampling distributions and the standard error | [notebook](notebooks/05_03_sampling_distributions_standard_error.ipynb) | [page](html/05_03_sampling_distributions_standard_error.html) | done |
+| 05_04 The bootstrap and Monte Carlo | [notebook](notebooks/05_04_bootstrap_monte_carlo.ipynb) | [page](html/05_04_bootstrap_monte_carlo.html) | done |
 
 ## How to open
 

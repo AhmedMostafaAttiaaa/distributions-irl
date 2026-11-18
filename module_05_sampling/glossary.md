@@ -3,11 +3,11 @@
 | Term | Definition | Lesson |
 |---|---|---|
 | Law of large numbers | The average of n iid observations converges to the true mean as n grows (weak: in probability; strong: with probability 1) | [05_01](html/05_01_law_of_large_numbers.html) |
-| Convergence in probability | Y_n tends to c if P(\\\\\\\|Y_n - c\\\\\\\| > eps) tends to 0 for every eps | [05_01](html/05_01_law_of_large_numbers.html) |
+| Convergence in probability | Y_n tends to c if P(\\\\\\\\|Y_n - c\\\\\\\\| > eps) tends to 0 for every eps | [05_01](html/05_01_law_of_large_numbers.html) |
 | Almost-sure convergence | The whole path converges to the limit with probability 1 | [05_01](html/05_01_law_of_large_numbers.html) |
 | Standard error | Standard deviation of a statistic over repeated samples; for the sample mean sigma / sqrt(n) (developed in 05_03) | [05_01](html/05_01_law_of_large_numbers.html) |
-| Chebyshev inequality | P(\\\\\\\|Y - E Y\\\\\\\| >= t) <= Var(Y) / t^2 for any distribution with finite variance | [05_01](html/05_01_law_of_large_numbers.html) |
-| Hoeffding inequality | For values in [a, b]: P(\\\\\\\|average - mu\\\\\\\| >= eps) <= 2 exp(-2 n eps^2 / (b-a)^2) | [05_01](html/05_01_law_of_large_numbers.html) |
+| Chebyshev inequality | P(\\\\\\\\|Y - E Y\\\\\\\\| >= t) <= Var(Y) / t^2 for any distribution with finite variance | [05_01](html/05_01_law_of_large_numbers.html) |
+| Hoeffding inequality | For values in [a, b]: P(\\\\\\\\|average - mu\\\\\\\\| >= eps) <= 2 exp(-2 n eps^2 / (b-a)^2) | [05_01](html/05_01_law_of_large_numbers.html) |
 | Gambler fallacy | The false belief that past outcomes make the opposite outcome due | [05_01](html/05_01_law_of_large_numbers.html) |
 | Monte Carlo estimate | An expectation estimated by an average of simulated draws; error shrinks like 1 / sqrt(n) | [05_01](html/05_01_law_of_large_numbers.html) |
 | Central limit theorem | Standardized sums or averages of iid variables with finite variance converge in distribution to N(0, 1) | [05_02](html/05_02_central_limit_theorem.html) |
@@ -53,3 +53,15 @@
 | Weibull extreme-value law | Extreme-value law (xi < 0) for the maximum of variables with a bounded upper end, such as Uniform and Beta. | [05_07](html/05_07_order_statistics_extremes.html) |
 | Generalised extreme value (GEV) distribution | Family G(z) = exp(-(1 + xi z)^(-1/xi)) containing the Gumbel, Frechet and Weibull limits of normalised maxima (Fisher-Tippett-Gnedenko theorem). | [05_07](html/05_07_order_statistics_extremes.html) |
 | Return level | The value exceeded on average once every T periods: the (1 - 1/T) quantile of the per-period maximum. | [05_07](html/05_07_order_statistics_extremes.html) |
+| Stratified sampling | Splitting the population into homogeneous groups (strata) and sampling each; with proportional allocation the variance is (1 - f) sum W_h S_h^2 / n. | [05_08](html/05_08_sampling_designs.html) |
+| Neyman allocation | Allocation n_h proportional to W_h S_h, which minimises the variance of the stratified mean for a fixed total n. | [05_08](html/05_08_sampling_designs.html) |
+| Cluster sampling | Sampling whole groups (villages, schools) instead of individuals; cheaper but less precise because members of a cluster are alike. | [05_08](html/05_08_sampling_designs.html) |
+| Intraclass correlation | Correlation between two units of the same cluster; drives the design effect 1 + (K - 1) rho. | [05_08](html/05_08_sampling_designs.html) |
+| Design effect | Ratio of the variance of an estimator under a sampling design to its variance under a simple random sample of the same size. | [05_08](html/05_08_sampling_designs.html) |
+| Effective sample size | n divided by the design effect: the size of a simple random sample with the same precision. | [05_08](html/05_08_sampling_designs.html) |
+| Systematic sampling | Selecting every k-th unit after a random start; good for trended lists, harmful for periodic ones. | [05_08](html/05_08_sampling_designs.html) |
+| Horvitz-Thompson estimator | Unbiased estimator of a total or mean that weights each sampled unit by the inverse of its inclusion probability, 1 / pi_i. | [05_08](html/05_08_sampling_designs.html) |
+| Hajek estimator | Ratio form sum(w_i y_i) / sum(w_i) of the weighted mean; steadier than Horvitz-Thompson when weights are noisy. | [05_08](html/05_08_sampling_designs.html) |
+| Post-stratification | Reweighting a sample so that group shares match known population shares. | [05_08](html/05_08_sampling_designs.html) |
+| Kish design effect | Variance inflation caused by unequal weights: 1 + CV(w)^2 = n sum w_i^2 / (sum w_i)^2. | [05_08](html/05_08_sampling_designs.html) |
+| Selection bias | Systematic error caused by inclusion that depends on the outcome; does not shrink as the sample grows. | [05_08](html/05_08_sampling_designs.html) |

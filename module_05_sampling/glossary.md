@@ -3,11 +3,11 @@
 | Term | Definition | Lesson |
 |---|---|---|
 | Law of large numbers | The average of n iid observations converges to the true mean as n grows (weak: in probability; strong: with probability 1) | [05_01](html/05_01_law_of_large_numbers.html) |
-| Convergence in probability | Y_n tends to c if P(\\\\|Y_n - c\\\\| > eps) tends to 0 for every eps | [05_01](html/05_01_law_of_large_numbers.html) |
+| Convergence in probability | Y_n tends to c if P(\\\\\|Y_n - c\\\\\| > eps) tends to 0 for every eps | [05_01](html/05_01_law_of_large_numbers.html) |
 | Almost-sure convergence | The whole path converges to the limit with probability 1 | [05_01](html/05_01_law_of_large_numbers.html) |
 | Standard error | Standard deviation of a statistic over repeated samples; for the sample mean sigma / sqrt(n) (developed in 05_03) | [05_01](html/05_01_law_of_large_numbers.html) |
-| Chebyshev inequality | P(\\\\|Y - E Y\\\\| >= t) <= Var(Y) / t^2 for any distribution with finite variance | [05_01](html/05_01_law_of_large_numbers.html) |
-| Hoeffding inequality | For values in [a, b]: P(\\\\|average - mu\\\\| >= eps) <= 2 exp(-2 n eps^2 / (b-a)^2) | [05_01](html/05_01_law_of_large_numbers.html) |
+| Chebyshev inequality | P(\\\\\|Y - E Y\\\\\| >= t) <= Var(Y) / t^2 for any distribution with finite variance | [05_01](html/05_01_law_of_large_numbers.html) |
+| Hoeffding inequality | For values in [a, b]: P(\\\\\|average - mu\\\\\| >= eps) <= 2 exp(-2 n eps^2 / (b-a)^2) | [05_01](html/05_01_law_of_large_numbers.html) |
 | Gambler fallacy | The false belief that past outcomes make the opposite outcome due | [05_01](html/05_01_law_of_large_numbers.html) |
 | Monte Carlo estimate | An expectation estimated by an average of simulated draws; error shrinks like 1 / sqrt(n) | [05_01](html/05_01_law_of_large_numbers.html) |
 | Central limit theorem | Standardized sums or averages of iid variables with finite variance converge in distribution to N(0, 1) | [05_02](html/05_02_central_limit_theorem.html) |
@@ -33,3 +33,9 @@
 | Monte Carlo error | Standard error of a simulation estimate: sqrt(p (1 - p) / B) for a probability | [05_04](html/05_04_bootstrap_monte_carlo.html) |
 | Permutation test | Test that shuffles group labels to build the null distribution of a statistic | [05_04](html/05_04_bootstrap_monte_carlo.html) |
 | Out-of-bag sample | Observations left out of a bootstrap resample (about 36.8 %) | [05_04](html/05_04_bootstrap_monte_carlo.html) |
+| Markov inequality | For X >= 0, P(X >= a) <= E[X] / a; the weakest tail bound, needing only the mean. | [05_05](html/05_05_concentration_inequalities.html) |
+| Chernoff bound | Tail bound P(S >= a) <= min over t of e^(-ta) M(t), from Markov applied to e^(tS); decays exponentially in n. | [05_05](html/05_05_concentration_inequalities.html) |
+| Bernstein inequality | Exponential tail bound for bounded variables that uses the variance: exp(-n e^2 / (2 sigma^2 + 2 b e / 3)); sharp for rare events. | [05_05](html/05_05_concentration_inequalities.html) |
+| Union bound | P(A1 or ... or AK) <= sum of P(Ak); lets K statements hold at once at the price of ln K in the sample size. | [05_05](html/05_05_concentration_inequalities.html) |
+| Sub-Gaussian variable | A variable whose tails are at most as heavy as a Normal's (bounded, Normal, Rademacher); satisfies Hoeffding-type bounds. | [05_05](html/05_05_concentration_inequalities.html) |
+| Upper confidence bound (UCB) | Estimate plus a confidence bonus sqrt(ln(1/delta) / (2n)); used to choose the next arm in a bandit. | [05_05](html/05_05_concentration_inequalities.html) |

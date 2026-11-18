@@ -19,6 +19,7 @@ What happens to averages and other statistics when we collect more data: the law
 | 05_04 The bootstrap and Monte Carlo | [notebook](notebooks/05_04_bootstrap_monte_carlo.ipynb) | [page](html/05_04_bootstrap_monte_carlo.html) | done |
 | 05_05 Concentration inequalities | [notebook](notebooks/05_05_concentration_inequalities.ipynb) | [page](html/05_05_concentration_inequalities.html) | done |
 | 05_06 Delta method and Slutsky | [notebook](notebooks/05_06_delta_method_slutsky.ipynb) | [page](html/05_06_delta_method_slutsky.html) | done |
+| 05_07 Order statistics and extremes | [notebook](notebooks/05_07_order_statistics_extremes.ipynb) | [page](html/05_07_order_statistics_extremes.html) | done |
 
 ## How to open
 

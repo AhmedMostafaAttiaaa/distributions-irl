@@ -3,11 +3,11 @@
 | Term | Definition | Lesson |
 |---|---|---|
 | Law of large numbers | The average of n iid observations converges to the true mean as n grows (weak: in probability; strong: with probability 1) | [05_01](html/05_01_law_of_large_numbers.html) |
-| Convergence in probability | Y_n tends to c if P(\\\\\|Y_n - c\\\\\| > eps) tends to 0 for every eps | [05_01](html/05_01_law_of_large_numbers.html) |
+| Convergence in probability | Y_n tends to c if P(\\\\\\|Y_n - c\\\\\\| > eps) tends to 0 for every eps | [05_01](html/05_01_law_of_large_numbers.html) |
 | Almost-sure convergence | The whole path converges to the limit with probability 1 | [05_01](html/05_01_law_of_large_numbers.html) |
 | Standard error | Standard deviation of a statistic over repeated samples; for the sample mean sigma / sqrt(n) (developed in 05_03) | [05_01](html/05_01_law_of_large_numbers.html) |
-| Chebyshev inequality | P(\\\\\|Y - E Y\\\\\| >= t) <= Var(Y) / t^2 for any distribution with finite variance | [05_01](html/05_01_law_of_large_numbers.html) |
-| Hoeffding inequality | For values in [a, b]: P(\\\\\|average - mu\\\\\| >= eps) <= 2 exp(-2 n eps^2 / (b-a)^2) | [05_01](html/05_01_law_of_large_numbers.html) |
+| Chebyshev inequality | P(\\\\\\|Y - E Y\\\\\\| >= t) <= Var(Y) / t^2 for any distribution with finite variance | [05_01](html/05_01_law_of_large_numbers.html) |
+| Hoeffding inequality | For values in [a, b]: P(\\\\\\|average - mu\\\\\\| >= eps) <= 2 exp(-2 n eps^2 / (b-a)^2) | [05_01](html/05_01_law_of_large_numbers.html) |
 | Gambler fallacy | The false belief that past outcomes make the opposite outcome due | [05_01](html/05_01_law_of_large_numbers.html) |
 | Monte Carlo estimate | An expectation estimated by an average of simulated draws; error shrinks like 1 / sqrt(n) | [05_01](html/05_01_law_of_large_numbers.html) |
 | Central limit theorem | Standardized sums or averages of iid variables with finite variance converge in distribution to N(0, 1) | [05_02](html/05_02_central_limit_theorem.html) |
@@ -39,3 +39,9 @@
 | Union bound | P(A1 or ... or AK) <= sum of P(Ak); lets K statements hold at once at the price of ln K in the sample size. | [05_05](html/05_05_concentration_inequalities.html) |
 | Sub-Gaussian variable | A variable whose tails are at most as heavy as a Normal's (bounded, Normal, Rademacher); satisfies Hoeffding-type bounds. | [05_05](html/05_05_concentration_inequalities.html) |
 | Upper confidence bound (UCB) | Estimate plus a confidence bonus sqrt(ln(1/delta) / (2n)); used to choose the next arm in a bandit. | [05_05](html/05_05_concentration_inequalities.html) |
+| Slutsky theorem | If X_n converges in distribution to X and Y_n converges in probability to a constant c, then X_n + Y_n, X_n Y_n and X_n / Y_n converge to X + c, cX and X / c. | [05_06](html/05_06_delta_method_slutsky.html) |
+| Multivariate delta method | If the vector estimate is asymptotically Normal with covariance Sigma / n, then g of it has variance about (gradient of g)' Sigma (gradient of g) / n. | [05_06](html/05_06_delta_method_slutsky.html) |
+| Variance-stabilising transformation | A function g chosen so that the variance of g(estimate) no longer depends on the parameter, such as 2 arcsin sqrt(p-hat) or sqrt of a Poisson count. | [05_06](html/05_06_delta_method_slutsky.html) |
+| Odds ratio | Ratio of the odds of an outcome in two groups, [p1 / (1 - p1)] / [p2 / (1 - p2)]; the log has SE sqrt(1/a + 1/b + 1/c + 1/d). | [05_06](html/05_06_delta_method_slutsky.html) |
+| Relative risk | Ratio of the probabilities of an outcome in two groups, p1 / p2; the log has SE sqrt((1 - p1) / (n1 p1) + (1 - p2) / (n2 p2)). | [05_06](html/05_06_delta_method_slutsky.html) |
+| Woolf interval | Confidence interval for an odds ratio built from the delta method on the log odds ratio and then exponentiated. | [05_06](html/05_06_delta_method_slutsky.html) |

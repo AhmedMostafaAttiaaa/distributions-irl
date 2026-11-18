@@ -25,7 +25,7 @@
 | Erlang distribution | Time until the k-th event of a Poisson process; Gamma with integer shape. | [02_03](html/02_03_exponential_gamma_erlang.html) |
 | Gamma distribution | Flexible positive skewed family with shape k and scale theta; mean k theta. | [02_03](html/02_03_exponential_gamma_erlang.html) |
 | Gamma function | Extension of the factorial: Gamma(n) = (n-1)!. | [02_03](html/02_03_exponential_gamma_erlang.html) |
-| Hazard rate | Instantaneous failure rate; constant for the Exponential. | [02_03](html/02_03_exponential_gamma_erlang.html) |
+| Hazard rate | Instantaneous failure risk at age t among units still working, h(t) = f(t) / S(t); constant for the Exponential. | [02_03](html/02_03_exponential_gamma_erlang.html) |
 | Survival function | S(x) = P(X > x) = 1 - F(x). | [02_03](html/02_03_exponential_gamma_erlang.html) |
 | Beta distribution | Distribution on [0, 1] with shape parameters alpha and beta; used for unknown probabilities. | [02_04](html/02_04_beta.html) |
 | Conjugate prior | A prior whose posterior is in the same family: Beta prior + Binomial data gives a Beta posterior. | [02_04](html/02_04_beta.html) |
@@ -36,7 +36,6 @@
 | Order statistic | The k-th smallest of n values; for Uniform(0,1) it is Beta(k, n-k+1). | [02_04](html/02_04_beta.html) |
 | Beta function | B(a, b) = Gamma(a) Gamma(b) / Gamma(a+b), the normalizing constant of the Beta. | [02_04](html/02_04_beta.html) |
 | Weibull distribution | Lifetime distribution with shape k and scale lambda; survival exp(-(x/lambda)^k). | [02_05](html/02_05_weibull.html) |
-| Hazard rate | Instantaneous failure risk at age t among units still working: h(t) = f(t)/S(t). | [02_05](html/02_05_weibull.html) |
 | Infant mortality | Falling hazard (Weibull shape k < 1): survivors become safer. | [02_05](html/02_05_weibull.html) |
 | Wear-out | Rising hazard (Weibull shape k > 1): risk grows with age. | [02_05](html/02_05_weibull.html) |
 | Bathtub curve | Hazard that falls, stays flat, then rises over a product life. | [02_05](html/02_05_weibull.html) |
@@ -55,7 +54,7 @@
 | Lorenz curve | Share of the total held by the bottom fraction of the population. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
 | Scale invariance | P(X > cx \| X > x) = c^(-alpha) for a Pareto, independent of x. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
 | Stable distribution | Distribution closed under sums up to scale and shift (Normal, Cauchy). | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
-| Laplace distribution | Double-exponential distribution f(x) = exp(-|x-mu|/b)/(2b); likelihood of absolute (L1) errors. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
+| Laplace distribution | Double-exponential distribution f(x) = exp(-\|x-mu\|/b)/(2b); likelihood of absolute (L1) errors. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
 | L1 loss (MAE) | Sum of absolute errors; minimized by the median; the Laplace negative log-likelihood. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
 | Robust estimator | Estimator little affected by outliers, such as the median. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
 | Logistic distribution | Bell-like distribution whose CDF is the sigmoid; variance pi^2 s^2 / 3. | [02_07](html/02_07_laplace_logistic_gumbel.html) |

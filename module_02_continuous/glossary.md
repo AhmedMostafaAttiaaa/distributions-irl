@@ -20,7 +20,7 @@
 | AIC | Akaike information criterion 2k - 2 log-likelihood; lower is better. | [02_02](html/02_02_lognormal.html) |
 | Exponential distribution | Waiting time between events of a Poisson process; f(x) = lambda exp(-lambda x), mean = SD = 1/lambda. | [02_03](html/02_03_exponential_gamma_erlang.html) |
 | Rate vs scale | Rate lambda is events per unit time; scale 1/lambda is the mean wait (what scipy uses). | [02_03](html/02_03_exponential_gamma_erlang.html) |
-| Memorylessness | P(X > s+t | X > s) = P(X > t): the past does not change the future wait. | [02_03](html/02_03_exponential_gamma_erlang.html) |
+| Memorylessness | P(X > s+t \| X > s) = P(X > t): the past does not change the future wait. | [02_03](html/02_03_exponential_gamma_erlang.html) |
 | Poisson process | Events at a constant rate with independent increments; counts are Poisson, gaps Exponential. | [02_03](html/02_03_exponential_gamma_erlang.html) |
 | Erlang distribution | Time until the k-th event of a Poisson process; Gamma with integer shape. | [02_03](html/02_03_exponential_gamma_erlang.html) |
 | Gamma distribution | Flexible positive skewed family with shape k and scale theta; mean k theta. | [02_03](html/02_03_exponential_gamma_erlang.html) |
@@ -53,7 +53,7 @@
 | 80/20 rule (Pareto principle) | About 80 % of the total comes from 20 % of the population; alpha = 1.16 for a Pareto. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
 | Gini coefficient | Inequality measure from 0 to 1; 1/(2 alpha - 1) for a Pareto. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
 | Lorenz curve | Share of the total held by the bottom fraction of the population. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
-| Scale invariance | P(X > cx | X > x) = c^(-alpha) for a Pareto, independent of x. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
+| Scale invariance | P(X > cx \| X > x) = c^(-alpha) for a Pareto, independent of x. | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
 | Stable distribution | Distribution closed under sums up to scale and shift (Normal, Cauchy). | [02_06](html/02_06_heavy_tails_pareto_cauchy.html) |
 | Laplace distribution | Double-exponential distribution f(x) = exp(-|x-mu|/b)/(2b); likelihood of absolute (L1) errors. | [02_07](html/02_07_laplace_logistic_gumbel.html) |
 | L1 loss (MAE) | Sum of absolute errors; minimized by the median; the Laplace negative log-likelihood. | [02_07](html/02_07_laplace_logistic_gumbel.html) |

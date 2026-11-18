@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05_03 Sampling Distributions and the Standard Error | Probability Distributions Book</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+/* ---------- Theme: colorblind-safe Okabe-Ito colors, light and dark ---------- */
+:root {
+  --bg: #ffffff; --panel: #f6f7f9; --text: #1b1f24; --muted: #5b636d; --border: #d8dce1;
+  --main: #0072B2;      /* theoretical curve */
+  --sim: #E69F00;       /* simulated samples */
+  --highlight: #D55E00; --third: #009E73; /* shaded region */
+  --grid: #e3e6ea;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14171a; --panel: #1d2126; --text: #e8eaed; --muted: #9aa3ad; --border: #343a41;
+    --main: #56B4E9; --sim: #E69F00; --highlight: #F08A4B; --third: #2FD0A0; --grid: #2b3036;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 980px; margin: 0 auto; padding: 0 16px 48px; }
+h1 { font-size: 1.7rem; margin: 20px 0 4px; }
+h2 { font-size: 1.2rem; margin: 28px 0 10px; }
+p, li { color: var(--text); }
+.muted { color: var(--muted); }
+
+/* ---------- Navigation bar ---------- */
+nav.topnav { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap;
+  padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--panel); }
+nav.topnav a { color: var(--main); text-decoration: none; font-weight: 600; }
+nav.topnav a:hover { text-decoration: underline; }
+nav.topnav .disabled { color: var(--muted); }
+
+/* ---------- Cards and layout ---------- */
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 720px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+/* ---------- Sliders ---------- */
+.slider-row { display: grid; grid-template-columns: 90px 1fr 70px; align-items: center; gap: 10px; margin: 6px 0; }
+.slider-row label { font-weight: 600; }
+.slider-row output { text-align: right; font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; accent-color: var(--main); }
+input[type=number] { width: 80px; padding: 4px 6px; background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px; }
+button { background: var(--main); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px;
+  font: inherit; font-weight: 600; cursor: pointer; }
+button.secondary { background: transparent; color: var(--main); border: 1px solid var(--main); }
+@media (prefers-color-scheme: dark) { button { color: #0b0d0f; } }
+
+/* ---------- Readouts ---------- */
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.readout { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
+.readout .name { color: var(--muted); font-size: 0.8rem; }
+.readout .value { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- Charts (SVG) ---------- */
+svg.chart { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+svg.chart text { fill: var(--muted); font-size: 12px; font-family: inherit; }
+svg.chart .title { fill: var(--text); font-size: 14px; font-weight: 600; }
+svg.chart .gridline { stroke: var(--grid); stroke-width: 1; }
+svg.chart .axisline { stroke: var(--muted); stroke-width: 1; }
+.plot3d { width: 100%; height: 420px; }
+.cards3 .card h3 { margin: 0 0 6px; font-size: 1rem; }
+footer { margin-top: 36px; padding-top: 12px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+footer a { color: var(--main); }
+
+
+.plain { border-left: 4px solid var(--main); }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 8px 0; }
+.controls label { display: inline-flex; gap: 6px; align-items: center; }
+select, input[type=number] { padding: 5px 8px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
+svg.chart { width: 100%; height: auto; display: block; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="../../index.html">Book index</a>
+  <a href="05_02_central_limit_theorem.html">&larr; Previous lesson</a>
+  <a class="disabled" href="#">Next lesson &rarr;</a>
+</nav>
+<main>
+<h1>05_03 Sampling Distributions and the Standard Error</h1>
+<p class="muted">How much would an estimate change if we collected the data again?</p>
+<section class="card"><h2 style="margin-top:0">Key ideas</h2><p>A statistic is random; its distribution over repeated samples is the <em>sampling distribution</em> and its standard deviation is the <em>standard error</em>. $\mathrm{SE}(\bar X)=\sigma/\sqrt n$, $\mathrm{SE}(\hat p)=\sqrt{p(1-p)/n}$, difference of means $\sqrt{\sigma_1^2/n_1+\sigma_2^2/n_2}$, median (Normal data) $\approx1.2533\,\sigma/\sqrt n$; without replacement multiply by $\sqrt{(N-n)/(N-1)}$. Normal data: $(n-1)s^2/\sigma^2\sim\chi^2_{n-1}$ and $(\bar X-\mu)/(s/\sqrt n)\sim t_{n-1}$. Interval: $\bar x\pm t_{n-1,0.975}\,s/\sqrt n$; the 95 % describes the procedure.</p></section>
+<section class="card plain"><h2 style="margin-top:0">In plain words</h2><ul>
+<li><strong>Standard deviation is about the data; standard error is about the estimate.</strong> Only the second shrinks as you collect more.</li>
+<li><strong>Different statistics, different sampling distributions:</strong> switch the lab between mean, median, standard deviation and maximum.</li>
+<li><strong>95 % belongs to the method.</strong> In the dance, about 3 of 60 intervals miss; with 1.96 and n = 10 more of them do.</li>
+<li><strong>The difference of two groups needs its own standard error</strong> (Example 3): 11 seconds is only about 1.5 standard errors.</li></ul></section>
+
+<section>
+  <h2>Sampling distribution lab</h2>
+  <div class="card">
+    <div class="controls">
+      <label>Population <select id="pop"></select></label>
+      <label>Statistic <select id="stat"><option value="mean">mean</option><option value="median">median</option><option value="sd">standard deviation</option><option value="max">maximum</option></select></label>
+      <label>Sample size n <input type="number" id="n" value="10" min="2" max="500" style="width:80px"></label>
+      <button id="play">Play</button><button class="secondary" id="more">+1000 samples</button><button class="secondary" id="reset">Reset</button>
+    </div>
+    <div class="readouts" id="labOut"></div>
+    <div class="two">
+      <svg class="chart" id="labHist" viewBox="0 0 480 300"></svg>
+      <svg class="chart" id="labSE" viewBox="0 0 480 300"></svg>
+    </div>
+    <p id="labText" class="muted"></p>
+  </div>
+</section>
+<section>
+  <h2>The interval dance</h2>
+  <div class="card">
+    <div class="controls">
+      <label>Sample size n <input type="number" id="dn" value="10" min="2" max="200" style="width:80px"></label>
+      <label>Multiplier <select id="dmult"><option value="t">t quantile (correct)</option><option value="z">1.96 (too small for small n)</option></select></label>
+      <button id="dgo">Draw 60 intervals</button><button class="secondary" id="dreset">Reset counts</button>
+    </div>
+    <div class="readouts" id="danceOut"></div>
+    <svg class="chart" id="danceChart" viewBox="0 0 480 360"></svg>
+    <p class="muted">Population: Normal with mean 50 and standard deviation 12 (dashed line = true mean). Red intervals miss it.</p>
+  </div>
+</section>
+<section id="examplePanel">
+  <h2>Worked examples (edit the numbers)</h2>
+  <div class="card">
+    <h3>Example 1: average delivery time from a sample</h3>
+    <p>Population N <input type="number" id="e1N" value="20000" min="2"> sd sigma (min) <input type="number" id="e1s" value="15.07" min="0.1" step="0.1"> mean (min) <input type="number" id="e1m" value="30.04" step="0.1"> sample n <input type="number" id="e1n" value="40" min="2"> threshold <input type="number" id="e1t" value="33"> target margin (min) <input type="number" id="e1g" value="1" min="0.05" step="0.1"></p>
+    <div class="readouts" id="e1Out"></div>
+    <h3>Example 2: a defect rate and its interval</h3>
+    <p>Defective <input type="number" id="e2k" value="12" min="0"> out of <input type="number" id="e2n" value="80" min="1"></p>
+    <div class="readouts" id="e2Out"></div>
+    <h3>Example 3: two checkout designs</h3>
+    <p>A: mean <input type="number" id="e3m1" value="142"> sd <input type="number" id="e3s1" value="40" min="0.1"> n <input type="number" id="e3n1" value="50" min="2"> &nbsp; B: mean <input type="number" id="e3m2" value="131"> sd <input type="number" id="e3s2" value="35" min="0.1"> n <input type="number" id="e3n2" value="60" min="2"></p>
+    <div class="readouts" id="e3Out"></div>
+  </div>
+</section>
+<section>
+  <h2>3D view: mean and standard deviation of a Normal sample</h2>
+  <div class="card"><div id="plot3d" class="plot3d"></div></div>
+  <p class="muted">Joint density of the sample mean and sample standard deviation for Normal data (n = 10, mean 10, sd 3). It is a product: the sample mean and sample sd are independent for Normal data. Plotly is loaded from a CDN only on this page.</p>
+</section>
+
+<section>
+  <h2>Where it is used</h2>
+  <div class="grid3 cards3">
+    <div class="card"><h3>Statistics</h3><p>Confidence intervals and tests are statements about sampling distributions; survey sampling and quality control.</p></div>
+    <div class="card"><h3>Data science</h3><p>Error bars on dashboards, A/B test denominators, sample-size planning from a target standard error.</p></div>
+    <div class="card"><h3>ML and AI</h3><p>Standard error of a test metric, variation across training seeds, comparing models with overlapping uncertainty.</p></div>
+  </div>
+</section>
+<footer>Matching notebook: <a href="../notebooks/05_03_sampling_distributions_standard_error.ipynb">notebooks/05_03_sampling_distributions_standard_error.ipynb</a></footer>
+</main>
+<script>
+"use strict";
+/* =====================================================================
+   SECTION A. MATH HELPERS (small, readable, no libraries)
+   ===================================================================== */
+
+// log(n!) using a running sum; fine for the sizes used in these lessons.
+function logFactorial(n) {
+  let total = 0;
+  for (let i = 2; i <= n; i++) total += Math.log(i);
+  return total;
+}
+
+// Binomial PMF computed in log space so large n does not overflow.
+function binomPmf(k, n, p) {
+  if (k < 0 || k > n) return 0;
+  if (p === 0) return k === 0 ? 1 : 0;
+  if (p === 1) return k === n ? 1 : 0;
+  const logChoose = logFactorial(n) - logFactorial(k) - logFactorial(n - k);
+  return Math.exp(logChoose + k * Math.log(p) + (n - k) * Math.log(1 - p));
+}
+
+// Turn an array of probabilities into running totals (the CDF).
+function cumulative(probs) {
+  const out = [];
+  let running = 0;
+  for (const p of probs) { running += p; out.push(running); }
+  return out;
+}
+
+// Mean, variance, std and skewness of a discrete distribution given as (xs, probs).
+function discreteMoments(xs, probs) {
+  let mean = 0;
+  for (let i = 0; i < xs.length; i++) mean += xs[i] * probs[i];
+  let variance = 0, third = 0;
+  for (let i = 0; i < xs.length; i++) {
+    const d = xs[i] - mean;
+    variance += d * d * probs[i];
+    third += d * d * d * probs[i];
+  }
+  const std = Math.sqrt(variance);
+  const skew = std > 0 ? third / (std * std * std) : 0;
+  return { mean, variance, std, skew };
+}
+
+// Sample from a discrete distribution by inverting the CDF (xs sorted ascending).
+function sampleDiscrete(xs, cdf, count) {
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    const u = Math.random();
+    let j = 0;
+    while (j < cdf.length - 1 && cdf[j] < u) j++;
+    out.push(xs[j]);
+  }
+  return out;
+}
+
+// Format a number for display.
+function fmt(x, digits = 4) { return Number.isFinite(x) ? x.toFixed(digits) : "n/a"; }
+
+/* =====================================================================
+   SECTION B. UI HELPERS: sliders and readouts
+   ===================================================================== */
+
+// Add a labelled slider to a container. Calls onChange(value) whenever it moves.
+function addSlider(container, { label, min, max, step, value, onChange }) {
+  const row = document.createElement("div");
+  row.className = "slider-row";
+  const name = document.createElement("label");
+  name.textContent = label;
+  const input = document.createElement("input");
+  Object.assign(input, { type: "range", min, max, step, value });
+  const out = document.createElement("output");
+  out.textContent = value;
+  input.addEventListener("input", () => { out.textContent = input.value; onChange(Number(input.value)); });
+  row.append(name, input, out);
+  container.appendChild(row);
+  return { get: () => Number(input.value) };
+}
+
+// Fill the readouts grid from an object like { Mean: 1.2, Variance: 3.4 }.
+function showReadouts(values) {
+  const box = document.getElementById("readouts");
+  box.innerHTML = "";
+  for (const [name, value] of Object.entries(values)) {
+    const cell = document.createElement("div");
+    cell.className = "readout";
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${typeof value === "string" ? value : fmt(value)}</div>`;
+    box.appendChild(cell);
+  }
+}
+
+/* =====================================================================
+   SECTION C. SVG CHART HELPERS
+   drawChart(svgElement, spec) where spec is:
+     { title, xlabel, ylabel,
+       series: [ { kind: "bar" | "line" | "step" | "points", xs, ys, color, label } ],
+       shade: [a, b]   // optional: highlight x values between a and b
+       xrange, yrange  // optional fixed ranges
+     }
+   ===================================================================== */
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function svgEl(name, attrs, text) {
+  const node = document.createElementNS(SVG_NS, name);
+  for (const [key, value] of Object.entries(attrs || {})) node.setAttribute(key, value);
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+// Pick about 5 round tick values between lo and hi.
+function niceTicks(lo, hi) {
+  const span = hi - lo || 1;
+  const rawStep = span / 5;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const options = [1, 2, 5, 10];
+  let step = magnitude;
+  for (const o of options) { if (o * magnitude >= rawStep) { step = o * magnitude; break; } }
+  const ticks = [];
+  for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) ticks.push(Number(t.toPrecision(10)));
+  return ticks;
+}
+
+function drawChart(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right;
+  const plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+
+  // Work out the data ranges from all series.
+  let xmin = Infinity, xmax = -Infinity, ymax = 0;
+  for (const s of spec.series) {
+    for (const x of s.xs) { xmin = Math.min(xmin, x); xmax = Math.max(xmax, x); }
+    for (const y of s.ys) ymax = Math.max(ymax, y);
+  }
+  if (spec.xrange) [xmin, xmax] = spec.xrange;
+  if (spec.yrange) ymax = spec.yrange[1];
+  ymax = ymax * 1.08 || 1;
+  const hasBars = spec.series.some(s => s.kind === "bar");
+  const pad = (hasBars && !spec.series.some(s => s.width)) ? 0.7 : 0;               // keep the first and last bar inside the axes
+  const x0 = xmin - pad, x1 = xmax + pad || 1;
+  const sx = x => margin.left + (x - x0) / (x1 - x0) * plotW;
+  const sy = y => margin.top + plotH - y / ymax * plotH;
+
+  // Title, grid and axes.
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (const t of niceTicks(0, ymax)) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(t), y2: sy(t), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(t) + 4, "text-anchor": "end" }, String(t)));
+  }
+  for (const t of niceTicks(x0, x1)) {
+    svg.appendChild(svgEl("text", { x: sx(t), y: H - margin.bottom + 16, "text-anchor": "middle" }, String(t)));
+  }
+  svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(0), y2: sy(0), class: "axisline" }));
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  const yl = svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || "");
+  svg.appendChild(yl);
+
+  // Shaded region for the probability calculator.
+  if (spec.shade) {
+    const [a, b] = spec.shade;
+    svg.appendChild(svgEl("rect", { x: sx(a - (hasBars ? 0.5 : 0)), y: margin.top,
+      width: Math.max(0, sx(b + (hasBars ? 0.5 : 0)) - sx(a - (hasBars ? 0.5 : 0))), height: plotH,
+      fill: "var(--highlight)", opacity: 0.15 }));
+  }
+
+  // Area under a curve between a and b (continuous distributions): spec.fillUnder = [a, b]
+  if (spec.fillUnder) {
+    const curve = spec.series.find(s => s.kind === "line");
+    const regions = Array.isArray(spec.fillUnder[0]) ? spec.fillUnder : [spec.fillUnder];   // one [a, b] or several
+    for (const [a, b] of regions) {
+      const heightAt = x => {                          // curve height at x (linear interpolation; at a vertical edge take the top)
+        const exact = curve.ys.filter((_, i) => curve.xs[i] === x);
+        if (exact.length) return Math.max(...exact);
+        for (let i = 1; i < curve.xs.length; i++) {
+          if (x <= curve.xs[i] && curve.xs[i] > curve.xs[i - 1]) {
+            return curve.ys[i - 1] + (curve.ys[i] - curve.ys[i - 1]) * (x - curve.xs[i - 1]) / (curve.xs[i] - curve.xs[i - 1]);
+          }
+        }
+        return 0;
+      };
+      const left = Math.max(a, curve.xs[0]), right = Math.min(b, curve.xs[curve.xs.length - 1]);
+      let points = `${sx(left)},${sy(0)} ${sx(left)},${sy(heightAt(left))}`;
+      curve.xs.forEach((x, i) => { if (x > left && x < right) points += ` ${sx(x)},${sy(curve.ys[i])}`; });
+      points += ` ${sx(right)},${sy(heightAt(right))} ${sx(right)},${sy(0)}`;
+      svg.appendChild(svgEl("polygon", { points, fill: "var(--highlight)", opacity: 0.35 }));
+    }
+  }
+
+  // Draw each series.
+  const legendItems = [];
+  for (const s of spec.series) {
+    const color = s.color || "var(--main)";
+    if (s.kind === "bar") {
+      const barW = s.width ? Math.max(1, plotW / (x1 - x0) * s.width) : Math.max(1, plotW / (x1 - x0) * 0.8);   // s.width is in data units (histograms)
+      s.xs.forEach((x, i) => {
+        const inside = spec.shade && x >= spec.shade[0] && x <= spec.shade[1];
+        svg.appendChild(svgEl("rect", { x: sx(x) - barW / 2, y: sy(s.ys[i]), width: barW,
+          height: Math.max(0, sy(0) - sy(s.ys[i])), fill: inside ? "var(--highlight)" : color,
+          opacity: s.opacity || 0.9 }));
+      });
+    } else if (s.kind === "points") {
+      s.xs.forEach((x, i) => svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 3, fill: color })));
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => {
+        if (s.kind === "step" && i > 0) d += ` L${sx(x)},${sy(s.ys[i - 1])}`;
+        d += (i === 0 ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`;
+      });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) legendItems.push({ label: s.label, color });
+  }
+  legendItems.forEach((item, i) => {
+    const lx = W - margin.right - 130, ly = margin.top + 6 + i * 16;
+    svg.appendChild(svgEl("rect", { x: lx, y: ly - 8, width: 12, height: 10, fill: item.color }));
+    svg.appendChild(svgEl("text", { x: lx + 18, y: ly + 1 }, item.label));
+  });
+}
+
+// Log-log scatter/line chart for power laws. spec: { title, xlabel, ylabel, series: [{kind: "points"|"line", xs, ys, color, label}] }
+// Axes show decades (1, 10, 100, ...); all x and y values must be positive.
+function drawLogLog(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right, plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+  let xlo = Infinity, xhi = -Infinity, ylo = Infinity, yhi = -Infinity;
+  for (const s of spec.series) {
+    s.xs.forEach((x, i) => {
+      if (x > 0 && s.ys[i] > 0) {
+        xlo = Math.min(xlo, Math.log10(x)); xhi = Math.max(xhi, Math.log10(x));
+        ylo = Math.min(ylo, Math.log10(s.ys[i])); yhi = Math.max(yhi, Math.log10(s.ys[i]));
+      }
+    });
+  }
+  xlo = Math.floor(xlo); xhi = Math.max(Math.ceil(xhi), xlo + 1);
+  ylo = Math.floor(ylo); yhi = Math.max(Math.ceil(yhi), ylo + 1);
+  const sx = x => margin.left + (Math.log10(x) - xlo) / (xhi - xlo) * plotW;
+  const sy = y => margin.top + plotH - (Math.log10(y) - ylo) / (yhi - ylo) * plotH;
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (let e = ylo; e <= yhi; e++) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(Math.pow(10, e)), y2: sy(Math.pow(10, e)), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(Math.pow(10, e)) + 4, "text-anchor": "end" }, "1e" + e));
+  }
+  for (let e = xlo; e <= xhi; e++) {
+    svg.appendChild(svgEl("line", { x1: sx(Math.pow(10, e)), x2: sx(Math.pow(10, e)), y1: margin.top, y2: margin.top + plotH, class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: sx(Math.pow(10, e)), y: H - margin.bottom + 16, "text-anchor": "middle" }, "1e" + e));
+  }
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  svg.appendChild(svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || ""));
+  spec.series.forEach((s, idx) => {
+    const color = s.color || "var(--main)";
+    if (s.kind === "points") {
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 2.2, fill: color })); });
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) d += (d === "" ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`; });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) {
+      svg.appendChild(svgEl("rect", { x: W - margin.right - 130, y: margin.top + idx * 16 - 2, width: 12, height: 10, fill: color }));
+      svg.appendChild(svgEl("text", { x: W - margin.right - 112, y: margin.top + idx * 16 + 7 }, s.label));
+    }
+  });
+}
+
+/* =====================================================================
+   SECTION D. OPTIONAL 3D (Plotly gl3d partial bundle, loaded on demand)
+   ===================================================================== */
+function loadPlotlyThen(callback) {
+  if (window.Plotly) { callback(); return; }
+  const script = document.createElement("script");
+  script.src = "https://cdn.plot.ly/plotly-gl3d-2.35.2.min.js";
+  script.onload = callback;
+  script.onerror = () => { document.getElementById("plot3d").textContent = "Could not load Plotly from the CDN (check your connection)."; };
+  document.head.appendChild(script);
+}
+
+
+
+/* =====================================================================
+   SECTION M. SPECIAL FUNCTIONS for continuous distributions (Numerical Recipes style, plain loops)
+   ===================================================================== */
+function lgamma(z) {                      // log Gamma(z), Lanczos approximation, z > 0
+  const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  let y = z, tmp = z + 5.5;
+  tmp -= (z + 0.5) * Math.log(tmp);
+  let series = 1.000000000190015;
+  for (let j = 0; j < 6; j++) series += c[j] / ++y;
+  return -tmp + Math.log(2.5066282746310005 * series / z);
+}
+function gammaP(a, x) {                   // regularized lower incomplete gamma P(a, x)
+  if (x <= 0) return 0;
+  if (x < a + 1) {
+    let sum = 1 / a, term = sum;
+    for (let n = 1; n < 1000; n++) { term *= x / (a + n); sum += term; if (Math.abs(term) < Math.abs(sum) * 1e-14) break; }
+    return sum * Math.exp(-x + a * Math.log(x) - lgamma(a));
+  }
+  let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+  for (let i = 1; i < 1000; i++) {
+    const an = -i * (i - a);
+    b += 2;
+    d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+    c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+    d = 1 / d;
+    const delta = d * c;
+    h *= delta;
+    if (Math.abs(delta - 1) < 1e-14) break;
+  }
+  return 1 - Math.exp(-x + a * Math.log(x) - lgamma(a)) * h;
+}
+function betaI(x, a, b) {                 // regularized incomplete beta I_x(a, b)
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const front = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  const cf = (xx, aa, bb) => {
+    let c = 1, d = 1 - (aa + bb) * xx / (aa + 1);
+    if (Math.abs(d) < 1e-300) d = 1e-300;
+    d = 1 / d;
+    let h = d;
+    for (let m = 1; m < 1000; m++) {
+      const m2 = 2 * m;
+      let an = m * (bb - m) * xx / ((aa + m2 - 1) * (aa + m2));
+      d = 1 + an * d; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = 1 + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d; h *= d * c;
+      an = -(aa + m) * (aa + bb + m) * xx / ((aa + m2) * (aa + m2 + 1));
+      d = 1 + an * d; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = 1 + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d;
+      const delta = d * c;
+      h *= delta;
+      if (Math.abs(delta - 1) < 1e-14) break;
+    }
+    return h;
+  };
+  if (x < (a + 1) / (a + b + 2)) return front * cf(x, a, b) / a;
+  return 1 - front * cf(1 - x, b, a) / b;
+}
+function erf(x) { const v = gammaP(0.5, x * x); return x >= 0 ? v : -v; }
+function normPdf(x, mu = 0, sigma = 1) { return Math.exp(-0.5 * ((x - mu) / sigma) ** 2) / (sigma * Math.sqrt(2 * Math.PI)); }
+function normCdf(x, mu = 0, sigma = 1) { return 0.5 * (1 + erf((x - mu) / (sigma * Math.SQRT2))); }
+// Invert any increasing function by bisection (used for quantiles when no formula exists).
+function bisect(f, target, lo, hi) {
+  for (let i = 0; i < 200; i++) { const mid = (lo + hi) / 2; if (f(mid) < target) lo = mid; else hi = mid; }
+  return (lo + hi) / 2;
+}
+function linspace(a, b, n) { const out = []; for (let i = 0; i < n; i++) out.push(a + (b - a) * i / (n - 1)); return out; }
+
+
+function normQ(p) { return bisect(z => normCdf(z), p, -9, 9); }
+function gauss() { let u = 0, v = 0; while (u === 0) u = Math.random(); while (v === 0) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+function tCdfA(x, nu) { const tail = 0.5 * betaI(nu / (nu + x * x), nu / 2, 0.5); return x >= 0 ? 1 - tail : tail; }
+function tQ(p, nu) { return bisect(x => tCdfA(x, nu), p, -60, 60); }
+function chi2Pdf(x, k) { return x <= 0 ? 0 : Math.exp((k / 2 - 1) * Math.log(x) - x / 2 - (k / 2) * Math.log(2) - lgamma(k / 2)); }
+function boxOut(values, id) {
+  const box = document.getElementById(id); box.innerHTML = "";
+  for (const [name, value] of Object.entries(values)) {
+    const cell = document.createElement("div"); cell.className = "readout";
+    const text = typeof value === "string" ? value : (Number.isInteger(value) ? value.toLocaleString("en-US") : (Math.abs(value) < 1e-3 && value !== 0 ? value.toExponential(2) : fmt(value, 4)));
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${text}</div>`; box.appendChild(cell);
+  }
+}
+
+
+const POPS = [
+  { name: "Normal(50, 12)", mu: 50, med: 50, sd: 12, draw: () => 50 + 12 * gauss(), normal: true },
+  { name: "Delivery times: Gamma(4, scale 7.5), skewed", mu: 30, med: 27.54, sd: 15, draw: () => { let s = 0; for (let i = 0; i < 4; i++) s += -Math.log(1 - Math.random()); return 7.5 * s; }, normal: false },
+  { name: "Uniform(0, 100)", mu: 50, med: 50, sd: 100 / Math.sqrt(12), draw: () => 100 * Math.random(), normal: false },
+  { name: "Exponential(mean 50)", mu: 50, med: 34.66, sd: 50, draw: () => -50 * Math.log(1 - Math.random()), normal: false },
+  { name: "Laplace(50), heavy tails", mu: 50, med: 50, sd: Math.sqrt(2) * 8, draw: () => { const u = Math.random() - 0.5; return 50 - 8 * Math.sign(u) * Math.log(1 - 2 * Math.abs(u)); }, normal: false },
+];
+function statOf(kind, x) {
+  const n = x.length;
+  if (kind === "mean") return x.reduce((a, b) => a + b, 0) / n;
+  if (kind === "median") { const s = x.slice().sort((a, b) => a - b); return n % 2 ? s[(n - 1) / 2] : 0.5 * (s[n / 2 - 1] + s[n / 2]); }
+  if (kind === "max") return Math.max(...x);
+  const m = x.reduce((a, b) => a + b, 0) / n; return Math.sqrt(x.reduce((a, b) => a + (b - m) ** 2, 0) / (n - 1));
+}
+function seTheory(kind, pop, n) {
+  if (kind === "mean") return pop.sd / Math.sqrt(n);
+  if (kind === "median") return 1.2533 * pop.sd / Math.sqrt(n);
+  if (kind === "sd") return pop.sd / Math.sqrt(2 * (n - 1));
+  return null;
+}
+
+function main() {
+  const el = id => document.getElementById(id);
+  const sel = el("pop");
+  POPS.forEach((p, i) => { const o = document.createElement("option"); o.value = i; o.textContent = p.name; sel.appendChild(o); });
+  sel.value = "1";
+  let vals = [], timer = null, playing = false, seCurve = null;
+  const pop = () => POPS[Number(sel.value)], kind = () => el("stat").value, nn = () => Math.max(2, Math.min(500, Math.round(Number(el("n").value))));
+
+  function oneSample(n) { const p = pop(), x = new Array(n); for (let i = 0; i < n; i++) x[i] = p.draw(); return statOf(kind(), x); }
+  function add(count) { const n = nn(); for (let i = 0; i < count; i++) vals.push(oneSample(n)); if (vals.length > 40000) vals = vals.slice(-40000); }
+  function computeSECurve() {
+    const ns = [4, 8, 16, 32, 64, 128, 256], ses = [];
+    ns.forEach(n => { const v = []; const reps = n > 100 ? 150 : 300; for (let i = 0; i < reps; i++) v.push(oneSample(n)); const m = v.reduce((a, b) => a + b, 0) / reps; ses.push(Math.sqrt(v.reduce((a, b) => a + (b - m) ** 2, 0) / (reps - 1))); });
+    seCurve = { ns, ses };
+  }
+  function redraw() {
+    const p = pop(), n = nn(), M = vals.length; if (M < 5) return;
+    const m = vals.reduce((a, b) => a + b, 0) / M, sd = Math.sqrt(vals.reduce((a, b) => a + (b - m) ** 2, 0) / (M - 1)), sk = vals.reduce((a, b) => a + ((b - m) / sd) ** 3, 0) / M;
+    const lo = Math.min(...vals), hi = Math.max(...vals), pad = (hi - lo) * 0.05 || 1, xl = lo - pad, xh = hi + pad, bins = 40, w = (xh - xl) / bins, counts = new Array(bins).fill(0);
+    vals.forEach(v => { const i = Math.min(bins - 1, Math.floor((v - xl) / w)); counts[i]++; });
+    const bx = counts.map((_, i) => xl + (i + 0.5) * w), by = counts.map(c => c / M / w), th = seTheory(kind(), p, n), series = [{ kind: "bar", xs: bx, ys: by, color: "var(--sim)", width: w * 0.95, opacity: 0.6, label: "simulated statistic" }];
+    if (th !== null && kind() !== "max") { const gx = linspace(xl, xh, 200), c0 = kind() === "sd" ? p.sd : p.mu; series.push({ kind: "line", xs: gx, ys: gx.map(x => normPdf(x, c0, th)), color: "var(--main)", label: "Normal with the theory SE" }); }
+    drawChart(el("labHist"), { title: `Sampling distribution of the ${kind()} (n = ${n})`, xlabel: "value of the statistic", ylabel: "density", series, xrange: [xl, xh], yrange: [0, Math.max(...by) * 1.15] });
+    const s2 = [{ kind: "line", xs: seCurve.ns.map(Math.log10), ys: seCurve.ses.map(Math.log10), color: "var(--sim)", label: "simulated SE" }];
+    if (th !== null && kind() !== "max") s2.push({ kind: "line", xs: seCurve.ns.map(Math.log10), ys: seCurve.ns.map(k => Math.log10(seTheory(kind(), p, k))), color: "var(--main)", label: "theory" });
+    s2.push({ kind: "line", xs: seCurve.ns.map(Math.log10), ys: seCurve.ns.map(k => Math.log10(p.sd / Math.sqrt(k))), color: "var(--third)", label: "sigma / sqrt n (mean)" });
+    drawChart(el("labSE"), { title: "Standard error versus n (log10 scales)", xlabel: "log10 n", ylabel: "log10 standard error", series: s2, xrange: [0.5, 2.5], yrange: [-1.2, 1.5] });
+    const target = kind() === "mean" ? p.mu : (kind() === "sd" ? p.sd : (kind() === "median" ? p.med : null));
+    boxOut({ "Samples drawn": M, "Average of the statistic": m, "True value": target === null ? "n/a" : target, "Bias": target === null ? "n/a" : m - target, "Standard error (simulated)": sd, [kind() === "mean" ? "Standard error (theory)" : "SE by Normal-data formula"]: th === null ? "no simple formula" : th, "Skewness of the statistic": sk }, "labOut");
+    el("labText").textContent = kind() === "max" ? "The maximum is a very different statistic: its sampling distribution is skewed and its SE does not shrink like 1/sqrt(n)." : (kind() === "median" ? "For Normal data the median has an SE about 25 % larger than the mean; for heavy-tailed populations (Laplace) it is smaller." : "The simulated SE should match the theory for the mean (slope -1/2 on the log-log chart). For the median and standard deviation the formulas assume Normal data: compare them for the skewed and heavy-tailed populations.");
+  }
+  function reset() { vals = []; computeSECurve(); add(2000); redraw(); }
+  function stop() { playing = false; clearInterval(timer); el("play").textContent = "Play"; }
+  el("play").addEventListener("click", () => { if (playing) stop(); else { playing = true; el("play").textContent = "Pause"; timer = setInterval(() => { add(Math.max(20, Math.floor(20000 / nn()))); redraw(); if (vals.length >= 40000) stop(); }, 80); } });
+  el("more").addEventListener("click", () => { add(1000); redraw(); });
+  el("reset").addEventListener("click", () => { stop(); reset(); });
+  ["pop", "stat", "n"].forEach(id => el(id).addEventListener("change", () => { stop(); reset(); }));
+  reset();
+
+  // ---------- interval dance
+  let tot = 0, hit = 0;
+  function dance() {
+    const n = Math.max(2, Math.min(200, Math.round(Number(el("dn").value)))), mult = el("dmult").value === "t" ? tQ(0.975, n - 1) : 1.96, series = [], miss = [];
+    for (let i = 0; i < 60; i++) {
+      let s = 0, ss = 0; for (let j = 0; j < n; j++) { const x = 50 + 12 * gauss(); s += x; ss += x * x; }
+      const m = s / n, sd = Math.sqrt(Math.max(0, (ss - n * m * m) / (n - 1))), half = mult * sd / Math.sqrt(n), missed = Math.abs(m - 50) > half;
+      tot++; if (!missed) hit++; series.push({ kind: "line", xs: [m - half, m + half], ys: [i, i], color: missed ? "var(--highlight)" : "var(--main)" });
+    }
+    series.push({ kind: "line", xs: [50, 50], ys: [-1, 60], color: "var(--text)", label: "true mean" });
+    drawChart(el("danceChart"), { title: "60 confidence intervals from 60 samples", xlabel: "value", ylabel: "sample number", series, xrange: [20, 80], yrange: [-1, 61] });
+    boxOut({ "Multiplier used": mult, "Intervals so far": tot, "Coverage so far": hit / tot, "Target": "95 %" }, "danceOut");
+  }
+  el("dgo").addEventListener("click", dance); el("dreset").addEventListener("click", () => { tot = 0; hit = 0; dance(); });
+  dance();
+
+  // ---------- examples
+  const ev = id => Number(el(id).value);
+  function example1() {
+    const N = ev("e1N"), s = ev("e1s"), mu = ev("e1m"), n = Math.min(N, Math.round(ev("e1n"))), thr = ev("e1t"), g = ev("e1g");
+    const se = s / Math.sqrt(n), fpc = Math.sqrt((N - n) / (N - 1)), sec = se * fpc, tc = tQ(0.975, Math.max(1, n - 1));
+    boxOut({ "SE (no correction)": se, "Correction factor": fpc, "SE (corrected)": sec, "P(mean > threshold)": 1 - normCdf(thr, mu, sec), "95 % interval, half width (t)": tc * sec, "n for SE = target": Math.ceil(s * s / (g * g)), "n for 95 % margin = target": Math.ceil(Math.pow(1.96 * s / g, 2)) }, "e1Out");
+  }
+  function example2() {
+    const k = Math.round(ev("e2k")), n = Math.round(ev("e2n")), p = k / n, se = Math.sqrt(p * (1 - p) / n), z = 1.959964;
+    const centre = (p + z * z / (2 * n)) / (1 + z * z / n), half = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / (1 + z * z / n);
+    const lo = k === 0 ? 0 : bisect(q => betaI(q, k, n - k + 1), 0.025, 0, 1), hi = k === n ? 1 : bisect(q => betaI(q, k + 1, n - k), 0.975, 0, 1);
+    boxOut({ "Estimate": p, "Standard error": se, "Wald low": Math.max(0, p - z * se), "Wald high": Math.min(1, p + z * se), "Wilson low": centre - half, "Wilson high": centre + half, "Exact low": lo, "Exact high": hi }, "e2Out");
+  }
+  function example3() {
+    const m1 = ev("e3m1"), s1 = ev("e3s1"), n1 = Math.round(ev("e3n1")), m2 = ev("e3m2"), s2 = ev("e3s2"), n2 = Math.round(ev("e3n2")), d = m1 - m2;
+    const v1 = s1 * s1 / n1, v2 = s2 * s2 / n2, se = Math.sqrt(v1 + v2), df = (v1 + v2) ** 2 / (v1 * v1 / (n1 - 1) + v2 * v2 / (n2 - 1)), tc = tQ(0.975, df), p = 2 * (1 - tCdfA(Math.abs(d / se), df));
+    boxOut({ "Difference": d, "Standard error": se, "z (differences in SE units)": d / se, "Welch d.f.": df, "95 % interval low": d - tc * se, "95 % interval high": d + tc * se, "Two-sided p-value": p, "Includes zero?": (d - tc * se <= 0 && d + tc * se >= 0) ? "yes" : "no" }, "e3Out");
+  }
+  document.querySelectorAll("#examplePanel input").forEach(x => x.addEventListener("input", () => { example1(); example2(); example3(); }));
+  example1(); example2(); example3();
+
+  // ---------- 3D: joint density of sample mean and sample sd, Normal data
+  const nn3 = 10, mu3 = 10, sd3 = 3, mx = linspace(6, 14, 60), sx = linspace(0.8, 6, 60);
+  const z3 = sx.map(s => mx.map(m => normPdf(m, mu3, sd3 / Math.sqrt(nn3)) * chi2Pdf((nn3 - 1) * s * s / (sd3 * sd3), nn3 - 1) * 2 * (nn3 - 1) * s / (sd3 * sd3)));
+  loadPlotlyThen(() => Plotly.newPlot("plot3d", [{ type: "surface", x: mx, y: sx, z: z3, colorscale: "Viridis" }],
+    { margin: { l: 0, r: 0, t: 30, b: 0 }, title: { text: "Joint density of (sample mean, sample sd), Normal data" }, scene: { xaxis: { title: "sample mean" }, yaxis: { title: "sample sd" }, zaxis: { title: "density" } } }, { responsive: true }));
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  main();
+  if (window.renderMathInElement) { renderMathInElement(document.body, { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] }); }
+});
+</script>
+</body>
+</html>

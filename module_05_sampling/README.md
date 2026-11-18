@@ -14,6 +14,7 @@ What happens to averages and other statistics when we collect more data: the law
 - `figures/`: PNG exports of every notebook figure, in notebook order.
 - `data/`: see its README.
 | 05_01 The law of large numbers | [notebook](notebooks/05_01_law_of_large_numbers.ipynb) | [page](html/05_01_law_of_large_numbers.html) | done |
+| 05_02 The central limit theorem | [notebook](notebooks/05_02_central_limit_theorem.ipynb) | [page](html/05_02_central_limit_theorem.html) | done |
 
 ## How to open
 

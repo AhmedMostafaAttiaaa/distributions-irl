@@ -9,3 +9,4 @@ Lessons use **simulated data** with fixed seeds (`np.random.default_rng(42)`), s
 All scenarios are illustrative, not measured.
 | 05_02 | draws from Uniform, Exponential, Bernoulli, Lognormal, a two-humped mixture and Pareto; daily sales totals (Lognormal orders, mean 85, SD 60); bottle fills (Uniform 495 to 505 ml); heavy-skew revenue per user (Lognormal s = 2) |
 | 05_03 | a population of 20,000 delivery times (Gamma(4, scale 7.5), seed 2025); Normal samples (mean 50, SD 12); a defect sample (12 of 80); two checkout-time summaries |
+| 05_04 | the 60-delivery sample of 05_03 (seed 5) bootstrapped; A/B counts (48 of 400, 66 of 420); Uniform(0, 100) samples for the failure demo; five project task durations simulated for the deadline example |

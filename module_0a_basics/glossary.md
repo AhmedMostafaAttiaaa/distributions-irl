@@ -22,7 +22,7 @@
 | Addition rule | P(A or B) = P(A) + P(B) - P(A and B); the overlap is subtracted once because it was counted twice. | [0a_03](html/0a_03_probability_rules.html) |
 | Inclusion-exclusion | For several events, add the singles, subtract the pairs, add the triples, and so on, to get P of the union. | [0a_03](html/0a_03_probability_rules.html) |
 | Independent events | Events A and B with P(A and B) = P(A) P(B); knowing one happened does not change the chance of the other. | [0a_03](html/0a_03_probability_rules.html) |
-| Multiplication rule | For independent events P(A and B) = P(A) P(B); in general P(A and B) = P(A) P(B given A). | [0a_03](html/0a_03_probability_rules.html) |
+| Multiplication rule for probabilities | For independent events P(A and B) = P(A) P(B); in general P(A and B) = P(A) P(B given A). | [0a_03](html/0a_03_probability_rules.html) |
 | At least one | P(at least one of independent events) = 1 - product of (1 - p_i), the complement of 'none happens'. | [0a_03](html/0a_03_probability_rules.html) |
 | Series system | A system that works only if all its components work; reliability is the product of the component reliabilities. | [0a_03](html/0a_03_probability_rules.html) |
 | Parallel system | A system that works if at least one component works; reliability is 1 minus the product of the failure probabilities. | [0a_03](html/0a_03_probability_rules.html) |

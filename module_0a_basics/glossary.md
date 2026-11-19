@@ -19,3 +19,11 @@
 | Binomial coefficient | The number C(n, k) of ways to choose k items from n, read 'n choose k'; the entries of Pascal's triangle. | [0a_02](html/0a_02_counting_basics.html) |
 | Pascal's triangle | Triangle of binomial coefficients in which each entry is the sum of the two entries above it. | [0a_02](html/0a_02_counting_basics.html) |
 | Birthday problem | Probability that at least two of n people share a birthday: 1 - product of (365 - j) / 365; above 50 % for 23 people. | [0a_02](html/0a_02_counting_basics.html) |
+| Addition rule | P(A or B) = P(A) + P(B) - P(A and B); the overlap is subtracted once because it was counted twice. | [0a_03](html/0a_03_probability_rules.html) |
+| Inclusion-exclusion | For several events, add the singles, subtract the pairs, add the triples, and so on, to get P of the union. | [0a_03](html/0a_03_probability_rules.html) |
+| Independent events | Events A and B with P(A and B) = P(A) P(B); knowing one happened does not change the chance of the other. | [0a_03](html/0a_03_probability_rules.html) |
+| Multiplication rule | For independent events P(A and B) = P(A) P(B); in general P(A and B) = P(A) P(B given A). | [0a_03](html/0a_03_probability_rules.html) |
+| At least one | P(at least one of independent events) = 1 - product of (1 - p_i), the complement of 'none happens'. | [0a_03](html/0a_03_probability_rules.html) |
+| Series system | A system that works only if all its components work; reliability is the product of the component reliabilities. | [0a_03](html/0a_03_probability_rules.html) |
+| Parallel system | A system that works if at least one component works; reliability is 1 minus the product of the failure probabilities. | [0a_03](html/0a_03_probability_rules.html) |
+| Union bound | P(A1 or ... or An) is at most the sum of the P(Ai), whatever the overlaps. | [0a_03](html/0a_03_probability_rules.html) |

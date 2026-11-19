@@ -45,3 +45,11 @@
 | Sensitivity and specificity | Sensitivity P(positive given case) is the true positive rate; specificity P(negative given non-case) the true negative rate. | [0a_05](html/0a_05_trees_total_probability.html) |
 | Precision (positive predictive value) | P(case given positive result): the share of alarms that are correct; depends on the base rate. | [0a_05](html/0a_05_trees_total_probability.html) |
 | Natural frequencies | Counts out of a fixed number of cases (for example 1,000) used instead of percentages to reason about conditional probabilities. | [0a_05](html/0a_05_trees_total_probability.html) |
+| Random variable | A rule that assigns a number to each outcome of an experiment, such as the sum of two dice. | [0a_06](html/0a_06_from_events_to_random_variables.html) |
+| Probability mass function (PMF) | For a discrete random variable, p(x) = P(X = x); the values are non-negative and add to 1. | [0a_06](html/0a_06_from_events_to_random_variables.html) |
+| Cumulative distribution function (CDF) | F(x) = P(X <= x), the running total of the PMF; a staircase for a discrete variable. | [0a_06](html/0a_06_from_events_to_random_variables.html) |
+| Expected value | E[X] = sum of x p(x): the probability-weighted average, which the average of many repetitions approaches. | [0a_06](html/0a_06_from_events_to_random_variables.html) |
+| Variance | Var(X) = E[(X - mu)^2] = E[X^2] - mu^2, the average squared distance from the mean. | [0a_06](html/0a_06_from_events_to_random_variables.html) |
+| Standard deviation | The square root of the variance, in the same units as X; the usual measure of spread or risk. | [0a_06](html/0a_06_from_events_to_random_variables.html) |
+| Linearity of expectation | E[aX + b] = a E[X] + b and E[X + Y] = E[X] + E[Y], with or without independence. | [0a_06](html/0a_06_from_events_to_random_variables.html) |
+| Indicator variable | The random variable that equals 1 if an event happens and 0 otherwise; its expected value is the probability of the event. | [0a_06](html/0a_06_from_events_to_random_variables.html) |

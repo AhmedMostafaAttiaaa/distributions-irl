@@ -35,3 +35,13 @@
 | Chi-square test of independence | Test that compares observed counts in a contingency table with the counts expected under independence. | [0a_04](html/0a_04_conditional_independence.html) |
 | Monty Hall problem | Three doors, one car: switching after the host reveals a goat wins with probability 2/3, staying wins 1/3. | [0a_04](html/0a_04_conditional_independence.html) |
 | Prosecutor's fallacy | Confusing P(A given B) with P(B given A). | [0a_04](html/0a_04_conditional_independence.html) |
+| Probability tree | Diagram of a multi-stage experiment: multiply probabilities along a path, add the paths that lead to the same outcome. | [0a_05](html/0a_05_trees_total_probability.html) |
+| Partition | A set of events that are mutually exclusive and together cover the whole sample space; their probabilities add to 1. | [0a_05](html/0a_05_trees_total_probability.html) |
+| Law of total probability | P(B) = sum over i of P(B given A_i) P(A_i) for a partition A_1, ..., A_k. | [0a_05](html/0a_05_trees_total_probability.html) |
+| Bayes' theorem | P(A_j given B) = P(B given A_j) P(A_j) / P(B): reverses a conditional probability. | [0a_05](html/0a_05_trees_total_probability.html) |
+| Prior and posterior | The prior is the probability before seeing evidence; the posterior is the probability after updating with Bayes' theorem. | [0a_05](html/0a_05_trees_total_probability.html) |
+| Likelihood ratio | Ratio P(evidence given case) / P(evidence given non-case); multiplies the prior odds to give the posterior odds. | [0a_05](html/0a_05_trees_total_probability.html) |
+| Base rate | The overall proportion of a condition in the population (prevalence); ignoring it is the base-rate fallacy. | [0a_05](html/0a_05_trees_total_probability.html) |
+| Sensitivity and specificity | Sensitivity P(positive given case) is the true positive rate; specificity P(negative given non-case) the true negative rate. | [0a_05](html/0a_05_trees_total_probability.html) |
+| Precision (positive predictive value) | P(case given positive result): the share of alarms that are correct; depends on the base rate. | [0a_05](html/0a_05_trees_total_probability.html) |
+| Natural frequencies | Counts out of a fixed number of cases (for example 1,000) used instead of percentages to reason about conditional probabilities. | [0a_05](html/0a_05_trees_total_probability.html) |

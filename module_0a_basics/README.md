@@ -9,6 +9,7 @@ A from-zero start before Module 00: sets and events, counting, the rules of prob
 | 0a_01 Outcomes, events and the sample space | [notebook](notebooks/0a_01_sets_events_sample_space.ipynb) | [page](html/0a_01_sets_events_sample_space.html) | done |
 | 0a_02 Counting basics | [notebook](notebooks/0a_02_counting_basics.ipynb) | [page](html/0a_02_counting_basics.html) | done |
 | 0a_03 The rules of probability | [notebook](notebooks/0a_03_probability_rules.ipynb) | [page](html/0a_03_probability_rules.html) | done |
+| 0a_04 Conditional probability and independence | [notebook](notebooks/0a_04_conditional_independence.ipynb) | [page](html/0a_04_conditional_independence.html) | done |
 
 ## Contents of the folders
 

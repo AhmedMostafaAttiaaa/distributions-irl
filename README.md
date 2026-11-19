@@ -4,6 +4,11 @@ A self-study course on probability distributions and how they are used in statis
 Every lesson has a Jupyter notebook (theory, derivations, 2D and 3D plots, simulation, a worked real-world example)
 and a lightweight interactive HTML page.
 
+## Where to start
+
+- **New to probability?** Start with Module 0A (`module_0a_basics`, six short lessons: events, counting, the rules of probability, conditional probability, trees and Bayes, and a first look at random variables). Then continue with Module 00.
+- **Already comfortable with basic probability?** Start at Module 00 (random variables, expectation, joint distributions) and go in order.
+
 ## Set up
 
 ```bash

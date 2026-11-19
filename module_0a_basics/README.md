@@ -6,6 +6,7 @@ A from-zero start before Module 00: sets and events, counting, the rules of prob
 
 | Lesson | Notebook | Interactive page | Status |
 |---|---|---|---|
+| 0a_01 Outcomes, events and the sample space | [notebook](notebooks/0a_01_sets_events_sample_space.ipynb) | [page](html/0a_01_sets_events_sample_space.html) | done |
 
 ## Contents of the folders
 

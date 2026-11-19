@@ -27,3 +27,11 @@
 | Series system | A system that works only if all its components work; reliability is the product of the component reliabilities. | [0a_03](html/0a_03_probability_rules.html) |
 | Parallel system | A system that works if at least one component works; reliability is 1 minus the product of the failure probabilities. | [0a_03](html/0a_03_probability_rules.html) |
 | Union bound | P(A1 or ... or An) is at most the sum of the P(Ai), whatever the overlaps. | [0a_03](html/0a_03_probability_rules.html) |
+| Conditional probability | P(A given B) = P(A and B) / P(B): the probability of A in the smaller world where B is known to have happened. | [0a_04](html/0a_04_conditional_independence.html) |
+| General multiplication rule | P(A and B) = P(B) P(A given B) = P(A) P(B given A); extends to chains of events. | [0a_04](html/0a_04_conditional_independence.html) |
+| Independence (conditional form) | A and B are independent when P(A given B) = P(A): learning B does not change the chance of A. | [0a_04](html/0a_04_conditional_independence.html) |
+| Sampling without replacement | Drawing items that are not returned, so each draw changes the probabilities of the next. | [0a_04](html/0a_04_conditional_independence.html) |
+| Contingency table | A table of counts of units classified by two categories at once; rows and columns give conditional probabilities. | [0a_04](html/0a_04_conditional_independence.html) |
+| Chi-square test of independence | Test that compares observed counts in a contingency table with the counts expected under independence. | [0a_04](html/0a_04_conditional_independence.html) |
+| Monty Hall problem | Three doors, one car: switching after the host reveals a goat wins with probability 2/3, staying wins 1/3. | [0a_04](html/0a_04_conditional_independence.html) |
+| Prosecutor's fallacy | Confusing P(A given B) with P(B given A). | [0a_04](html/0a_04_conditional_independence.html) |

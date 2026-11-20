@@ -133,6 +133,14 @@ footer a { color: var(--main); }
 </div>
 </section>
 
+<section id="moreExamples">
+  <h2>More worked examples (edit the numbers)</h2>
+  <div class="card">
+<style>.dpctl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0}.dpctl input{padding:5px 8px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px}</style>
+<h3>Two-component mixture explorer</h3><p class="muted">Mixture of two Normals. Enter a weight, the means and SDs, an observation x and a threshold t.</p><div class="dpctl"><label>weight of component 1 <input type="number" step="any" id="dp0_w" value="0.8" style="width:90px"></label><label>mean 1 <input type="number" step="any" id="dp0_m1" value="20" style="width:90px"></label><label>SD 1 <input type="number" step="any" id="dp0_s1" value="5" style="width:90px"></label><label>mean 2 <input type="number" step="any" id="dp0_m2" value="120" style="width:90px"></label><label>SD 2 <input type="number" step="any" id="dp0_s2" value="30" style="width:90px"></label><label>observation x <input type="number" step="any" id="dp0_x" value="60" style="width:90px"></label><label>threshold t <input type="number" step="any" id="dp0_t" value="100" style="width:90px"></label></div><div class="readouts" id="dpOut0"></div>
+<h3>One EM update for two groups</h3><p class="muted">Data x1..x6, two components with a common SD, equal weights. Enter the starting means.</p><div class="dpctl"><label>start mean 1 <input type="number" step="any" id="dp1_a" value="0" style="width:90px"></label><label>start mean 2 <input type="number" step="any" id="dp1_b" value="6" style="width:90px"></label><label>common SD <input type="number" step="any" id="dp1_sd" value="1" style="width:90px"></label></div><div class="readouts" id="dpOut1"></div>
+  </div>
+</section>
 <section>
   <h2>Where it is used</h2>
   <div class="grid3 cards3">
@@ -691,6 +699,32 @@ window.addEventListener("DOMContentLoaded", () => {
       { left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
   }
 });
+</script>
+<script>
+(function () {
+
+const M = (() => {
+  const lgamma = z => { const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5]; let x = z, y = z, t = x + 5.5; t -= (x + 0.5) * Math.log(t); let s = 1.000000000190015; for (const cj of c) s += cj / ++y; return -t + Math.log(2.5066282746310005 * s / x); };
+  const lchoose = (n, k) => (k < 0 || k > n) ? -Infinity : lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1);
+  const erf = x => { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x); const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return s * y; };
+  const normCdf = (x, m = 0, s = 1) => 0.5 * (1 + erf((x - m) / (s * Math.SQRT2)));
+  const normPdf = (x, m = 0, s = 1) => Math.exp(-0.5 * Math.pow((x - m) / s, 2)) / (s * Math.sqrt(2 * Math.PI));
+  const binomPmf = (k, n, p) => (k < 0 || k > n) ? 0 : (p <= 0 ? (k === 0 ? 1 : 0) : p >= 1 ? (k === n ? 1 : 0) : Math.exp(lchoose(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p)));
+  const binomCdf = (k, n, p) => { let s = 0; for (let j = 0; j <= Math.min(k, n); j++) s += binomPmf(j, n, p); return Math.min(1, s); };
+  const poisPmf = (k, l) => k < 0 ? 0 : Math.exp(-l + k * Math.log(l) - lgamma(k + 1));
+  const poisCdf = (k, l) => { let s = 0; for (let j = 0; j <= k; j++) s += poisPmf(j, l); return Math.min(1, s); };
+  const hyperPmf = (k, N, K, n) => Math.exp(lchoose(K, k) + lchoose(N - K, n - k) - lchoose(N, n));
+  const fmt = v => typeof v === "string" ? v : !Number.isFinite(v) ? "n/a" : (Number.isInteger(v) && Math.abs(v) < 1e9) ? v.toLocaleString("en-US") : (Math.abs(v) < 1e-3 && v !== 0) ? v.toExponential(2) : Math.abs(v) >= 1000 ? v.toLocaleString("en-US", { maximumFractionDigits: 2 }) : v.toFixed(4);
+  return { lgamma, lchoose, erf, normCdf, normPdf, binomPmf, binomCdf, poisPmf, poisCdf, hyperPmf, fmt };
+})();
+const DEEP = [
+  { names: ["w","m1","s1","m2","s2","x","t"], f: function (v) { const w = Math.min(1, Math.max(0, v.w)), mean = w * v.m1 + (1 - w) * v.m2, within = w * v.s1 * v.s1 + (1 - w) * v.s2 * v.s2, between = w * (v.m1 - mean) * (v.m1 - mean) + (1 - w) * (v.m2 - mean) * (v.m2 - mean); const f1 = w * M.normPdf(v.x, v.m1, v.s1), f2 = (1 - w) * M.normPdf(v.x, v.m2, v.s2); return { 'mixture mean': mean, 'mixture SD': Math.sqrt(within + between), 'between-group share of variance': between / (within + between), 'density at x': f1 + f2, 'P(component 1 | x)': f1 + f2 > 0 ? f1 / (f1 + f2) : NaN, 'P(X > t)': w * (1 - M.normCdf(v.t, v.m1, v.s1)) + (1 - w) * (1 - M.normCdf(v.t, v.m2, v.s2)) };  } },
+  { names: ["a","b","sd"], f: function (v) { const x = [1.0, 1.2, 0.8, 4.8, 5.0, 5.3]; let n1 = 0, n2 = 0, s1 = 0, s2 = 0; for (const xi of x) { const d1 = M.normPdf(xi, v.a, v.sd), d2 = M.normPdf(xi, v.b, v.sd), r1 = d1 / (d1 + d2); n1 += r1; n2 += 1 - r1; s1 += r1 * xi; s2 += (1 - r1) * xi; } return { 'new mean 1': s1 / n1, 'new mean 2': s2 / n2, 'new weight 1': n1 / x.length, 'effective points in group 1': n1 };  } }
+];
+function run(k) { const ex = DEEP[k], v = {}; for (const nm of ex.names) v[nm] = Number(document.getElementById('dp' + k + '_' + nm).value); let out; try { out = ex.f(v); } catch (err) { out = { error: String(err) }; }
+  const box = document.getElementById('dpOut' + k); box.innerHTML = ''; for (const [name, val] of Object.entries(out)) { const c = document.createElement('div'); c.className = 'readout'; c.innerHTML = '<div class="name">' + name + '</div><div class="value">' + M.fmt(val) + '</div>'; box.appendChild(c); } }
+window.addEventListener('DOMContentLoaded', () => { DEEP.forEach((ex, k) => { for (const nm of ex.names) document.getElementById('dp' + k + '_' + nm).addEventListener('input', () => run(k)); run(k); }); });
+})();
 </script>
 </body>
 </html>

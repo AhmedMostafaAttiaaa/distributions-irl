@@ -134,6 +134,14 @@ Person: height <input type="number" id="e1h" value="185"> weight <input type="nu
 </div>
 </section>
 
+<section id="moreExamples">
+  <h2>More worked examples (edit the numbers)</h2>
+  <div class="card">
+<style>.dpctl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0}.dpctl input{padding:5px 8px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px}</style>
+<h3>Two-asset portfolio</h3><p class="muted">Returns are bivariate Normal; the portfolio puts weight w in asset A and 1 - w in asset B.</p><div class="dpctl"><label>weight in A <input type="number" step="any" id="dp0_w" value="0.6" style="width:90px"></label><label>mean A (%) <input type="number" step="any" id="dp0_mA" value="5" style="width:90px"></label><label>SD A (%) <input type="number" step="any" id="dp0_sA" value="10" style="width:90px"></label><label>mean B (%) <input type="number" step="any" id="dp0_mB" value="8" style="width:90px"></label><label>SD B (%) <input type="number" step="any" id="dp0_sB" value="20" style="width:90px"></label><label>correlation <input type="number" step="any" id="dp0_rho" value="0.3" style="width:90px"></label></div><div class="readouts" id="dpOut0"></div>
+<h3>Predicting one score from another</h3><p class="muted">Bivariate Normal: the conditional distribution of y given x is Normal with mean mu_y + rho (sd_y / sd_x)(x - mu_x) and SD sd_y sqrt(1 - rho^2).</p><div class="dpctl"><label>mean of x <input type="number" step="any" id="dp1_mx" value="70" style="width:90px"></label><label>SD of x <input type="number" step="any" id="dp1_sx" value="10" style="width:90px"></label><label>mean of y <input type="number" step="any" id="dp1_my" value="65" style="width:90px"></label><label>SD of y <input type="number" step="any" id="dp1_sy" value="12" style="width:90px"></label><label>correlation <input type="number" step="any" id="dp1_rho" value="0.7" style="width:90px"></label><label>observed x <input type="number" step="any" id="dp1_x" value="85" style="width:90px"></label><label>threshold for y <input type="number" step="any" id="dp1_t" value="80" style="width:90px"></label></div><div class="readouts" id="dpOut1"></div>
+  </div>
+</section>
 <section>
   <h2>Where it is used</h2>
   <div class="grid3 cards3">
@@ -671,6 +679,32 @@ window.addEventListener("DOMContentLoaded", () => {
       { left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
   }
 });
+</script>
+<script>
+(function () {
+
+const M = (() => {
+  const lgamma = z => { const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5]; let x = z, y = z, t = x + 5.5; t -= (x + 0.5) * Math.log(t); let s = 1.000000000190015; for (const cj of c) s += cj / ++y; return -t + Math.log(2.5066282746310005 * s / x); };
+  const lchoose = (n, k) => (k < 0 || k > n) ? -Infinity : lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1);
+  const erf = x => { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x); const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return s * y; };
+  const normCdf = (x, m = 0, s = 1) => 0.5 * (1 + erf((x - m) / (s * Math.SQRT2)));
+  const normPdf = (x, m = 0, s = 1) => Math.exp(-0.5 * Math.pow((x - m) / s, 2)) / (s * Math.sqrt(2 * Math.PI));
+  const binomPmf = (k, n, p) => (k < 0 || k > n) ? 0 : (p <= 0 ? (k === 0 ? 1 : 0) : p >= 1 ? (k === n ? 1 : 0) : Math.exp(lchoose(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p)));
+  const binomCdf = (k, n, p) => { let s = 0; for (let j = 0; j <= Math.min(k, n); j++) s += binomPmf(j, n, p); return Math.min(1, s); };
+  const poisPmf = (k, l) => k < 0 ? 0 : Math.exp(-l + k * Math.log(l) - lgamma(k + 1));
+  const poisCdf = (k, l) => { let s = 0; for (let j = 0; j <= k; j++) s += poisPmf(j, l); return Math.min(1, s); };
+  const hyperPmf = (k, N, K, n) => Math.exp(lchoose(K, k) + lchoose(N - K, n - k) - lchoose(N, n));
+  const fmt = v => typeof v === "string" ? v : !Number.isFinite(v) ? "n/a" : (Number.isInteger(v) && Math.abs(v) < 1e9) ? v.toLocaleString("en-US") : (Math.abs(v) < 1e-3 && v !== 0) ? v.toExponential(2) : Math.abs(v) >= 1000 ? v.toLocaleString("en-US", { maximumFractionDigits: 2 }) : v.toFixed(4);
+  return { lgamma, lchoose, erf, normCdf, normPdf, binomPmf, binomCdf, poisPmf, poisCdf, hyperPmf, fmt };
+})();
+const DEEP = [
+  { names: ["w","mA","sA","mB","sB","rho"], f: function (v) { const w = v.w, m = w * v.mA + (1 - w) * v.mB, va = w * w * v.sA * v.sA + (1 - w) * (1 - w) * v.sB * v.sB + 2 * w * (1 - w) * v.rho * v.sA * v.sB, s = Math.sqrt(va); return { 'portfolio mean (%)': m, 'portfolio SD (%)': s, 'weighted average of the SDs': w * v.sA + (1 - w) * v.sB, 'P(loss)': M.normCdf(0, m, s), 'P(loss) for A alone': M.normCdf(0, v.mA, v.sA), 'P(loss) for B alone': M.normCdf(0, v.mB, v.sB) };  } },
+  { names: ["mx","sx","my","sy","rho","x","t"], f: function (v) { const cm = v.my + v.rho * v.sy / v.sx * (v.x - v.mx), cs = v.sy * Math.sqrt(1 - v.rho * v.rho); return { 'conditional mean of y': cm, 'conditional SD of y': cs, 'P(y > t | x)': 1 - M.normCdf(v.t, cm, cs), 'P(y > t) unconditional': 1 - M.normCdf(v.t, v.my, v.sy), 'variance explained (rho^2)': v.rho * v.rho };  } }
+];
+function run(k) { const ex = DEEP[k], v = {}; for (const nm of ex.names) v[nm] = Number(document.getElementById('dp' + k + '_' + nm).value); let out; try { out = ex.f(v); } catch (err) { out = { error: String(err) }; }
+  const box = document.getElementById('dpOut' + k); box.innerHTML = ''; for (const [name, val] of Object.entries(out)) { const c = document.createElement('div'); c.className = 'readout'; c.innerHTML = '<div class="name">' + name + '</div><div class="value">' + M.fmt(val) + '</div>'; box.appendChild(c); } }
+window.addEventListener('DOMContentLoaded', () => { DEEP.forEach((ex, k) => { for (const nm of ex.names) document.getElementById('dp' + k + '_' + nm).addEventListener('input', () => run(k)); run(k); }); });
+})();
 </script>
 </body>
 </html>

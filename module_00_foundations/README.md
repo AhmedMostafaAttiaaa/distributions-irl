@@ -19,6 +19,6 @@ The vocabulary every later module uses: random variables, expectation and moment
 
 ## Decisions
 
-- To keep these lessons short, each has one main worked example (hand, code plus assert, simulation, plots, decision) and one shorter extra example; derivations are compact with "In plain words" cells.
+- **Deepened on 2026-11-20:** every lesson now has three worked examples (the main one plus two more, each solved by hand, in code with asserts, by simulation and with a plain-language decision), an "In plain words" cell after the derivations, extra exercises with solutions, and a panel of two editable extra examples on its page.
 - The HTML pages use a continuous engine: PDF and CDF lines, area shading, density histogram of samples, a quantile calculator, and special functions (incomplete gamma and beta) written in plain JavaScript so everything works from `file://`.
 - All data are synthetic.

@@ -136,6 +136,14 @@ Given height <input type="number" id="e1h" value="185">: P(weight &gt; <input ty
 </div>
 </section>
 
+<section id="moreExamples">
+  <h2>More worked examples (edit the numbers)</h2>
+  <div class="card">
+<style>.dpctl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0}.dpctl input{padding:5px 8px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px}</style>
+<h3>Pages viewed and purchase</h3><p class="muted">Joint table: p(1,.) = 0.30, 0.05; p(2,.) = 0.25, 0.10; p(3,.) = 0.10, 0.20 (no purchase, purchase). Pick a number of pages.</p><div class="dpctl"><label>pages viewed (1 to 3) <input type="number" step="any" id="dp0_x" value="3" style="width:90px"></label></div><div class="readouts" id="dpOut0"></div>
+<h3>Two segments: total variance</h3><p class="muted">Mobile and desktop order values. Change the mobile share and the segment means and SDs.</p><div class="dpctl"><label>mobile share (0 to 1) <input type="number" step="any" id="dp1_w" value="0.6" style="width:90px"></label><label>mobile mean <input type="number" step="any" id="dp1_m1" value="40" style="width:90px"></label><label>mobile SD <input type="number" step="any" id="dp1_s1" value="15" style="width:90px"></label><label>desktop mean <input type="number" step="any" id="dp1_m2" value="70" style="width:90px"></label><label>desktop SD <input type="number" step="any" id="dp1_s2" value="25" style="width:90px"></label></div><div class="readouts" id="dpOut1"></div>
+  </div>
+</section>
 <section>
   <h2>Where it is used</h2>
   <div class="grid3 cards3">
@@ -661,6 +669,32 @@ window.addEventListener("DOMContentLoaded", () => {
       { left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
   }
 });
+</script>
+<script>
+(function () {
+
+const M = (() => {
+  const lgamma = z => { const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5]; let x = z, y = z, t = x + 5.5; t -= (x + 0.5) * Math.log(t); let s = 1.000000000190015; for (const cj of c) s += cj / ++y; return -t + Math.log(2.5066282746310005 * s / x); };
+  const lchoose = (n, k) => (k < 0 || k > n) ? -Infinity : lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1);
+  const erf = x => { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x); const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return s * y; };
+  const normCdf = (x, m = 0, s = 1) => 0.5 * (1 + erf((x - m) / (s * Math.SQRT2)));
+  const normPdf = (x, m = 0, s = 1) => Math.exp(-0.5 * Math.pow((x - m) / s, 2)) / (s * Math.sqrt(2 * Math.PI));
+  const binomPmf = (k, n, p) => (k < 0 || k > n) ? 0 : (p <= 0 ? (k === 0 ? 1 : 0) : p >= 1 ? (k === n ? 1 : 0) : Math.exp(lchoose(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p)));
+  const binomCdf = (k, n, p) => { let s = 0; for (let j = 0; j <= Math.min(k, n); j++) s += binomPmf(j, n, p); return Math.min(1, s); };
+  const poisPmf = (k, l) => k < 0 ? 0 : Math.exp(-l + k * Math.log(l) - lgamma(k + 1));
+  const poisCdf = (k, l) => { let s = 0; for (let j = 0; j <= k; j++) s += poisPmf(j, l); return Math.min(1, s); };
+  const hyperPmf = (k, N, K, n) => Math.exp(lchoose(K, k) + lchoose(N - K, n - k) - lchoose(N, n));
+  const fmt = v => typeof v === "string" ? v : !Number.isFinite(v) ? "n/a" : (Number.isInteger(v) && Math.abs(v) < 1e9) ? v.toLocaleString("en-US") : (Math.abs(v) < 1e-3 && v !== 0) ? v.toExponential(2) : Math.abs(v) >= 1000 ? v.toLocaleString("en-US", { maximumFractionDigits: 2 }) : v.toFixed(4);
+  return { lgamma, lchoose, erf, normCdf, normPdf, binomPmf, binomCdf, poisPmf, poisCdf, hyperPmf, fmt };
+})();
+const DEEP = [
+  { names: ["x"], f: function (v) { const J = [[0.30, 0.05], [0.25, 0.10], [0.10, 0.20]]; const x = Math.min(3, Math.max(1, Math.round(v.x))), px = J.map(r => r[0] + r[1]); const cond = J[x - 1][1] / px[x - 1]; const ex = px[0] + 2 * px[1] + 3 * px[2], ey = 0.35, exy = J[0][1] + 2 * J[1][1] + 3 * J[2][1]; const cov = exy - ex * ey, vx = px[0] + 4 * px[1] + 9 * px[2] - ex * ex; return { 'P(pages = x)': px[x - 1], 'P(purchase | x pages)': cond, 'P(purchase)': ey, 'covariance': cov, 'correlation': cov / Math.sqrt(vx * 0.2275) };  } },
+  { names: ["w","m1","s1","m2","s2"], f: function (v) { const w = Math.min(1, Math.max(0, v.w)); const e = w * v.m1 + (1 - w) * v.m2, within = w * v.s1 * v.s1 + (1 - w) * v.s2 * v.s2, between = w * (v.m1 - e) * (v.m1 - e) + (1 - w) * (v.m2 - e) * (v.m2 - e); return { 'E[V]': e, 'within-segment variance': within, 'between-segment variance': between, 'total variance': within + between, 'total SD': Math.sqrt(within + between), 'between share': between / (within + between) };  } }
+];
+function run(k) { const ex = DEEP[k], v = {}; for (const nm of ex.names) v[nm] = Number(document.getElementById('dp' + k + '_' + nm).value); let out; try { out = ex.f(v); } catch (err) { out = { error: String(err) }; }
+  const box = document.getElementById('dpOut' + k); box.innerHTML = ''; for (const [name, val] of Object.entries(out)) { const c = document.createElement('div'); c.className = 'readout'; c.innerHTML = '<div class="name">' + name + '</div><div class="value">' + M.fmt(val) + '</div>'; box.appendChild(c); } }
+window.addEventListener('DOMContentLoaded', () => { DEEP.forEach((ex, k) => { for (const nm of ex.names) document.getElementById('dp' + k + '_' + nm).addEventListener('input', () => run(k)); run(k); }); });
+})();
 </script>
 </body>
 </html>

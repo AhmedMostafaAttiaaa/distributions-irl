@@ -133,6 +133,14 @@ copula parameter <input type="number" id="e1r" value="0.6" step="0.05" min="-0.9
 </div>
 </section>
 
+<section id="moreExamples">
+  <h2>More worked examples (edit the numbers)</h2>
+  <div class="card">
+<style>.dpctl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0}.dpctl input{padding:5px 8px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px}</style>
+<h3>Joint bad years under a Gaussian copula</h3><p class="muted">Both variables exceed their own q-quantile; the joint probability is found by simulating 200,000 pairs of the bivariate Normal.</p><div class="dpctl"><label>copula correlation <input type="number" step="any" id="dp0_rho" value="0.6" style="width:90px"></label><label>quantile level (e.g. 0.9) <input type="number" step="any" id="dp0_q" value="0.9" style="width:90px"></label></div><div class="readouts" id="dpOut0"></div>
+<h3>Rank correlations of a Gaussian copula</h3><p class="muted">Kendall tau = (2/pi) arcsin(rho); Spearman = (6/pi) arcsin(rho/2); Pearson of (Z1, exp(a Z2)) = rho a / sqrt(exp(a^2) - 1) when the Z are standard Normal.</p><div class="dpctl"><label>copula correlation rho <input type="number" step="any" id="dp1_rho" value="0.7" style="width:90px"></label><label>skew factor a in exp(a Z2) <input type="number" step="any" id="dp1_a" value="2" style="width:90px"></label></div><div class="readouts" id="dpOut1"></div>
+  </div>
+</section>
 <section>
   <h2>Where it is used</h2>
   <div class="grid3 cards3">
@@ -674,6 +682,32 @@ window.addEventListener("DOMContentLoaded", () => {
       { left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
   }
 });
+</script>
+<script>
+(function () {
+
+const M = (() => {
+  const lgamma = z => { const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5]; let x = z, y = z, t = x + 5.5; t -= (x + 0.5) * Math.log(t); let s = 1.000000000190015; for (const cj of c) s += cj / ++y; return -t + Math.log(2.5066282746310005 * s / x); };
+  const lchoose = (n, k) => (k < 0 || k > n) ? -Infinity : lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1);
+  const erf = x => { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x); const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return s * y; };
+  const normCdf = (x, m = 0, s = 1) => 0.5 * (1 + erf((x - m) / (s * Math.SQRT2)));
+  const normPdf = (x, m = 0, s = 1) => Math.exp(-0.5 * Math.pow((x - m) / s, 2)) / (s * Math.sqrt(2 * Math.PI));
+  const binomPmf = (k, n, p) => (k < 0 || k > n) ? 0 : (p <= 0 ? (k === 0 ? 1 : 0) : p >= 1 ? (k === n ? 1 : 0) : Math.exp(lchoose(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p)));
+  const binomCdf = (k, n, p) => { let s = 0; for (let j = 0; j <= Math.min(k, n); j++) s += binomPmf(j, n, p); return Math.min(1, s); };
+  const poisPmf = (k, l) => k < 0 ? 0 : Math.exp(-l + k * Math.log(l) - lgamma(k + 1));
+  const poisCdf = (k, l) => { let s = 0; for (let j = 0; j <= k; j++) s += poisPmf(j, l); return Math.min(1, s); };
+  const hyperPmf = (k, N, K, n) => Math.exp(lchoose(K, k) + lchoose(N - K, n - k) - lchoose(N, n));
+  const fmt = v => typeof v === "string" ? v : !Number.isFinite(v) ? "n/a" : (Number.isInteger(v) && Math.abs(v) < 1e9) ? v.toLocaleString("en-US") : (Math.abs(v) < 1e-3 && v !== 0) ? v.toExponential(2) : Math.abs(v) >= 1000 ? v.toLocaleString("en-US", { maximumFractionDigits: 2 }) : v.toFixed(4);
+  return { lgamma, lchoose, erf, normCdf, normPdf, binomPmf, binomCdf, poisPmf, poisCdf, hyperPmf, fmt };
+})();
+const DEEP = [
+  { names: ["rho","q"], f: function (v) { const q = Math.min(0.9999, Math.max(0.5, v.q)); let lo = -8, hi = 8; for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; if (M.normCdf(mid) < q) lo = mid; else hi = mid; } const z = (lo + hi) / 2, r = Math.max(-0.999, Math.min(0.999, v.rho)), s = Math.sqrt(1 - r * r); let both = 0; const R = 200000; for (let i = 0; i < R; i++) { const u1 = Math.random(), u2 = Math.random(), g1 = Math.sqrt(-2 * Math.log(1 - u1)) * Math.cos(2 * Math.PI * u2), g2 = Math.sqrt(-2 * Math.log(1 - u1)) * Math.sin(2 * Math.PI * u2); if (g1 > z && r * g1 + s * g2 > z) both++; } return { 'quantile as a z-value': z, 'P(both exceed) independent': (1 - q) * (1 - q), 'P(both exceed) Gaussian copula (simulated)': both / R, 'ratio to independence': (both / R) / ((1 - q) * (1 - q)) };  } },
+  { names: ["rho","a"], f: function (v) { const r = Math.max(-1, Math.min(1, v.rho)); return { 'Kendall tau': 2 / Math.PI * Math.asin(r), 'Spearman rho': 6 / Math.PI * Math.asin(r / 2), 'Pearson of (Z1, Z2)': r, 'Pearson of (Z1, exp(a Z2))': Math.abs(v.a) < 1e-9 ? 0 : r * v.a / Math.sqrt(Math.exp(v.a * v.a) - 1) };  } }
+];
+function run(k) { const ex = DEEP[k], v = {}; for (const nm of ex.names) v[nm] = Number(document.getElementById('dp' + k + '_' + nm).value); let out; try { out = ex.f(v); } catch (err) { out = { error: String(err) }; }
+  const box = document.getElementById('dpOut' + k); box.innerHTML = ''; for (const [name, val] of Object.entries(out)) { const c = document.createElement('div'); c.className = 'readout'; c.innerHTML = '<div class="name">' + name + '</div><div class="value">' + M.fmt(val) + '</div>'; box.appendChild(c); } }
+window.addEventListener('DOMContentLoaded', () => { DEEP.forEach((ex, k) => { for (const nm of ex.names) document.getElementById('dp' + k + '_' + nm).addEventListener('input', () => run(k)); run(k); }); });
+})();
 </script>
 </body>
 </html>

@@ -134,6 +134,14 @@ P(share of A &gt; <input type="number" id="e1t" value="0.5" step="0.05" min="0" 
 </div>
 </section>
 
+<section id="moreExamples">
+  <h2>More worked examples (edit the numbers)</h2>
+  <div class="card">
+<style>.dpctl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0}.dpctl input{padding:5px 8px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px}</style>
+<h3>Smoothing word counts</h3><p class="muted">Add-alpha smoothing is the posterior mean of a Dirichlet(alpha, ..., alpha) prior.</p><div class="dpctl"><label>count of word 1 <input type="number" step="any" id="dp0_c1" value="10" style="width:90px"></label><label>count of word 2 <input type="number" step="any" id="dp0_c2" value="3" style="width:90px"></label><label>count of word 3 <input type="number" step="any" id="dp0_c3" value="0" style="width:90px"></label><label>count of word 4 <input type="number" step="any" id="dp0_c4" value="1" style="width:90px"></label><label>alpha (pseudo-count) <input type="number" step="any" id="dp0_a" value="1" style="width:90px"></label></div><div class="readouts" id="dpOut0"></div>
+<h3>Strength of a Dirichlet prior</h3><p class="muted">Prior mean (0.5, 0.3, 0.2) with concentration alpha0; data are customer counts for the three products.</p><div class="dpctl"><label>prior concentration alpha0 <input type="number" step="any" id="dp1_a0" value="5" style="width:90px"></label><label>customers choosing 1 <input type="number" step="any" id="dp1_x1" value="8" style="width:90px"></label><label>customers choosing 2 <input type="number" step="any" id="dp1_x2" value="4" style="width:90px"></label><label>customers choosing 3 <input type="number" step="any" id="dp1_x3" value="8" style="width:90px"></label></div><div class="readouts" id="dpOut1"></div>
+  </div>
+</section>
 <section>
   <h2>Where it is used</h2>
   <div class="grid3 cards3">
@@ -676,6 +684,32 @@ window.addEventListener("DOMContentLoaded", () => {
       { left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
   }
 });
+</script>
+<script>
+(function () {
+
+const M = (() => {
+  const lgamma = z => { const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5]; let x = z, y = z, t = x + 5.5; t -= (x + 0.5) * Math.log(t); let s = 1.000000000190015; for (const cj of c) s += cj / ++y; return -t + Math.log(2.5066282746310005 * s / x); };
+  const lchoose = (n, k) => (k < 0 || k > n) ? -Infinity : lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1);
+  const erf = x => { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x); const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return s * y; };
+  const normCdf = (x, m = 0, s = 1) => 0.5 * (1 + erf((x - m) / (s * Math.SQRT2)));
+  const normPdf = (x, m = 0, s = 1) => Math.exp(-0.5 * Math.pow((x - m) / s, 2)) / (s * Math.sqrt(2 * Math.PI));
+  const binomPmf = (k, n, p) => (k < 0 || k > n) ? 0 : (p <= 0 ? (k === 0 ? 1 : 0) : p >= 1 ? (k === n ? 1 : 0) : Math.exp(lchoose(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p)));
+  const binomCdf = (k, n, p) => { let s = 0; for (let j = 0; j <= Math.min(k, n); j++) s += binomPmf(j, n, p); return Math.min(1, s); };
+  const poisPmf = (k, l) => k < 0 ? 0 : Math.exp(-l + k * Math.log(l) - lgamma(k + 1));
+  const poisCdf = (k, l) => { let s = 0; for (let j = 0; j <= k; j++) s += poisPmf(j, l); return Math.min(1, s); };
+  const hyperPmf = (k, N, K, n) => Math.exp(lchoose(K, k) + lchoose(N - K, n - k) - lchoose(N, n));
+  const fmt = v => typeof v === "string" ? v : !Number.isFinite(v) ? "n/a" : (Number.isInteger(v) && Math.abs(v) < 1e9) ? v.toLocaleString("en-US") : (Math.abs(v) < 1e-3 && v !== 0) ? v.toExponential(2) : Math.abs(v) >= 1000 ? v.toLocaleString("en-US", { maximumFractionDigits: 2 }) : v.toFixed(4);
+  return { lgamma, lchoose, erf, normCdf, normPdf, binomPmf, binomCdf, poisPmf, poisCdf, hyperPmf, fmt };
+})();
+const DEEP = [
+  { names: ["c1","c2","c3","c4","a"], f: function (v) { const c = [v.c1, v.c2, v.c3, v.c4], n = c.reduce((s, x) => s + x, 0), a0 = 4 * v.a; const out = {}; c.forEach((x, i) => { out['smoothed P(word ' + (i + 1) + ')'] = (x + v.a) / (n + a0); }); out['raw frequency of word 3'] = n ? c[2] / n : 0; out['total weight of the prior'] = a0 / (n + a0); return out;  } },
+  { names: ["a0","x1","x2","x3"], f: function (v) { const x = [v.x1, v.x2, v.x3], n = x[0] + x[1] + x[2], pm = [0.5, 0.3, 0.2], post = pm.map((p, i) => v.a0 * p + x[i]), t = post[0] + post[1] + post[2]; return { 'posterior mean 1': post[0] / t, 'posterior mean 2': post[1] / t, 'posterior mean 3': post[2] / t, 'data alone, share 3': n ? x[2] / n : 0, 'weight of the prior': v.a0 / (v.a0 + n), 'posterior SD of share 3': Math.sqrt(post[2] * (t - post[2]) / (t * t * (t + 1))) };  } }
+];
+function run(k) { const ex = DEEP[k], v = {}; for (const nm of ex.names) v[nm] = Number(document.getElementById('dp' + k + '_' + nm).value); let out; try { out = ex.f(v); } catch (err) { out = { error: String(err) }; }
+  const box = document.getElementById('dpOut' + k); box.innerHTML = ''; for (const [name, val] of Object.entries(out)) { const c = document.createElement('div'); c.className = 'readout'; c.innerHTML = '<div class="name">' + name + '</div><div class="value">' + M.fmt(val) + '</div>'; box.appendChild(c); } }
+window.addEventListener('DOMContentLoaded', () => { DEEP.forEach((ex, k) => { for (const nm of ex.names) document.getElementById('dp' + k + '_' + nm).addEventListener('input', () => run(k)); run(k); }); });
+})();
 </script>
 </body>
 </html>

@@ -21,7 +21,7 @@ How the common discrete distributions are generated, their full math, how to com
 
 ## Decisions
 
-- **Deepened on 2026-11-20:** every lesson now has three worked examples (the main one plus two more, each solved by hand, in code with asserts, by simulation and with a plain-language decision), an "In plain words" cell after the derivations, extra exercises with solutions, and a panel of two editable extra examples on its page.
+- **Deepened on 2026-11-20:** lessons 01_01 to 01_06 now have three worked examples (the main one plus two more, each solved by hand, in code with asserts, by simulation and with a plain-language decision), an "In plain words" cell after the derivations, extra exercises with solutions, and a panel of two editable extra examples on its page.
 - Where hand arithmetic over many PMF terms is impractical, the "by hand" step is the exact formula written as an explicit sum with `math.comb`, preceded by a normal-approximation calculation done on paper.
 - Lesson 01_03 uses the 2023/24 Premier League season (`data/E0_2324.csv`, 380 matches). Run `data/download_data.py` if the file is missing.
 - Lesson 01_06 uses *Pride and Prejudice* from Project Gutenberg (`data/pride_and_prejudice.txt`). www.gutenberg.org was down on the download date, so `download_data.py` tries the official mirror gutenberg.pglaf.org first. The HTML page embeds the top 500 word counts as JSON so it works from `file://`.

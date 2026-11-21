@@ -33,3 +33,13 @@
 | Effect size | The size of the true difference, often standardised as d = (mu - mu0) / sigma; the quantity power depends on. | [06_03](html/06_03_hypothesis_testing_core.html) |
 | Rejection region | The set of test-statistic values for which H0 is rejected; its probability under H0 equals alpha. | [06_03](html/06_03_hypothesis_testing_core.html) |
 | Neyman-Pearson lemma | For two simple hypotheses the most powerful test of a given level rejects when the likelihood ratio is large. | [06_03](html/06_03_hypothesis_testing_core.html) |
+| Welch t-test | Two-sample t-test that does not assume equal variances: t = (difference of means) / sqrt(s1^2/n1 + s2^2/n2) with Satterthwaite degrees of freedom; the recommended default. | [06_04](html/06_04_common_tests.html) |
+| Pooled t-test | Two-sample t-test that assumes equal variances and uses the pooled standard deviation; inflated Type I error when the variances and sample sizes differ. | [06_04](html/06_04_common_tests.html) |
+| Paired t-test | One-sample t-test on the within-unit differences; removes between-unit variation and is more sensitive when the pairs are correlated. | [06_04](html/06_04_common_tests.html) |
+| Chi-square goodness-of-fit test | Compares observed counts with the counts expected under a model: chi-square = sum of (O - E)^2 / E with K - 1 degrees of freedom. | [06_04](html/06_04_common_tests.html) |
+| Chi-square test of independence | Tests whether two categorical variables are related in a contingency table; expected counts are row total times column total divided by n, df = (r - 1)(c - 1). | [06_04](html/06_04_common_tests.html) |
+| Cramer's V | Strength of association in a contingency table, sqrt(chi-square / (n min(r - 1, c - 1))), between 0 and 1. | [06_04](html/06_04_common_tests.html) |
+| One-way ANOVA | Test that several group means are equal, comparing the variation between groups with the variation within groups. | [06_04](html/06_04_common_tests.html) |
+| F statistic | Ratio of two independent variance estimates (mean squares), F = MSB / MSW in ANOVA; follows an F distribution with (k - 1, N - k) degrees of freedom under H0. | [06_04](html/06_04_common_tests.html) |
+| Cohen's d | Standardised difference of two means, (mean1 - mean2) / pooled SD; about 0.2 small, 0.5 medium, 0.8 large. | [06_04](html/06_04_common_tests.html) |
+| Eta squared | Share of the total variation explained by the groups in ANOVA, SSB / SST. | [06_04](html/06_04_common_tests.html) |

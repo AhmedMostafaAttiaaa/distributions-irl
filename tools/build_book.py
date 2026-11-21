@@ -27,7 +27,8 @@ MODULES = [
      "The family tree of distributions, limits and approximations."),
     ("05", "module_05_sampling", "Sampling and limit theorems",
      "Law of large numbers, central limit theorem (and its role in AI), standard errors, bootstrap, concentration inequalities, delta method, extremes, sampling designs."),
-    ("06", None, "Statistical inference", "Planned."),
+    ("06", "module_06_inference", "Statistical inference",
+     "Estimation (moments and maximum likelihood), confidence intervals, hypothesis tests, power, common tests; nonparametric tests, multiple testing and A/B testing."),
     ("07", None, "Bayesian thinking", "Planned."),
     ("08", None, "Information theory", "Planned."),
     ("09", None, "Distributions inside ML and AI", "Planned."),
@@ -36,6 +37,8 @@ MODULES = [
     ("12", None, "Sampling algorithms", "Planned."),
     ("13", None, "Capstone projects", "Planned."),
 ]
+
+IN_PROGRESS = {"06"}   # modules shown with the badge "in progress" instead of "done"
 
 CSS = """
 :root { --bg:#fff; --panel:#f6f7f9; --text:#1b1f24; --muted:#5b636d; --border:#d8dce1; --main:#0072B2; --hit:#fff3cd; }
@@ -115,7 +118,7 @@ def build_index(modules_data, search_items):
     for mid, folder, title, desc, lessons in modules_data:
         if folder and lessons:
             items = "\n".join(f'<li><a href="{l["url"]}">{html.escape(l["title"])}</a></li>' for l in lessons)
-            blocks.append(f'<div class="module" id="module-{mid}"><h2>Module {mid.upper()}. {html.escape(title)} <span class="badge">done</span></h2>\n<p>{html.escape(desc)}</p><ul>\n{items}\n</ul></div>')
+            blocks.append(f'<div class="module" id="module-{mid}"><h2>Module {mid.upper()}. {html.escape(title)} <span class="badge">{"in progress" if mid in IN_PROGRESS else "done"}</span></h2>\n<p>{html.escape(desc)}</p><ul>\n{items}\n</ul></div>')
         else:
             blocks.append(f'<div class="module todo"><h2>Module {mid}. {html.escape(title)} <span class="badge">planned</span></h2></div>')
     n_lessons = sum(len(m[4]) for m in modules_data)

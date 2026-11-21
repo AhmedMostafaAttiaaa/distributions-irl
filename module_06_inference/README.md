@@ -7,6 +7,7 @@ How to learn about a population from a sample: estimating parameters (method of 
 | Lesson | Notebook | Interactive page | Status |
 |---|---|---|---|
 | 06_01 Estimation: method of moments and maximum likelihood | [notebook](notebooks/06_01_estimation_mle_mom.ipynb) | [page](html/06_01_estimation_mle_mom.html) | done |
+| 06_02 Confidence intervals | [notebook](notebooks/06_02_confidence_intervals.ipynb) | [page](html/06_02_confidence_intervals.html) | done |
 
 ## Contents of the folders
 

@@ -13,3 +13,12 @@
 | Cramer-Rao bound | Lower bound 1 / (n I) on the variance of any unbiased estimator; the MLE attains it asymptotically. | [06_01](html/06_01_estimation_mle_mom.html) |
 | Invariance of the MLE | If theta-hat is the MLE of theta, then g(theta-hat) is the MLE of g(theta). | [06_01](html/06_01_estimation_mle_mom.html) |
 | Sufficient statistic | A function of the data (such as the sum for the Exponential) that contains all the information about the parameter. | [06_01](html/06_01_estimation_mle_mom.html) |
+| Confidence interval | A range (L, U) computed from the data by a procedure that contains the true parameter in at least 95 % (or the chosen level) of repeated samples. | [06_02](html/06_02_confidence_intervals.html) |
+| Coverage probability | The long-run share of samples whose confidence interval contains the true parameter; the actual coverage can differ from the nominal level. | [06_02](html/06_02_confidence_intervals.html) |
+| Pivotal quantity | A function of the data and the parameter whose distribution does not depend on the parameter, such as (x-bar - mu) / (s / sqrt n), which has a t distribution. | [06_02](html/06_02_confidence_intervals.html) |
+| Margin of error | The half-width of a confidence interval, z x standard error; the sample size for a margin m is n = (z sigma / m)^2. | [06_02](html/06_02_confidence_intervals.html) |
+| t interval | x-bar plus or minus t(n-1) s / sqrt n; the interval for a Normal mean when the standard deviation is estimated. | [06_02](html/06_02_confidence_intervals.html) |
+| Wald interval | Estimate plus or minus z standard errors with the standard error computed at the estimate; poor for small samples and rare events. | [06_02](html/06_02_confidence_intervals.html) |
+| Wilson interval | Interval for a proportion obtained by inverting the score test; stays inside 0 to 1 and has near-nominal coverage. | [06_02](html/06_02_confidence_intervals.html) |
+| Clopper-Pearson (exact) interval | Interval for a proportion from the exact Binomial tails (Beta quantiles); guaranteed to cover at least the nominal level, hence conservative. | [06_02](html/06_02_confidence_intervals.html) |
+| Prediction interval | A range for a single future observation, much wider than the confidence interval for the mean. | [06_02](html/06_02_confidence_intervals.html) |

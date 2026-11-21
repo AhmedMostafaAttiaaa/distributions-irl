@@ -22,3 +22,14 @@
 | Wilson interval | Interval for a proportion obtained by inverting the score test; stays inside 0 to 1 and has near-nominal coverage. | [06_02](html/06_02_confidence_intervals.html) |
 | Clopper-Pearson (exact) interval | Interval for a proportion from the exact Binomial tails (Beta quantiles); guaranteed to cover at least the nominal level, hence conservative. | [06_02](html/06_02_confidence_intervals.html) |
 | Prediction interval | A range for a single future observation, much wider than the confidence interval for the mean. | [06_02](html/06_02_confidence_intervals.html) |
+| Null hypothesis | The default 'no effect' claim H0 that is kept unless the data provide strong evidence against it. | [06_03](html/06_03_hypothesis_testing_core.html) |
+| Alternative hypothesis | The claim H1 that the test looks for, one-sided (greater or less) or two-sided (not equal). | [06_03](html/06_03_hypothesis_testing_core.html) |
+| Test statistic | A number computed from the data, such as z or t, whose distribution under H0 is known. | [06_03](html/06_03_hypothesis_testing_core.html) |
+| p-value | The probability, if H0 is true, of a test statistic at least as extreme as the one observed; not the probability that H0 is true. | [06_03](html/06_03_hypothesis_testing_core.html) |
+| Significance level | The Type I error rate alpha chosen in advance (often 5 %); H0 is rejected when the p-value is at most alpha. | [06_03](html/06_03_hypothesis_testing_core.html) |
+| Type I error | Rejecting a true null hypothesis (a false positive); its probability is alpha. | [06_03](html/06_03_hypothesis_testing_core.html) |
+| Type II error | Failing to reject a false null hypothesis (a false negative); its probability is beta. | [06_03](html/06_03_hypothesis_testing_core.html) |
+| Power | The probability 1 - beta of rejecting H0 when a specified alternative is true; grows with the effect size and the sample size. | [06_03](html/06_03_hypothesis_testing_core.html) |
+| Effect size | The size of the true difference, often standardised as d = (mu - mu0) / sigma; the quantity power depends on. | [06_03](html/06_03_hypothesis_testing_core.html) |
+| Rejection region | The set of test-statistic values for which H0 is rejected; its probability under H0 equals alpha. | [06_03](html/06_03_hypothesis_testing_core.html) |
+| Neyman-Pearson lemma | For two simple hypotheses the most powerful test of a given level rejects when the likelihood ratio is large. | [06_03](html/06_03_hypothesis_testing_core.html) |

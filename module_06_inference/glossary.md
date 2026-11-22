@@ -63,3 +63,12 @@
 | Adjusted p-value (q-value) | The smallest error-control level at which a hypothesis would still be rejected; for BH, the minimum over j >= i of m p(j) / j. | [06_06](html/06_06_multiple_testing.html) |
 | Tukey HSD | Post-hoc test for all pairwise differences of k group means using the studentised range distribution, with simultaneous error control. | [06_06](html/06_06_multiple_testing.html) |
 | Winner's curse | The upward bias of the best result chosen among many noisy candidates, such as the highest validation score of many models. | [06_06](html/06_06_multiple_testing.html) |
+| A/B test | A randomised experiment that compares a control version with a treatment version on a pre-chosen metric to estimate the causal effect of the change. | [06_07](html/06_07_ab_testing.html) |
+| Primary metric | The single pre-registered metric on which the ship or don't-ship decision depends; secondary and guardrail metrics are judged with a multiple-testing correction. | [06_07](html/06_07_ab_testing.html) |
+| Guardrail metric | A metric that must not get worse (for example latency or rounds played) even if the primary metric improves. | [06_07](html/06_07_ab_testing.html) |
+| Minimum detectable effect (MDE) | The smallest true difference an experiment is designed to detect with the chosen power; the sample size grows with 1 / MDE squared. | [06_07](html/06_07_ab_testing.html) |
+| Sample ratio mismatch (SRM) | A significant departure of the observed group sizes from the planned split (chi-square test on the counts); it signals broken randomisation or logging. | [06_07](html/06_07_ab_testing.html) |
+| A/A test | An experiment with two identical versions, used to validate the pipeline: it should give p < 0.05 in 5 percent of runs and uniform p-values. | [06_07](html/06_07_ab_testing.html) |
+| Relative lift | The effect expressed as a share of the control rate, (p_B - p_A) / p_A. | [06_07](html/06_07_ab_testing.html) |
+| Peeking | Checking a running test repeatedly and stopping at the first significant result; it inflates the false-positive rate well above the nominal level. | [06_07](html/06_07_ab_testing.html) |
+| Sequential testing | Designs such as alpha spending (O'Brien-Fleming boundaries) or always-valid p-values that allow repeated looks while keeping the overall error rate. | [06_07](html/06_07_ab_testing.html) |

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06_05 Nonparametric Tests: Ranks, Permutations and KS | Probability Distributions Book</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+/* ---------- Theme: colorblind-safe Okabe-Ito colors, light and dark ---------- */
+:root {
+  --bg: #ffffff; --panel: #f6f7f9; --text: #1b1f24; --muted: #5b636d; --border: #d8dce1;
+  --main: #0072B2;      /* theoretical curve */
+  --sim: #E69F00;       /* simulated samples */
+  --highlight: #D55E00; --third: #009E73; /* shaded region */
+  --grid: #e3e6ea;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14171a; --panel: #1d2126; --text: #e8eaed; --muted: #9aa3ad; --border: #343a41;
+    --main: #56B4E9; --sim: #E69F00; --highlight: #F08A4B; --third: #2FD0A0; --grid: #2b3036;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 980px; margin: 0 auto; padding: 0 16px 48px; }
+h1 { font-size: 1.7rem; margin: 20px 0 4px; }
+h2 { font-size: 1.2rem; margin: 28px 0 10px; }
+p, li { color: var(--text); }
+.muted { color: var(--muted); }
+
+/* ---------- Navigation bar ---------- */
+nav.topnav { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap;
+  padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--panel); }
+nav.topnav a { color: var(--main); text-decoration: none; font-weight: 600; }
+nav.topnav a:hover { text-decoration: underline; }
+nav.topnav .disabled { color: var(--muted); }
+
+/* ---------- Cards and layout ---------- */
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 720px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+/* ---------- Sliders ---------- */
+.slider-row { display: grid; grid-template-columns: 90px 1fr 70px; align-items: center; gap: 10px; margin: 6px 0; }
+.slider-row label { font-weight: 600; }
+.slider-row output { text-align: right; font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; accent-color: var(--main); }
+input[type=number] { width: 80px; padding: 4px 6px; background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px; }
+button { background: var(--main); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px;
+  font: inherit; font-weight: 600; cursor: pointer; }
+button.secondary { background: transparent; color: var(--main); border: 1px solid var(--main); }
+@media (prefers-color-scheme: dark) { button { color: #0b0d0f; } }
+
+/* ---------- Readouts ---------- */
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.readout { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
+.readout .name { color: var(--muted); font-size: 0.8rem; }
+.readout .value { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- Charts (SVG) ---------- */
+svg.chart { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+svg.chart text { fill: var(--muted); font-size: 12px; font-family: inherit; }
+svg.chart .title { fill: var(--text); font-size: 14px; font-weight: 600; }
+svg.chart .gridline { stroke: var(--grid); stroke-width: 1; }
+svg.chart .axisline { stroke: var(--muted); stroke-width: 1; }
+.plot3d { width: 100%; height: 420px; }
+.cards3 .card h3 { margin: 0 0 6px; font-size: 1rem; }
+footer { margin-top: 36px; padding-top: 12px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+footer a { color: var(--main); }
+
+
+.plain { border-left: 4px solid var(--main); }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 8px 0; }
+.controls label { display: inline-flex; gap: 6px; align-items: center; }
+select, input[type=number] { padding: 5px 8px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
+svg.chart { width: 100%; height: auto; display: block; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="../../index.html">Book index</a>
+  <a href="06_04_common_tests.html">&larr; Previous lesson</a>
+  <a class="disabled" href="#">Next lesson &rarr;</a>
+</nav>
+<main>
+<h1>06_05 Nonparametric Tests: Ranks, Permutations and KS</h1>
+<p class="muted">Tests that do not depend on the shape of the data: robust to outliers and exact for small samples.</p>
+<section class="card"><h2 style="margin-top:0">Key ideas</h2><p>Mann-Whitney: $U_1=R_1-\frac{n_1(n_1+1)}2$; under $H_0$ $E[U]=\frac{n_1n_2}2$, $\mathrm{Var}(U)=\frac{n_1n_2(n_1+n_2+1)}{12}$; $U_1/(n_1n_2)=\hat P(X_1>X_2)$. Permutation test: $p=\frac{\#\{|T^*|\ge|T_{obs}|\}}{\#\text{relabellings}}$ (exact, any statistic). Sign test: Binomial$(n,\frac12)$. KS: $D=\sup_x|\hat F_1(x)-\hat F_2(x)|$, 5 % critical value $\approx1.36/\sqrt n$ (too large if parameters are estimated: Lilliefors). Efficiency of Wilcoxon against $t$: 0.955 (Normal), above 1 for heavy tails.</p></section>
+<section class="card plain"><h2 style="margin-top:0">In plain words</h2><ul>
+<li><strong>Ranks forget how big an outlier is,</strong> only that it is the largest: put 30.2 or 3000 in the box and the rank test does not move.</li>
+<li><strong>A permutation test shuffles the labels</strong> to show what "no effect" looks like for any statistic you choose (means, medians).</li>
+<li><strong>The KS test compares whole distributions,</strong> so it can see a change of shape that a mean test cannot.</li>
+<li><strong>Estimated parameters make the usual KS critical value far too large:</strong> run the simulation to see it.</li></ul></section>
+
+<section>
+  <h2>Mann-Whitney and permutation tests on your own data</h2>
+  <div class="card">
+    <p>Enter two samples (numbers separated by commas or spaces). Defaults: ticket resolution times in hours.</p>
+    <label>Group A <textarea id="ga" rows="2" style="width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px"></textarea></label>
+    <label>Group B <textarea id="gb" rows="2" style="width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px"></textarea></label>
+    <div class="controls"><label>statistic for the permutation test <select id="st"><option value="mean" selected>difference of means</option><option value="median">difference of medians</option></select></label><button id="pgo">Run 20,000 random relabellings</button></div>
+    <div class="readouts" id="mwOut"></div>
+    <div class="readouts" id="pmOut"></div>
+    <svg class="chart" id="pChart" viewBox="0 0 480 300"></svg>
+  </div>
+</section>
+<section id="examplePanel">
+  <h2>Worked examples (edit the numbers)</h2>
+  <div class="card">
+    <h3>Example 3: the KS test with an estimated mean (the Lilliefors problem)</h3>
+    <div class="controls"><label>sample size n <input type="number" id="kn" value="60" min="5" max="500" style="width:75px"></label><button id="kgo">Simulate 3,000 Exponential samples</button></div>
+    <div class="readouts" id="ksOut"></div>
+    <svg class="chart" id="kChart" viewBox="0 0 480 300"></svg>
+    <p class="muted">Each sample is truly Exponential. Testing it against an Exponential whose mean is estimated from the same sample gives a statistic D that is much smaller than for a fixed distribution: using the usual critical value rejects far less than 5 % of the time.</p>
+  </div>
+</section>
+<section>
+  <h2>3D view: power of the Mann-Whitney test</h2>
+  <div class="card"><div id="plot3d" class="plot3d"></div></div>
+  <p class="muted">Normal approximation, two-sided, $\alpha=0.05$, over the probability of superiority $\theta=P(X_2>X_1)$ and the group size. Plotly is loaded from a CDN only on this page.</p>
+</section>
+
+<section>
+  <h2>Where it is used</h2>
+  <div class="grid3 cards3">
+    <div class="card"><h3>Statistics</h3><p>Small, skewed or ordinal data, exact tests, Kruskal-Wallis, distribution comparison and goodness of fit.</p></div>
+    <div class="card"><h3>Data science</h3><p>A/B tests on heavy-tailed metrics, drift detection between training and production data with two-sample KS.</p></div>
+    <div class="card"><h3>ML and AI</h3><p>The Mann-Whitney U is the AUC of a score; permutation importance and permutation tests for models; calibration and shift checks.</p></div>
+  </div>
+</section>
+<footer>Matching notebook: <a href="../notebooks/06_05_nonparametric_tests.ipynb">notebooks/06_05_nonparametric_tests.ipynb</a></footer>
+</main>
+<script>
+"use strict";
+/* =====================================================================
+   SECTION A. MATH HELPERS (small, readable, no libraries)
+   ===================================================================== */
+
+// log(n!) using a running sum; fine for the sizes used in these lessons.
+function logFactorial(n) {
+  let total = 0;
+  for (let i = 2; i <= n; i++) total += Math.log(i);
+  return total;
+}
+
+// Binomial PMF computed in log space so large n does not overflow.
+function binomPmf(k, n, p) {
+  if (k < 0 || k > n) return 0;
+  if (p === 0) return k === 0 ? 1 : 0;
+  if (p === 1) return k === n ? 1 : 0;
+  const logChoose = logFactorial(n) - logFactorial(k) - logFactorial(n - k);
+  return Math.exp(logChoose + k * Math.log(p) + (n - k) * Math.log(1 - p));
+}
+
+// Turn an array of probabilities into running totals (the CDF).
+function cumulative(probs) {
+  const out = [];
+  let running = 0;
+  for (const p of probs) { running += p; out.push(running); }
+  return out;
+}
+
+// Mean, variance, std and skewness of a discrete distribution given as (xs, probs).
+function discreteMoments(xs, probs) {
+  let mean = 0;
+  for (let i = 0; i < xs.length; i++) mean += xs[i] * probs[i];
+  let variance = 0, third = 0;
+  for (let i = 0; i < xs.length; i++) {
+    const d = xs[i] - mean;
+    variance += d * d * probs[i];
+    third += d * d * d * probs[i];
+  }
+  const std = Math.sqrt(variance);
+  const skew = std > 0 ? third / (std * std * std) : 0;
+  return { mean, variance, std, skew };
+}
+
+// Sample from a discrete distribution by inverting the CDF (xs sorted ascending).
+function sampleDiscrete(xs, cdf, count) {
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    const u = Math.random();
+    let j = 0;
+    while (j < cdf.length - 1 && cdf[j] < u) j++;
+    out.push(xs[j]);
+  }
+  return out;
+}
+
+// Format a number for display.
+function fmt(x, digits = 4) { return Number.isFinite(x) ? x.toFixed(digits) : "n/a"; }
+
+/* =====================================================================
+   SECTION B. UI HELPERS: sliders and readouts
+   ===================================================================== */
+
+// Add a labelled slider to a container. Calls onChange(value) whenever it moves.
+function addSlider(container, { label, min, max, step, value, onChange }) {
+  const row = document.createElement("div");
+  row.className = "slider-row";
+  const name = document.createElement("label");
+  name.textContent = label;
+  const input = document.createElement("input");
+  Object.assign(input, { type: "range", min, max, step, value });
+  const out = document.createElement("output");
+  out.textContent = value;
+  input.addEventListener("input", () => { out.textContent = input.value; onChange(Number(input.value)); });
+  row.append(name, input, out);
+  container.appendChild(row);
+  return { get: () => Number(input.value) };
+}
+
+// Fill the readouts grid from an object like { Mean: 1.2, Variance: 3.4 }.
+function showReadouts(values) {
+  const box = document.getElementById("readouts");
+  box.innerHTML = "";
+  for (const [name, value] of Object.entries(values)) {
+    const cell = document.createElement("div");
+    cell.className = "readout";
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${typeof value === "string" ? value : fmt(value)}</div>`;
+    box.appendChild(cell);
+  }
+}
+
+/* =====================================================================
+   SECTION C. SVG CHART HELPERS
+   drawChart(svgElement, spec) where spec is:
+     { title, xlabel, ylabel,
+       series: [ { kind: "bar" | "line" | "step" | "points", xs, ys, color, label } ],
+       shade: [a, b]   // optional: highlight x values between a and b
+       xrange, yrange  // optional fixed ranges
+     }
+   ===================================================================== */
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function svgEl(name, attrs, text) {
+  const node = document.createElementNS(SVG_NS, name);
+  for (const [key, value] of Object.entries(attrs || {})) node.setAttribute(key, value);
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+// Pick about 5 round tick values between lo and hi.
+function niceTicks(lo, hi) {
+  const span = hi - lo || 1;
+  const rawStep = span / 5;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const options = [1, 2, 5, 10];
+  let step = magnitude;
+  for (const o of options) { if (o * magnitude >= rawStep) { step = o * magnitude; break; } }
+  const ticks = [];
+  for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) ticks.push(Number(t.toPrecision(10)));
+  return ticks;
+}
+
+function drawChart(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right;
+  const plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+
+  // Work out the data ranges from all series.
+  let xmin = Infinity, xmax = -Infinity, ymax = 0;
+  for (const s of spec.series) {
+    for (const x of s.xs) { xmin = Math.min(xmin, x); xmax = Math.max(xmax, x); }
+    for (const y of s.ys) ymax = Math.max(ymax, y);
+  }
+  if (spec.xrange) [xmin, xmax] = spec.xrange;
+  if (spec.yrange) ymax = spec.yrange[1];
+  ymax = ymax * 1.08 || 1;
+  const hasBars = spec.series.some(s => s.kind === "bar");
+  const pad = (hasBars && !spec.series.some(s => s.width)) ? 0.7 : 0;               // keep the first and last bar inside the axes
+  const x0 = xmin - pad, x1 = xmax + pad || 1;
+  const sx = x => margin.left + (x - x0) / (x1 - x0) * plotW;
+  const sy = y => margin.top + plotH - y / ymax * plotH;
+
+  // Title, grid and axes.
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (const t of niceTicks(0, ymax)) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(t), y2: sy(t), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(t) + 4, "text-anchor": "end" }, String(t)));
+  }
+  for (const t of niceTicks(x0, x1)) {
+    svg.appendChild(svgEl("text", { x: sx(t), y: H - margin.bottom + 16, "text-anchor": "middle" }, String(t)));
+  }
+  svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(0), y2: sy(0), class: "axisline" }));
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  const yl = svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || "");
+  svg.appendChild(yl);
+
+  // Shaded region for the probability calculator.
+  if (spec.shade) {
+    const [a, b] = spec.shade;
+    svg.appendChild(svgEl("rect", { x: sx(a - (hasBars ? 0.5 : 0)), y: margin.top,
+      width: Math.max(0, sx(b + (hasBars ? 0.5 : 0)) - sx(a - (hasBars ? 0.5 : 0))), height: plotH,
+      fill: "var(--highlight)", opacity: 0.15 }));
+  }
+
+  // Area under a curve between a and b (continuous distributions): spec.fillUnder = [a, b]
+  if (spec.fillUnder) {
+    const curve = spec.series.find(s => s.kind === "line");
+    const regions = Array.isArray(spec.fillUnder[0]) ? spec.fillUnder : [spec.fillUnder];   // one [a, b] or several
+    for (const [a, b] of regions) {
+      const heightAt = x => {                          // curve height at x (linear interpolation; at a vertical edge take the top)
+        const exact = curve.ys.filter((_, i) => curve.xs[i] === x);
+        if (exact.length) return Math.max(...exact);
+        for (let i = 1; i < curve.xs.length; i++) {
+          if (x <= curve.xs[i] && curve.xs[i] > curve.xs[i - 1]) {
+            return curve.ys[i - 1] + (curve.ys[i] - curve.ys[i - 1]) * (x - curve.xs[i - 1]) / (curve.xs[i] - curve.xs[i - 1]);
+          }
+        }
+        return 0;
+      };
+      const left = Math.max(a, curve.xs[0]), right = Math.min(b, curve.xs[curve.xs.length - 1]);
+      let points = `${sx(left)},${sy(0)} ${sx(left)},${sy(heightAt(left))}`;
+      curve.xs.forEach((x, i) => { if (x > left && x < right) points += ` ${sx(x)},${sy(curve.ys[i])}`; });
+      points += ` ${sx(right)},${sy(heightAt(right))} ${sx(right)},${sy(0)}`;
+      svg.appendChild(svgEl("polygon", { points, fill: "var(--highlight)", opacity: 0.35 }));
+    }
+  }
+
+  // Draw each series.
+  const legendItems = [];
+  for (const s of spec.series) {
+    const color = s.color || "var(--main)";
+    if (s.kind === "bar") {
+      const barW = s.width ? Math.max(1, plotW / (x1 - x0) * s.width) : Math.max(1, plotW / (x1 - x0) * 0.8);   // s.width is in data units (histograms)
+      s.xs.forEach((x, i) => {
+        const inside = spec.shade && x >= spec.shade[0] && x <= spec.shade[1];
+        svg.appendChild(svgEl("rect", { x: sx(x) - barW / 2, y: sy(s.ys[i]), width: barW,
+          height: Math.max(0, sy(0) - sy(s.ys[i])), fill: inside ? "var(--highlight)" : color,
+          opacity: s.opacity || 0.9 }));
+      });
+    } else if (s.kind === "points") {
+      s.xs.forEach((x, i) => svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 3, fill: color })));
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => {
+        if (s.kind === "step" && i > 0) d += ` L${sx(x)},${sy(s.ys[i - 1])}`;
+        d += (i === 0 ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`;
+      });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) legendItems.push({ label: s.label, color });
+  }
+  legendItems.forEach((item, i) => {
+    const lx = W - margin.right - 130, ly = margin.top + 6 + i * 16;
+    svg.appendChild(svgEl("rect", { x: lx, y: ly - 8, width: 12, height: 10, fill: item.color }));
+    svg.appendChild(svgEl("text", { x: lx + 18, y: ly + 1 }, item.label));
+  });
+}
+
+// Log-log scatter/line chart for power laws. spec: { title, xlabel, ylabel, series: [{kind: "points"|"line", xs, ys, color, label}] }
+// Axes show decades (1, 10, 100, ...); all x and y values must be positive.
+function drawLogLog(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right, plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+  let xlo = Infinity, xhi = -Infinity, ylo = Infinity, yhi = -Infinity;
+  for (const s of spec.series) {
+    s.xs.forEach((x, i) => {
+      if (x > 0 && s.ys[i] > 0) {
+        xlo = Math.min(xlo, Math.log10(x)); xhi = Math.max(xhi, Math.log10(x));
+        ylo = Math.min(ylo, Math.log10(s.ys[i])); yhi = Math.max(yhi, Math.log10(s.ys[i]));
+      }
+    });
+  }
+  xlo = Math.floor(xlo); xhi = Math.max(Math.ceil(xhi), xlo + 1);
+  ylo = Math.floor(ylo); yhi = Math.max(Math.ceil(yhi), ylo + 1);
+  const sx = x => margin.left + (Math.log10(x) - xlo) / (xhi - xlo) * plotW;
+  const sy = y => margin.top + plotH - (Math.log10(y) - ylo) / (yhi - ylo) * plotH;
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (let e = ylo; e <= yhi; e++) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(Math.pow(10, e)), y2: sy(Math.pow(10, e)), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(Math.pow(10, e)) + 4, "text-anchor": "end" }, "1e" + e));
+  }
+  for (let e = xlo; e <= xhi; e++) {
+    svg.appendChild(svgEl("line", { x1: sx(Math.pow(10, e)), x2: sx(Math.pow(10, e)), y1: margin.top, y2: margin.top + plotH, class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: sx(Math.pow(10, e)), y: H - margin.bottom + 16, "text-anchor": "middle" }, "1e" + e));
+  }
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  svg.appendChild(svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || ""));
+  spec.series.forEach((s, idx) => {
+    const color = s.color || "var(--main)";
+    if (s.kind === "points") {
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 2.2, fill: color })); });
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) d += (d === "" ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`; });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) {
+      svg.appendChild(svgEl("rect", { x: W - margin.right - 130, y: margin.top + idx * 16 - 2, width: 12, height: 10, fill: color }));
+      svg.appendChild(svgEl("text", { x: W - margin.right - 112, y: margin.top + idx * 16 + 7 }, s.label));
+    }
+  });
+}
+
+/* =====================================================================
+   SECTION D. OPTIONAL 3D (Plotly gl3d partial bundle, loaded on demand)
+   ===================================================================== */
+function loadPlotlyThen(callback) {
+  if (window.Plotly) { callback(); return; }
+  const script = document.createElement("script");
+  script.src = "https://cdn.plot.ly/plotly-gl3d-2.35.2.min.js";
+  script.onload = callback;
+  script.onerror = () => { document.getElementById("plot3d").textContent = "Could not load Plotly from the CDN (check your connection)."; };
+  document.head.appendChild(script);
+}
+
+
+
+/* =====================================================================
+   SECTION M. SPECIAL FUNCTIONS for continuous distributions (Numerical Recipes style, plain loops)
+   ===================================================================== */
+function lgamma(z) {                      // log Gamma(z), Lanczos approximation, z > 0
+  const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  let y = z, tmp = z + 5.5;
+  tmp -= (z + 0.5) * Math.log(tmp);
+  let series = 1.000000000190015;
+  for (let j = 0; j < 6; j++) series += c[j] / ++y;
+  return -tmp + Math.log(2.5066282746310005 * series / z);
+}
+function gammaP(a, x) {                   // regularized lower incomplete gamma P(a, x)
+  if (x <= 0) return 0;
+  if (x < a + 1) {
+    let sum = 1 / a, term = sum;
+    for (let n = 1; n < 1000; n++) { term *= x / (a + n); sum += term; if (Math.abs(term) < Math.abs(sum) * 1e-14) break; }
+    return sum * Math.exp(-x + a * Math.log(x) - lgamma(a));
+  }
+  let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+  for (let i = 1; i < 1000; i++) {
+    const an = -i * (i - a);
+    b += 2;
+    d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+    c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+    d = 1 / d;
+    const delta = d * c;
+    h *= delta;
+    if (Math.abs(delta - 1) < 1e-14) break;
+  }
+  return 1 - Math.exp(-x + a * Math.log(x) - lgamma(a)) * h;
+}
+function betaI(x, a, b) {                 // regularized incomplete beta I_x(a, b)
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const front = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  const cf = (xx, aa, bb) => {
+    let c = 1, d = 1 - (aa + bb) * xx / (aa + 1);
+    if (Math.abs(d) < 1e-300) d = 1e-300;
+    d = 1 / d;
+    let h = d;
+    for (let m = 1; m < 1000; m++) {
+      const m2 = 2 * m;
+      let an = m * (bb - m) * xx / ((aa + m2 - 1) * (aa + m2));
+      d = 1 + an * d; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = 1 + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d; h *= d * c;
+      an = -(aa + m) * (aa + bb + m) * xx / ((aa + m2) * (aa + m2 + 1));
+      d = 1 + an * d; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = 1 + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d;
+      const delta = d * c;
+      h *= delta;
+      if (Math.abs(delta - 1) < 1e-14) break;
+    }
+    return h;
+  };
+  if (x < (a + 1) / (a + b + 2)) return front * cf(x, a, b) / a;
+  return 1 - front * cf(1 - x, b, a) / b;
+}
+function erf(x) { const v = gammaP(0.5, x * x); return x >= 0 ? v : -v; }
+function normPdf(x, mu = 0, sigma = 1) { return Math.exp(-0.5 * ((x - mu) / sigma) ** 2) / (sigma * Math.sqrt(2 * Math.PI)); }
+function normCdf(x, mu = 0, sigma = 1) { return 0.5 * (1 + erf((x - mu) / (sigma * Math.SQRT2))); }
+// Invert any increasing function by bisection (used for quantiles when no formula exists).
+function bisect(f, target, lo, hi) {
+  for (let i = 0; i < 200; i++) { const mid = (lo + hi) / 2; if (f(mid) < target) lo = mid; else hi = mid; }
+  return (lo + hi) / 2;
+}
+function linspace(a, b, n) { const out = []; for (let i = 0; i < n; i++) out.push(a + (b - a) * i / (n - 1)); return out; }
+
+
+function gauss() { let u = 0, v = 0; while (u === 0) u = Math.random(); while (v === 0) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+function expo() { return -Math.log(1 - Math.random()); }
+function boxOut(values, id) {
+  const box = document.getElementById(id); box.innerHTML = "";
+  for (const [name, value] of Object.entries(values)) {
+    const cell = document.createElement("div"); cell.className = "readout";
+    const text = typeof value === "string" ? value : (Number.isInteger(value) ? value.toLocaleString("en-US") : (Math.abs(value) < 1e-3 && value !== 0 ? value.toExponential(2) : (Math.abs(value) < 0.1 && value !== 0 ? value.toPrecision(3) : fmt(value, 4))));
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${text}</div>`; box.appendChild(cell);
+  }
+}
+function histo(vals, lo, hi, bins) {
+  const w = (hi - lo) / bins, c = new Array(bins).fill(0);
+  for (const v of vals) { const k = Math.floor((v - lo) / w); if (k >= 0 && k < bins) c[k]++; }
+  return { xs: c.map((_, i) => lo + (i + 0.5) * w), ys: c.map(x => x / (vals.length * w)), w };
+}
+function momentsOf(v) {
+  const n = v.length; let m = 0; for (const x of v) m += x; m /= n;
+  let s2 = 0, s3 = 0, s4 = 0; for (const x of v) { const d = x - m; s2 += d * d; s3 += d * d * d; s4 += d * d * d * d; }
+  s2 /= n; return { mean: m, sd: Math.sqrt(s2), skew: s3 / n / Math.pow(s2, 1.5), kurt: s4 / n / (s2 * s2) - 3 };
+}
+function quantileOf(arr, q) { const s = Float64Array.from(arr).sort(); const pos = (s.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos); return s[lo] + (s[hi] - s[lo]) * (pos - lo); }
+function lbinom(n, k) { return lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1); }
+function binomPmf(k, n, p) { if (p <= 0) return k === 0 ? 1 : 0; if (p >= 1) return k === n ? 1 : 0; return Math.exp(lbinom(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p)); }
+function overlayChart(svg, h, pdf, lo, hi, title, xlabel) {
+  const gx = linspace(lo, hi, 160);
+  drawChart(svg, { title, xlabel, ylabel: "density", xrange: [lo, hi], series: [
+    { kind: "bar", xs: h.xs, ys: h.ys, color: "var(--sim)", width: h.w * 0.95, opacity: 0.6, label: "simulated" },
+    { kind: "line", xs: gx, ys: gx.map(pdf), color: "var(--highlight)", label: "theory" }] });
+}
+
+
+const A0 = "2.1, 3.4, 1.8, 5.9, 2.7, 4.2, 12.5", B0 = "4.8, 6.1, 3.9, 8.7, 5.2, 9.9, 7.4, 30.2";
+const tCdf = (t, v) => { const x = v / (v + t * t), tail = 0.5 * betaI(x, v / 2, 0.5); return t > 0 ? 1 - tail : tail; };
+function ranksOf(v) { const idx = v.map((x, i) => [x, i]).sort((a, b) => a[0] - b[0]), r = new Array(v.length); let i = 0, ties = 0; while (i < idx.length) { let j = i; while (j + 1 < idx.length && idx[j + 1][0] === idx[i][0]) j++; const avg = (i + j) / 2 + 1; for (let k = i; k <= j; k++) r[idx[k][1]] = avg; if (j > i) ties++; i = j + 1; } return { r, ties }; }
+function exactU(n1, n2) { // distribution of U by dynamic programming on the number of subsets of ranks 1..N with n1 elements and given sum
+  const N = n1 + n2, maxS = N * (N + 1) / 2; let dp = Array.from({ length: n1 + 1 }, () => new Float64Array(maxS + 1)); dp[0][0] = 1;
+  for (let r = 1; r <= N; r++) for (let k = Math.min(r, n1); k >= 1; k--) for (let s = maxS; s >= r; s--) dp[k][s] += dp[k - 1][s - r];
+  const off = n1 * (n1 + 1) / 2, tot = dp[n1].reduce((a, b) => a + b, 0), pm = new Array(n1 * n2 + 1).fill(0); for (let s = off; s <= maxS; s++) if (dp[n1][s] && s - off <= n1 * n2) pm[s - off] = dp[n1][s] / tot; return pm; }
+const parse = id => document.getElementById(id).value.split(/[\s,;]+/).filter(t => t !== "").map(Number).filter(Number.isFinite);
+function main() {
+  const el = id => document.getElementById(id); el("ga").value = A0; el("gb").value = B0;
+  let last = null;
+  function mw() {
+    const a = parse("ga"), b = parse("gb"), n1 = a.length, n2 = b.length; if (n1 < 2 || n2 < 2) { boxOut({ note: "need at least 2 numbers in each group" }, "mwOut"); return; }
+    const all = a.concat(b), { r, ties } = ranksOf(all), Ra = r.slice(0, n1).reduce((x, y) => x + y, 0), U = Ra - n1 * (n1 + 1) / 2, N = n1 + n2, mean = n1 * n2 / 2, sd = Math.sqrt(n1 * n2 * (N + 1) / 12);
+    let p, how; if (ties === 0 && N <= 40) { const pm = exactU(n1, n2); let s = 0; for (let u = 0; u < pm.length; u++) if (u <= Math.min(U, n1 * n2 - U) || u >= Math.max(U, n1 * n2 - U)) s += pm[u]; p = Math.min(1, s); how = "exact"; } else { const z = (Math.abs(U - mean) - 0.5) / sd; p = 2 * (1 - normCdf(Math.max(0, z))); how = "normal approximation"; }
+    const m1 = a.reduce((x, y) => x + y, 0) / n1, m2 = b.reduce((x, y) => x + y, 0) / n2, v1 = a.reduce((x, y) => x + (y - m1) * (y - m1), 0) / (n1 - 1), v2 = b.reduce((x, y) => x + (y - m2) * (y - m2), 0) / (n2 - 1), se = Math.sqrt(v1 / n1 + v2 / n2), t = (m1 - m2) / se, df = (v1 / n1 + v2 / n2) ** 2 / ((v1 / n1) ** 2 / (n1 - 1) + (v2 / n2) ** 2 / (n2 - 1));
+    boxOut({ "rank sum of A": Ra, "rank sum of B": N * (N + 1) / 2 - Ra, "U (group A)": U, "Mann-Whitney p-value": p, "method": how, "P(A < B)": 1 - U / (n1 * n2), "Welch t": t, "Welch p-value": 2 * (1 - tCdf(Math.abs(t), df)), "mean A / mean B": `${m1.toFixed(2)} / ${m2.toFixed(2)}` }, "mwOut"); last = { a, b }; }
+  for (const id of ["ga", "gb"]) el(id).addEventListener("input", mw); mw();
+  el("pgo").addEventListener("click", () => {
+    if (!last) return; const { a, b } = last, all = a.concat(b), n1 = a.length, kind = el("st").value, stat = (x, y) => kind === "mean" ? x.reduce((s, v) => s + v, 0) / x.length - y.reduce((s, v) => s + v, 0) / y.length : medianOf(x) - medianOf(y);
+    const medianOf = v => { const s = v.slice().sort((p, q) => p - q), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }; const obs = stat(a, b), B = 20000, res = [], pool = all.slice(); let extreme = 0;
+    for (let i = 0; i < B; i++) { for (let k = pool.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [pool[k], pool[j]] = [pool[j], pool[k]]; } const d = stat(pool.slice(0, n1), pool.slice(n1)); res.push(d); if (Math.abs(d) >= Math.abs(obs) - 1e-9) extreme++; }
+    boxOut({ "observed statistic": obs, "relabellings": B, "as extreme": extreme, "permutation p-value": (extreme + 1) / (B + 1) }, "pmOut");
+    const lim = Math.max(Math.abs(obs) * 1.3, ...res.map(Math.abs)) * 0.9, h = histo(res, -lim, lim, 50);
+    drawChart(el("pChart"), { title: "Permutation distribution; dashed lines at +/- observed", xlabel: "statistic after shuffling the labels", ylabel: "density", xrange: [-lim, lim], series: [
+      { kind: "bar", xs: h.xs, ys: h.ys.map((y, i) => Math.abs(h.xs[i]) >= Math.abs(obs) ? y : 0), color: "var(--highlight)", width: h.w * 0.95, opacity: 0.8, label: "as extreme as observed" }, { kind: "bar", xs: h.xs, ys: h.ys.map((y, i) => Math.abs(h.xs[i]) >= Math.abs(obs) ? 0 : y), color: "var(--neutral)", width: h.w * 0.95, opacity: 0.6, label: "less extreme" },
+      { kind: "line", xs: [obs, obs], ys: [0, Math.max(...h.ys)], color: "black", label: "observed" }, { kind: "line", xs: [-obs, -obs], ys: [0, Math.max(...h.ys)], color: "black", label: "" }] });
+  }); el("pgo").click();
+  el("kgo").addEventListener("click", () => {
+    const n = Math.max(5, Math.round(Number(el("kn").value))), R = 3000, ds = []; let naive = 0; const crit = 1.358 / Math.sqrt(n);
+    for (let r = 0; r < R; r++) { const x = []; let s = 0; for (let i = 0; i < n; i++) { const v = -Math.log(1 - Math.random()); x.push(v); s += v; } const m = s / n; x.sort((p, q) => p - q); let D = 0; for (let i = 0; i < n; i++) { const F = 1 - Math.exp(-x[i] / m); D = Math.max(D, Math.abs((i + 1) / n - F), Math.abs(i / n - F)); } ds.push(D); if (D > crit) naive++; }
+    const q95 = quantileOf(ds, 0.95); boxOut({ "usual 5% critical value (known mean)": crit, "true 95th percentile of D (mean estimated)": q95, "rejection rate with the usual critical value": naive / R, "nominal rate": 0.05 }, "ksOut");
+    const h = histo(ds, 0, Math.max(...ds) * 1.05, 40);
+    drawChart(el("kChart"), { title: "Distribution of D when the mean is estimated from the data", xlabel: "KS statistic D", ylabel: "density", xrange: [0, Math.max(...ds) * 1.05], series: [{ kind: "bar", xs: h.xs, ys: h.ys, color: "var(--sim)", width: h.w * 0.95, opacity: 0.6, label: "simulated D" }, { kind: "line", xs: [crit, crit], ys: [0, Math.max(...h.ys)], color: "var(--highlight)", label: "usual critical value" }, { kind: "line", xs: [q95, q95], ys: [0, Math.max(...h.ys)], color: "black", label: "true 95th percentile" }] });
+  }); el("kgo").click();
+  const ths = linspace(0.5, 0.85, 40), ns = Array.from({ length: 40 }, (_, i) => 5 + i * 3.5), pw = (th, n) => { const se = Math.sqrt((2 * n + 1) / (12 * n * n)); return 1 - normCdf(1.96 - (th - 0.5) / se) + normCdf(-1.96 - (th - 0.5) / se); };
+  loadPlotlyThen(() => Plotly.newPlot("plot3d", [{ type: "surface", x: ths, y: ns, z: ns.map(n => ths.map(t => pw(t, n))), colorscale: "Viridis" }],
+    { margin: { l: 0, r: 0, t: 30, b: 0 }, title: { text: "Power of the Mann-Whitney test (normal approximation)" }, scene: { xaxis: { title: "theta = P(X2 > X1)" }, yaxis: { title: "n per group" }, zaxis: { title: "power", range: [0, 1] } } }, { responsive: true }));
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  main();
+  if (window.renderMathInElement) { renderMathInElement(document.body, { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] }); }
+});
+</script>
+</body>
+</html>

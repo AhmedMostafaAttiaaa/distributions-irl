@@ -12,6 +12,7 @@ How to learn about a population from a sample: estimating parameters (method of 
 | 06_04 The common tests: t-tests, chi-square and ANOVA | [notebook](notebooks/06_04_common_tests.ipynb) | [page](html/06_04_common_tests.html) | done |
 | 06_05 Nonparametric tests: ranks, permutations and KS | [notebook](notebooks/06_05_nonparametric_tests.ipynb) | [page](html/06_05_nonparametric_tests.html) | done |
 | 06_06 Multiple testing: Bonferroni, Holm and Benjamini-Hochberg | [notebook](notebooks/06_06_multiple_testing.ipynb) | [page](html/06_06_multiple_testing.html) | done |
+| 06_07 A/B testing end to end: the Cookie Cats experiment | [notebook](notebooks/06_07_ab_testing.ipynb) | [page](html/06_07_ab_testing.html) | done |
 
 ## Contents of the folders
 

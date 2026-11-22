@@ -54,3 +54,12 @@
 | Lilliefors correction | Correction for the KS test when the distribution's parameters are estimated from the same data; the critical value is smaller than the usual one. | [06_05](html/06_05_nonparametric_tests.html) |
 | Kruskal-Wallis test | Rank-based analogue of one-way ANOVA for three or more groups. | [06_05](html/06_05_nonparametric_tests.html) |
 | Asymptotic relative efficiency | Limiting ratio of the sample sizes two tests need for the same power; 0.955 for Wilcoxon against the t-test with Normal data, above 1 for heavy tails. | [06_05](html/06_05_nonparametric_tests.html) |
+| Multiple testing problem | Running many tests makes false positives likely: m independent true nulls tested at level alpha give at least one false positive with probability 1 - (1 - alpha)^m. | [06_06](html/06_06_multiple_testing.html) |
+| Family-wise error rate (FWER) | The probability of at least one false rejection among all the tests performed. | [06_06](html/06_06_multiple_testing.html) |
+| False discovery rate (FDR) | The expected proportion of false rejections among all rejections, E[V / max(R, 1)]; a more lenient and more powerful goal than FWER control. | [06_06](html/06_06_multiple_testing.html) |
+| Bonferroni correction | Reject a hypothesis if its p-value is at most alpha / m; controls the FWER under any dependence by the union bound, but loses power as m grows. | [06_06](html/06_06_multiple_testing.html) |
+| Holm procedure | Step-down version of Bonferroni that tests the sorted p-values at alpha / (m - k + 1) and stops at the first failure; controls the FWER and is never less powerful than Bonferroni. | [06_06](html/06_06_multiple_testing.html) |
+| Benjamini-Hochberg procedure | Step-up rule that rejects all hypotheses up to the largest k with p(k) <= k alpha / m; controls the FDR at (m0 / m) alpha for independent or positively dependent tests. | [06_06](html/06_06_multiple_testing.html) |
+| Adjusted p-value (q-value) | The smallest error-control level at which a hypothesis would still be rejected; for BH, the minimum over j >= i of m p(j) / j. | [06_06](html/06_06_multiple_testing.html) |
+| Tukey HSD | Post-hoc test for all pairwise differences of k group means using the studentised range distribution, with simultaneous error control. | [06_06](html/06_06_multiple_testing.html) |
+| Winner's curse | The upward bias of the best result chosen among many noisy candidates, such as the highest validation score of many models. | [06_06](html/06_06_multiple_testing.html) |

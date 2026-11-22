@@ -43,3 +43,14 @@
 | F statistic | Ratio of two independent variance estimates (mean squares), F = MSB / MSW in ANOVA; follows an F distribution with (k - 1, N - k) degrees of freedom under H0. | [06_04](html/06_04_common_tests.html) |
 | Cohen's d | Standardised difference of two means, (mean1 - mean2) / pooled SD; about 0.2 small, 0.5 medium, 0.8 large. | [06_04](html/06_04_common_tests.html) |
 | Eta squared | Share of the total variation explained by the groups in ANOVA, SSB / SST. | [06_04](html/06_04_common_tests.html) |
+| Nonparametric test | A test whose null distribution does not depend on the shape of the data distribution, often based on ranks or on relabelling the data. | [06_05](html/06_05_nonparametric_tests.html) |
+| Rank | The position of an observation in the sorted pooled sample (1 = smallest); ties receive the average rank. | [06_05](html/06_05_nonparametric_tests.html) |
+| Mann-Whitney U test | Rank-based test (equivalent to the Wilcoxon rank-sum test) that two independent samples come from the same distribution; U / (n1 n2) estimates P(X1 > X2). | [06_05](html/06_05_nonparametric_tests.html) |
+| Probability of superiority | P(X1 > X2) for a random observation from each group, estimated by U / (n1 n2); equals the AUC when the values are scores. | [06_05](html/06_05_nonparametric_tests.html) |
+| Wilcoxon signed-rank test | Rank test for paired data that the differences are symmetric about zero. | [06_05](html/06_05_nonparametric_tests.html) |
+| Sign test | Test that the median difference is zero using only the signs of the differences; the number of positives is Binomial(n, 1/2) under H0. | [06_05](html/06_05_nonparametric_tests.html) |
+| Permutation test | Test that obtains the null distribution of any statistic by recomputing it over all (or many random) relabellings of the data; exact when the labels are exchangeable. | [06_05](html/06_05_nonparametric_tests.html) |
+| Kolmogorov-Smirnov test | Test based on D, the largest vertical gap between an empirical CDF and a hypothesised CDF (one sample) or another empirical CDF (two samples). | [06_05](html/06_05_nonparametric_tests.html) |
+| Lilliefors correction | Correction for the KS test when the distribution's parameters are estimated from the same data; the critical value is smaller than the usual one. | [06_05](html/06_05_nonparametric_tests.html) |
+| Kruskal-Wallis test | Rank-based analogue of one-way ANOVA for three or more groups. | [06_05](html/06_05_nonparametric_tests.html) |
+| Asymptotic relative efficiency | Limiting ratio of the sample sizes two tests need for the same power; 0.955 for Wilcoxon against the t-test with Normal data, above 1 for heavy tails. | [06_05](html/06_05_nonparametric_tests.html) |

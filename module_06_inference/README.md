@@ -14,6 +14,7 @@ How to learn about a population from a sample: estimating parameters (method of 
 | 06_06 Multiple testing: Bonferroni, Holm and Benjamini-Hochberg | [notebook](notebooks/06_06_multiple_testing.ipynb) | [page](html/06_06_multiple_testing.html) | done |
 | 06_07 A/B testing end to end: the Cookie Cats experiment | [notebook](notebooks/06_07_ab_testing.ipynb) | [page](html/06_07_ab_testing.html) | done |
 | 06_08 Risk, relative risk and odds ratio | [notebook](notebooks/06_08_risk_odds_ratio.ipynb) | [page](html/06_08_risk_odds_ratio.html) | done |
+| 06_09 Variance reduction with CUPED | [notebook](notebooks/06_09_cuped_variance_reduction.ipynb) | [page](html/06_09_cuped_variance_reduction.html) | done |
 
 ## Contents of the folders
 

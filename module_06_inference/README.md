@@ -15,6 +15,7 @@ How to learn about a population from a sample: estimating parameters (method of 
 | 06_07 A/B testing end to end: the Cookie Cats experiment | [notebook](notebooks/06_07_ab_testing.ipynb) | [page](html/06_07_ab_testing.html) | done |
 | 06_08 Risk, relative risk and odds ratio | [notebook](notebooks/06_08_risk_odds_ratio.ipynb) | [page](html/06_08_risk_odds_ratio.html) | done |
 | 06_09 Variance reduction with CUPED | [notebook](notebooks/06_09_cuped_variance_reduction.ipynb) | [page](html/06_09_cuped_variance_reduction.html) | done |
+| 06_10 Likelihood-ratio, Wald and score tests | [notebook](notebooks/06_10_likelihood_ratio_tests.ipynb) | [page](html/06_10_likelihood_ratio_tests.html) | done |
 
 ## Contents of the folders
 

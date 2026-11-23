@@ -72,3 +72,8 @@
 | Relative lift | The effect expressed as a share of the control rate, (p_B - p_A) / p_A. | [06_07](html/06_07_ab_testing.html) |
 | Peeking | Checking a running test repeatedly and stopping at the first significant result; it inflates the false-positive rate well above the nominal level. | [06_07](html/06_07_ab_testing.html) |
 | Sequential testing | Designs such as alpha spending (O'Brien-Fleming boundaries) or always-valid p-values that allow repeated looks while keeping the overall error rate. | [06_07](html/06_07_ab_testing.html) |
+| Risk | The probability of an event in a group, estimated by events divided by group size. | [06_08](html/06_08_risk_odds_ratio.html) |
+| Relative risk (RR) | The ratio of the risk in the exposed group to the risk in the unexposed group, p1 / p0; its confidence interval is built on the log scale. | [06_08](html/06_08_risk_odds_ratio.html) |
+| Odds ratio (OR) | The ratio of the odds p / (1 - p) in two groups, equal to ad / bc in a 2x2 table; it approximates the relative risk only for rare outcomes. | [06_08](html/06_08_risk_odds_ratio.html) |
+| Number needed to treat (NNT) | The number of units that must be exposed for one extra (or one fewer) event: 1 / \|risk difference\|. | [06_08](html/06_08_risk_odds_ratio.html) |
+| Fisher's exact test | Exact test for a 2x2 table that conditions on the margins; the count in one cell is Hypergeometric under the null hypothesis. | [06_08](html/06_08_risk_odds_ratio.html) |

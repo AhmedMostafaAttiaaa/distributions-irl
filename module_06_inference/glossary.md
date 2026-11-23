@@ -75,5 +75,9 @@
 | Risk | The probability of an event in a group, estimated by events divided by group size. | [06_08](html/06_08_risk_odds_ratio.html) |
 | Relative risk (RR) | The ratio of the risk in the exposed group to the risk in the unexposed group, p1 / p0; its confidence interval is built on the log scale. | [06_08](html/06_08_risk_odds_ratio.html) |
 | Odds ratio (OR) | The ratio of the odds p / (1 - p) in two groups, equal to ad / bc in a 2x2 table; it approximates the relative risk only for rare outcomes. | [06_08](html/06_08_risk_odds_ratio.html) |
-| Number needed to treat (NNT) | The number of units that must be exposed for one extra (or one fewer) event: 1 / \|risk difference\|. | [06_08](html/06_08_risk_odds_ratio.html) |
+| Number needed to treat (NNT) | The number of units that must be exposed for one extra (or one fewer) event: 1 / \\|risk difference\\|. | [06_08](html/06_08_risk_odds_ratio.html) |
 | Fisher's exact test | Exact test for a 2x2 table that conditions on the margins; the count in one cell is Hypergeometric under the null hypothesis. | [06_08](html/06_08_risk_odds_ratio.html) |
+| CUPED | Controlled-experiment Using Pre-Experiment Data: the metric is adjusted as Y - theta (X - mean X) with a pre-experiment covariate X, which cuts the variance by 1 - rho^2 without biasing the treatment effect. | [06_09](html/06_09_cuped_variance_reduction.html) |
+| Variance reduction | Techniques that lower the variance of an experiment's estimate (covariate adjustment, stratification, control variates) so that fewer users are needed for the same power. | [06_09](html/06_09_cuped_variance_reduction.html) |
+| Control variate | A variable with known mean that is correlated with the quantity of interest and is subtracted (with an optimal coefficient) to reduce the variance of an estimate. | [06_09](html/06_09_cuped_variance_reduction.html) |
+| Pre-experiment covariate | A variable measured before the treatment is assigned, hence balanced across groups by randomisation and safe to adjust for. | [06_09](html/06_09_cuped_variance_reduction.html) |

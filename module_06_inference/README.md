@@ -32,5 +32,5 @@ How to learn about a population from a sample: estimating parameters (method of 
 ## Decisions
 
 - Each lesson has three worked examples (the main one in full, two more), every claim checked by simulation, an "In plain words" cell after each derivation, 3D plots and an interactive page.
-- Lessons 06_01 to 06_04 were built on 2026-11-21; 06_05 to 06_07 follow the next day.
+- Lessons 06_01 to 06_04 were built on 2026-11-21 and 06_05 to 06_07 on 2026-11-22. The short lessons 06_08 to 06_10 (risk and odds ratio, CUPED, likelihood-ratio tests) were added on 2026-11-23: compact versions of the same template, with fewer worked examples than the main lessons.
 - Data are synthetic unless a lesson says otherwise.

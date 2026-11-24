@@ -5,7 +5,7 @@
 | Prior | A probability distribution for a parameter that expresses what is believed before seeing the data. | [07_01](html/07_01_bayesian_updating_conjugates.html) |
 | Likelihood | The probability (density) of the observed data viewed as a function of the parameter. | [07_01](html/07_01_bayesian_updating_conjugates.html) |
 | Posterior | The distribution of the parameter after seeing the data: proportional to likelihood times prior. | [07_01](html/07_01_bayesian_updating_conjugates.html) |
-| Evidence (marginal likelihood) | The probability of the data averaged over the prior, p(x) = integral of p(x \\\| theta) p(theta); the normalising constant of the posterior and the basis of Bayes factors. | [07_01](html/07_01_bayesian_updating_conjugates.html) |
+| Evidence (marginal likelihood) | The probability of the data averaged over the prior, p(x) = integral of p(x \\\\| theta) p(theta); the normalising constant of the posterior and the basis of Bayes factors. | [07_01](html/07_01_bayesian_updating_conjugates.html) |
 | Conjugate prior | A prior family whose posterior is in the same family, so updating only changes the parameters (Beta-Binomial, Gamma-Poisson, Normal-Normal). | [07_01](html/07_01_bayesian_updating_conjugates.html) |
 | Beta-Binomial model | Binomial data with a Beta(a, b) prior on the success probability; the posterior is Beta(a + successes, b + failures). | [07_01](html/07_01_bayesian_updating_conjugates.html) |
 | Gamma-Poisson model | Poisson counts with a Gamma(alpha, beta) prior on the rate; the posterior is Gamma(alpha + events, beta + exposure). | [07_01](html/07_01_bayesian_updating_conjugates.html) |
@@ -28,3 +28,11 @@
 | Effective sample size (ESS) | The number of independent draws with the same precision as the correlated chain: N / (1 + 2 times the sum of autocorrelations). | [07_03](html/07_03_mcmc_metropolis.html) |
 | R-hat (Gelman-Rubin) | A convergence diagnostic comparing between-chain and within-chain variance of several chains; values above about 1.01 signal non-convergence. | [07_03](html/07_03_mcmc_metropolis.html) |
 | Hamiltonian Monte Carlo | MCMC that uses the gradient of the log-density to make long, efficient proposals; the NUTS variant is the default in Stan and PyMC. | [07_03](html/07_03_mcmc_metropolis.html) |
+| Multi-armed bandit | A sequential decision problem in which one of several options (arms) with unknown reward probabilities is chosen at each step, trading off exploration against exploitation. | [07_04](html/07_04_thompson_sampling_bandits.html) |
+| Exploration-exploitation trade-off | The tension between trying uncertain options to learn about them and using the option that currently looks best to earn reward. | [07_04](html/07_04_thompson_sampling_bandits.html) |
+| Regret | The cumulative reward lost relative to always choosing the best arm: the sum over steps of p_best minus the chosen arm's rate. | [07_04](html/07_04_thompson_sampling_bandits.html) |
+| Thompson sampling | A bandit policy that draws a plausible rate for each arm from its posterior and plays the arm with the highest draw, so each arm is played with its posterior probability of being best. | [07_04](html/07_04_thompson_sampling_bandits.html) |
+| Epsilon-greedy | A bandit policy that plays a random arm with probability epsilon and the empirically best arm otherwise. | [07_04](html/07_04_thompson_sampling_bandits.html) |
+| Upper confidence bound (UCB) | A bandit policy that plays the arm with the highest optimistic estimate: observed mean plus an exploration bonus that shrinks with the number of pulls. | [07_04](html/07_04_thompson_sampling_bandits.html) |
+| Lai-Robbins bound | The asymptotic lower bound on the regret of any consistent bandit policy: the sum over suboptimal arms of gap / KL divergence times ln T. | [07_04](html/07_04_thompson_sampling_bandits.html) |
+| Contextual bandit | A bandit in which the best arm depends on observed features of the user or situation, as in personalised recommendation. | [07_04](html/07_04_thompson_sampling_bandits.html) |

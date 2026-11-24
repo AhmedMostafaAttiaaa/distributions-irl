@@ -5,7 +5,7 @@
 | Prior | A probability distribution for a parameter that expresses what is believed before seeing the data. | [07_01](html/07_01_bayesian_updating_conjugates.html) |
 | Likelihood | The probability (density) of the observed data viewed as a function of the parameter. | [07_01](html/07_01_bayesian_updating_conjugates.html) |
 | Posterior | The distribution of the parameter after seeing the data: proportional to likelihood times prior. | [07_01](html/07_01_bayesian_updating_conjugates.html) |
-| Evidence (marginal likelihood) | The probability of the data averaged over the prior, p(x) = integral of p(x \\| theta) p(theta); the normalising constant of the posterior and the basis of Bayes factors. | [07_01](html/07_01_bayesian_updating_conjugates.html) |
+| Evidence (marginal likelihood) | The probability of the data averaged over the prior, p(x) = integral of p(x \\\| theta) p(theta); the normalising constant of the posterior and the basis of Bayes factors. | [07_01](html/07_01_bayesian_updating_conjugates.html) |
 | Conjugate prior | A prior family whose posterior is in the same family, so updating only changes the parameters (Beta-Binomial, Gamma-Poisson, Normal-Normal). | [07_01](html/07_01_bayesian_updating_conjugates.html) |
 | Beta-Binomial model | Binomial data with a Beta(a, b) prior on the success probability; the posterior is Beta(a + successes, b + failures). | [07_01](html/07_01_bayesian_updating_conjugates.html) |
 | Gamma-Poisson model | Poisson counts with a Gamma(alpha, beta) prior on the rate; the posterior is Gamma(alpha + events, beta + exposure). | [07_01](html/07_01_bayesian_updating_conjugates.html) |
@@ -20,3 +20,11 @@
 | Expected loss | The posterior average of the amount lost by a decision, for example E[max(theta_A - theta_B, 0)] when choosing B. | [07_02](html/07_02_credible_intervals_predictive.html) |
 | Probability of being best | The posterior probability that a given variant has the highest true rate among several, estimated by Monte Carlo from joint posterior draws. | [07_02](html/07_02_credible_intervals_predictive.html) |
 | Bayesian A/B test | An A/B analysis based on the posterior of each variant: probability of direction, expected loss, ROPE and probability of being best instead of a p-value. | [07_02](html/07_02_credible_intervals_predictive.html) |
+| Markov chain Monte Carlo (MCMC) | A family of algorithms that draw dependent samples from a target distribution, known only up to a constant, using a Markov chain whose long-run distribution is the target. | [07_03](html/07_03_mcmc_metropolis.html) |
+| Metropolis algorithm | Random-walk MCMC: propose a step, accept it with probability min(1, target ratio), otherwise stay; needs only the unnormalised density. | [07_03](html/07_03_mcmc_metropolis.html) |
+| Detailed balance | The condition pi(a) P(a to b) = pi(b) P(b to a) for a Markov chain, which guarantees that pi is stationary. | [07_03](html/07_03_mcmc_metropolis.html) |
+| Burn-in | The initial draws of a chain, discarded because the chain has not yet reached the target distribution. | [07_03](html/07_03_mcmc_metropolis.html) |
+| Acceptance rate | The share of proposals accepted by a Metropolis sampler; about 0.2 to 0.4 indicates a well-tuned step size. | [07_03](html/07_03_mcmc_metropolis.html) |
+| Effective sample size (ESS) | The number of independent draws with the same precision as the correlated chain: N / (1 + 2 times the sum of autocorrelations). | [07_03](html/07_03_mcmc_metropolis.html) |
+| R-hat (Gelman-Rubin) | A convergence diagnostic comparing between-chain and within-chain variance of several chains; values above about 1.01 signal non-convergence. | [07_03](html/07_03_mcmc_metropolis.html) |
+| Hamiltonian Monte Carlo | MCMC that uses the gradient of the log-density to make long, efficient proposals; the NUTS variant is the default in Stan and PyMC. | [07_03](html/07_03_mcmc_metropolis.html) |

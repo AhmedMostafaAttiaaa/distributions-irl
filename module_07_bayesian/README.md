@@ -9,6 +9,7 @@ Probability as a degree of belief, and how data update it: priors and posteriors
 | 07_01 Bayesian updating and conjugate families | [notebook](notebooks/07_01_bayesian_updating_conjugates.ipynb) | [page](html/07_01_bayesian_updating_conjugates.html) | done |
 | 07_02 Credible intervals, posterior prediction and Bayesian A/B decisions | [notebook](notebooks/07_02_credible_intervals_predictive.ipynb) | [page](html/07_02_credible_intervals_predictive.html) | done |
 | 07_03 MCMC: the Metropolis algorithm | [notebook](notebooks/07_03_mcmc_metropolis.ipynb) | [page](html/07_03_mcmc_metropolis.html) | done |
+| 07_04 Thompson sampling and multi-armed bandits | [notebook](notebooks/07_04_thompson_sampling_bandits.ipynb) | [page](html/07_04_thompson_sampling_bandits.html) | done |
 
 ## Contents of the folders
 

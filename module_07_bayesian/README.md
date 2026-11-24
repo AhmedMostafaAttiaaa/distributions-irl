@@ -6,6 +6,7 @@ Probability as a degree of belief, and how data update it: priors and posteriors
 
 | Lesson | Notebook | Interactive page | Status |
 |---|---|---|---|
+| 07_01 Bayesian updating and conjugate families | [notebook](notebooks/07_01_bayesian_updating_conjugates.ipynb) | [page](html/07_01_bayesian_updating_conjugates.html) | done |
 
 ## Contents of the folders
 

@@ -31,7 +31,8 @@ MODULES = [
      "Estimation (moments and maximum likelihood), confidence intervals, hypothesis tests, power, common tests; nonparametric tests, multiple testing and A/B testing."),
     ("07", "module_07_bayesian", "Bayesian thinking",
      "Priors and posteriors, conjugate updating, credible intervals and predictions, MCMC and Thompson sampling."),
-    ("08", None, "Information theory", "Planned."),
+    ("08", "module_08_information", "Information theory",
+     "Entropy and cross-entropy, KL and Jensen-Shannon divergence, Wasserstein distance, mutual information."),
     ("09", None, "Distributions inside ML and AI", "Planned."),
     ("10", None, "Model evaluation and the confusion matrix", "Planned."),
     ("11", None, "Data science in practice", "Planned."),
@@ -39,7 +40,7 @@ MODULES = [
     ("13", None, "Capstone projects", "Planned."),
 ]
 
-IN_PROGRESS = set()   # modules shown with the badge "in progress" instead of "done"
+IN_PROGRESS = {"08"}   # modules shown with the badge "in progress" instead of "done"
 
 CSS = """
 :root { --bg:#fff; --panel:#f6f7f9; --text:#1b1f24; --muted:#5b636d; --border:#d8dce1; --main:#0072B2; --hit:#fff3cd; }

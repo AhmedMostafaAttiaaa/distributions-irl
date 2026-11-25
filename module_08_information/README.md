@@ -8,6 +8,7 @@ How much surprise a distribution carries and how far apart two distributions are
 |---|---|---|---|
 | 08_01 Entropy and cross-entropy | [notebook](notebooks/08_01_entropy_cross_entropy.ipynb) | [page](html/08_01_entropy_cross_entropy.html) | done |
 | 08_02 KL divergence and Jensen-Shannon divergence | [notebook](notebooks/08_02_kl_js_divergence.ipynb) | [page](html/08_02_kl_js_divergence.html) | done |
+| 08_03 The Wasserstein distance | [notebook](notebooks/08_03_wasserstein_distance.ipynb) | [page](html/08_03_wasserstein_distance.html) | done |
 
 ## Contents of the folders
 

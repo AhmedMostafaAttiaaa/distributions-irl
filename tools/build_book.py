@@ -40,7 +40,7 @@ MODULES = [
     ("13", None, "Capstone projects", "Planned."),
 ]
 
-IN_PROGRESS = {"08"}   # modules shown with the badge "in progress" instead of "done"
+IN_PROGRESS = set()   # modules shown with the badge "in progress" instead of "done"
 
 CSS = """
 :root { --bg:#fff; --panel:#f6f7f9; --text:#1b1f24; --muted:#5b636d; --border:#d8dce1; --main:#0072B2; --hit:#fff3cd; }

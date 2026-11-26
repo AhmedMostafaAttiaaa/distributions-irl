@@ -19,3 +19,12 @@
 | Iteratively reweighted least squares (IRLS) | Newton's method for GLMs: repeated weighted least-squares fits to a working response until the coefficients stop changing. | [09_02](html/09_02_glms.html) |
 | Overdispersion | Variance larger than the model allows (for counts, larger than the mean); it makes Poisson standard errors too small and is handled by the negative binomial or quasi-likelihood. | [09_02](html/09_02_glms.html) |
 | Deviance | Twice the gap between the log-likelihood of the saturated model and the fitted model; the GLM analogue of the residual sum of squares. | [09_02](html/09_02_glms.html) |
+| Naive Bayes | A classifier that applies Bayes' rule with the assumption that the features are independent given the class, so the log-odds are the prior log-odds plus a sum of per-feature votes. | [09_03](html/09_03_naive_bayes.html) |
+| Multinomial naive Bayes | Naive Bayes for count features (word counts), with class-conditional word probabilities estimated by smoothed counts. | [09_03](html/09_03_naive_bayes.html) |
+| Bernoulli naive Bayes | Naive Bayes for presence/absence features, where absent words also contribute evidence. | [09_03](html/09_03_naive_bayes.html) |
+| Gaussian naive Bayes | Naive Bayes for continuous features, each modelled as a normal distribution within each class. | [09_03](html/09_03_naive_bayes.html) |
+| Laplace smoothing | Adding alpha pseudo-counts to every count, equivalent to the posterior mean under a symmetric Dirichlet prior; it prevents zero probabilities for unseen words. | [09_03](html/09_03_naive_bayes.html) |
+| Generative and discriminative models | A generative model describes how the features arise within each class (naive Bayes); a discriminative model fits the probability of the class given the features directly (logistic regression). | [09_03](html/09_03_naive_bayes.html) |
+| Log-odds score | The logarithm of P(class 1)/P(class 0) given the data; a sum of evidence terms whose sign gives the decision and whose size the confidence. | [09_03](html/09_03_naive_bayes.html) |
+| Precision and recall | Precision is the share of flagged items that are truly positive; recall is the share of true positives that are flagged. | [09_03](html/09_03_naive_bayes.html) |
+| ROC AUC | The area under the ROC curve; equal to the probability that a random positive example scores higher than a random negative one. | [09_03](html/09_03_naive_bayes.html) |

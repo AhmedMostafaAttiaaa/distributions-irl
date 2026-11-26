@@ -74,3 +74,12 @@
 | Posterior collapse | A latent dimension whose encoder distribution equals the prior for every input, carrying no information; its KL cost is zero. | [09_08](html/09_08_vae.html) |
 | Active latent dimension | A latent dimension of a VAE whose average KL to the prior is above a small threshold (for example 0.05 nats). | [09_08](html/09_08_vae.html) |
 | Amortised inference | Using one neural network (the encoder) to approximate the posterior of every data point instead of optimising each posterior separately. | [09_08](html/09_08_vae.html) |
+| Diffusion model | A generative model that learns to reverse a fixed process which gradually adds Gaussian noise to data; samples are produced by denoising pure noise step by step. | [09_09](html/09_09_diffusion_noise.html) |
+| Forward (noising) process | The fixed chain x_t = sqrt(alpha_bar_t) x_0 + sqrt(1 - alpha_bar_t) epsilon that turns data into standard normal noise; its marginals are known in closed form. | [09_09](html/09_09_diffusion_noise.html) |
+| Noise schedule | The sequence of per-step noise variances beta_t (linear, cosine, ...) that sets how fast the signal is destroyed. | [09_09](html/09_09_diffusion_noise.html) |
+| Signal-to-noise ratio (diffusion) | alpha_bar_t / (1 - alpha_bar_t): the ratio of signal variance to noise variance at step t. | [09_09](html/09_09_diffusion_noise.html) |
+| Reverse posterior | The Gaussian q(x_{t-1} \| x_t, x_0) with mean a weighted average of x_0 and x_t and variance (1 - alpha_bar_{t-1}) / (1 - alpha_bar_t) beta_t, obtained by Bayes' rule for Gaussians. | [09_09](html/09_09_diffusion_noise.html) |
+| Denoising (noise-prediction) objective | Training the network to predict the added noise epsilon from the noisy input and the step t, with the mean squared error as loss. | [09_09](html/09_09_diffusion_noise.html) |
+| Score function | The gradient of the log-density, grad log p(x); noise prediction is proportional to the score of the noisy marginal (Tweedie's formula). | [09_09](html/09_09_diffusion_noise.html) |
+| Sliced Wasserstein distance | The average one-dimensional Wasserstein distance between two samples projected on random directions; a cheap measure of how well generated samples match data. | [09_09](html/09_09_diffusion_noise.html) |
+| Maximum mean discrepancy (MMD) | A kernel-based distance between two distributions estimated from samples; zero when the distributions coincide. | [09_09](html/09_09_diffusion_noise.html) |

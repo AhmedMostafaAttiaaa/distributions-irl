@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>09_09 Diffusion Models: Noise as a Distribution | Probability Distributions Book</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+/* ---------- Theme: colorblind-safe Okabe-Ito colors, light and dark ---------- */
+:root {
+  --bg: #ffffff; --panel: #f6f7f9; --text: #1b1f24; --muted: #5b636d; --border: #d8dce1;
+  --main: #0072B2;      /* theoretical curve */
+  --sim: #E69F00;       /* simulated samples */
+  --highlight: #D55E00; --third: #009E73; /* shaded region */
+  --grid: #e3e6ea;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14171a; --panel: #1d2126; --text: #e8eaed; --muted: #9aa3ad; --border: #343a41;
+    --main: #56B4E9; --sim: #E69F00; --highlight: #F08A4B; --third: #2FD0A0; --grid: #2b3036;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 980px; margin: 0 auto; padding: 0 16px 48px; }
+h1 { font-size: 1.7rem; margin: 20px 0 4px; }
+h2 { font-size: 1.2rem; margin: 28px 0 10px; }
+p, li { color: var(--text); }
+.muted { color: var(--muted); }
+
+/* ---------- Navigation bar ---------- */
+nav.topnav { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap;
+  padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--panel); }
+nav.topnav a { color: var(--main); text-decoration: none; font-weight: 600; }
+nav.topnav a:hover { text-decoration: underline; }
+nav.topnav .disabled { color: var(--muted); }
+
+/* ---------- Cards and layout ---------- */
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 720px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+/* ---------- Sliders ---------- */
+.slider-row { display: grid; grid-template-columns: 90px 1fr 70px; align-items: center; gap: 10px; margin: 6px 0; }
+.slider-row label { font-weight: 600; }
+.slider-row output { text-align: right; font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; accent-color: var(--main); }
+input[type=number] { width: 80px; padding: 4px 6px; background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px; }
+button { background: var(--main); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px;
+  font: inherit; font-weight: 600; cursor: pointer; }
+button.secondary { background: transparent; color: var(--main); border: 1px solid var(--main); }
+@media (prefers-color-scheme: dark) { button { color: #0b0d0f; } }
+
+/* ---------- Readouts ---------- */
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.readout { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
+.readout .name { color: var(--muted); font-size: 0.8rem; }
+.readout .value { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- Charts (SVG) ---------- */
+svg.chart { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+svg.chart text { fill: var(--muted); font-size: 12px; font-family: inherit; }
+svg.chart .title { fill: var(--text); font-size: 14px; font-weight: 600; }
+svg.chart .gridline { stroke: var(--grid); stroke-width: 1; }
+svg.chart .axisline { stroke: var(--muted); stroke-width: 1; }
+.plot3d { width: 100%; height: 420px; }
+.cards3 .card h3 { margin: 0 0 6px; font-size: 1rem; }
+footer { margin-top: 36px; padding-top: 12px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+footer a { color: var(--main); }
+
+
+.plain { border-left: 4px solid var(--main); }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 8px 0; }
+.controls label { display: inline-flex; gap: 6px; align-items: center; }
+select, input[type=number] { padding: 5px 8px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
+svg.chart { width: 100%; height: auto; display: block; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="../../index.html">Book index</a>
+  <a href="09_08_vae.html">&larr; Previous lesson</a>
+  <a class="disabled" href="#">Next lesson &rarr;</a>
+</nav>
+<main>
+<h1>09_09 Diffusion Models: Noise as a Distribution</h1>
+<p class="muted">Destroy data with Gaussian noise in small steps, then learn to run the movie backwards: schedules, the reverse step, denoising as regression and a small model from scratch.</p>
+<section class="card"><h2 style="margin-top:0">Key ideas</h2><p>$x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\varepsilon$; $\bar\alpha_t=\prod(1-\beta_s)$; SNR $=\bar\alpha/(1-\bar\alpha)$. Reverse: $q(x_{t-1}|x_t,x_0)=N(\tilde\mu_t,\tilde\beta_t)$, $\tilde\beta_t=\frac{1-\bar\alpha_{t-1}}{1-\bar\alpha_t}\beta_t$. Loss $E\|\varepsilon-\varepsilon_\theta(x_t,t)\|^2$; $\varepsilon^*=-\sqrt{1-\bar\alpha_t}\nabla\ln p_t$. Sampling: $x_{t-1}=\frac1{\sqrt{\alpha_t}}(x_t-\frac{\beta_t}{\sqrt{1-\bar\alpha_t}}\varepsilon_\theta)+\sqrt{\tilde\beta_t}z$. Gaussian data: slope $\frac{\sqrt{1-\bar\alpha}}{\bar\alpha s^2+1-\bar\alpha}$.</p></section>
+<section class="card plain"><h2 style="margin-top:0">In plain words</h2><ul>
+<li><strong>Destroying data with noise is easy and known exactly;</strong> one formula jumps to any noise level.</li>
+<li><strong>The network only learns to predict the added noise,</strong> i.e. to denoise at every noise level.</li>
+<li><strong>Predicting the noise is estimating the score,</strong> the arrow pointing towards denser data.</li>
+<li><strong>Sampling runs the movie backwards</strong> in many small steps, adding a little fresh noise each time.</li></ul></section>
+
+<section>
+  <h2>The forward process: noising the half-moons</h2>
+  <div class="card">
+    <p>1,000 training points of two interleaved half-moons. Choose the schedule and the step $t$: the data are scaled down by $\sqrt{\bar\alpha_t}$ and noise of variance $1-\bar\alpha_t$ is added, so the total variance stays about 1.</p>
+    <div class="controls"><label>schedule <select id="sch"><option value="lin">linear (T = 100)</option><option value="cos">cosine (T = 100)</option></select></label><label>step $t$ <input type="range" id="t" min="1" max="100" step="1" value="30"></label><span id="tV"></span></div>
+    <div class="readouts" id="fOut"></div>
+    <svg class="chart" id="fChart" viewBox="0 0 480 300"></svg>
+  </div>
+</section>
+<section id="examplePanel">
+  <h2>Worked example: the reverse chain of the trained network</h2>
+  <div class="card">
+    <p>Snapshots of 500 points of the reverse chain of the denoising network trained in the notebook (5,000 steps, 100-step linear schedule), from pure noise ($N(0,I)$) to the generated sample, against the training data (grey).</p>
+    <div class="controls"><label>reverse steps done <select id="rs"><option value="0">0 (pure noise)</option><option value="50">50</option><option value="80">80</option><option value="95">95</option><option value="100" selected>100 (generated)</option></select></label></div>
+    <div class="readouts" id="rOut"></div>
+    <svg class="chart" id="rChart" viewBox="0 0 480 300"></svg>
+  </div>
+</section>
+<section>
+  <h2>3D view: the optimal noise predictor for Gaussian data</h2>
+  <div class="card"><div class="controls"><label>data sd $s$ <input type="number" id="s" value="1" min="0.1" max="3" step="0.1" style="width:65px"></label></div><div id="plot3d" class="plot3d"></div></div>
+  <p class="muted">For $x_0\sim N(0,s^2)$ the best noise predictor is linear in $x_t$: $\varepsilon^*=\frac{\sqrt{1-\bar\alpha}}{\bar\alpha s^2+1-\bar\alpha}x_t$. Plotly is loaded from a CDN only on this page.</p>
+</section>
+
+<section>
+  <h2>Where it is used</h2>
+  <div class="grid3 cards3">
+    <div class="card"><h3>Statistics</h3><p>Score matching, Tweedie's formula and empirical Bayes, Langevin samplers and stochastic differential equations.</p></div>
+    <div class="card"><h3>Data science</h3><p>Synthetic data and augmentation, imputation and inpainting, denoising of signals and images.</p></div>
+    <div class="card"><h3>ML and AI</h3><p>Image, video and audio generation, classifier-free guidance, latent diffusion, protein and molecule design, robotics policies.</p></div>
+  </div>
+</section>
+<footer>Matching notebook: <a href="../notebooks/09_09_diffusion_noise.ipynb">notebooks/09_09_diffusion_noise.ipynb</a></footer>
+</main>
+<script>
+"use strict";
+/* =====================================================================
+   SECTION A. MATH HELPERS (small, readable, no libraries)
+   ===================================================================== */
+
+// log(n!) using a running sum; fine for the sizes used in these lessons.
+function logFactorial(n) {
+  let total = 0;
+  for (let i = 2; i <= n; i++) total += Math.log(i);
+  return total;
+}
+
+// Binomial PMF computed in log space so large n does not overflow.
+function binomPmf(k, n, p) {
+  if (k < 0 || k > n) return 0;
+  if (p === 0) return k === 0 ? 1 : 0;
+  if (p === 1) return k === n ? 1 : 0;
+  const logChoose = logFactorial(n) - logFactorial(k) - logFactorial(n - k);
+  return Math.exp(logChoose + k * Math.log(p) + (n - k) * Math.log(1 - p));
+}
+
+// Turn an array of probabilities into running totals (the CDF).
+function cumulative(probs) {
+  const out = [];
+  let running = 0;
+  for (const p of probs) { running += p; out.push(running); }
+  return out;
+}
+
+// Mean, variance, std and skewness of a discrete distribution given as (xs, probs).
+function discreteMoments(xs, probs) {
+  let mean = 0;
+  for (let i = 0; i < xs.length; i++) mean += xs[i] * probs[i];
+  let variance = 0, third = 0;
+  for (let i = 0; i < xs.length; i++) {
+    const d = xs[i] - mean;
+    variance += d * d * probs[i];
+    third += d * d * d * probs[i];
+  }
+  const std = Math.sqrt(variance);
+  const skew = std > 0 ? third / (std * std * std) : 0;
+  return { mean, variance, std, skew };
+}
+
+// Sample from a discrete distribution by inverting the CDF (xs sorted ascending).
+function sampleDiscrete(xs, cdf, count) {
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    const u = Math.random();
+    let j = 0;
+    while (j < cdf.length - 1 && cdf[j] < u) j++;
+    out.push(xs[j]);
+  }
+  return out;
+}
+
+// Format a number for display.
+function fmt(x, digits = 4) { return Number.isFinite(x) ? x.toFixed(digits) : "n/a"; }
+
+/* =====================================================================
+   SECTION B. UI HELPERS: sliders and readouts
+   ===================================================================== */
+
+// Add a labelled slider to a container. Calls onChange(value) whenever it moves.
+function addSlider(container, { label, min, max, step, value, onChange }) {
+  const row = document.createElement("div");
+  row.className = "slider-row";
+  const name = document.createElement("label");
+  name.textContent = label;
+  const input = document.createElement("input");
+  Object.assign(input, { type: "range", min, max, step, value });
+  const out = document.createElement("output");
+  out.textContent = value;
+  input.addEventListener("input", () => { out.textContent = input.value; onChange(Number(input.value)); });
+  row.append(name, input, out);
+  container.appendChild(row);
+  return { get: () => Number(input.value) };
+}
+
+// Fill the readouts grid from an object like { Mean: 1.2, Variance: 3.4 }.
+function showReadouts(values) {
+  const box = document.getElementById("readouts");
+  box.innerHTML = "";
+  for (const [name, value] of Object.entries(values)) {
+    const cell = document.createElement("div");
+    cell.className = "readout";
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${typeof value === "string" ? value : fmt(value)}</div>`;
+    box.appendChild(cell);
+  }
+}
+
+/* =====================================================================
+   SECTION C. SVG CHART HELPERS
+   drawChart(svgElement, spec) where spec is:
+     { title, xlabel, ylabel,
+       series: [ { kind: "bar" | "line" | "step" | "points", xs, ys, color, label } ],
+       shade: [a, b]   // optional: highlight x values between a and b
+       xrange, yrange  // optional fixed ranges
+     }
+   ===================================================================== */
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function svgEl(name, attrs, text) {
+  const node = document.createElementNS(SVG_NS, name);
+  for (const [key, value] of Object.entries(attrs || {})) node.setAttribute(key, value);
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+// Pick about 5 round tick values between lo and hi.
+function niceTicks(lo, hi) {
+  const span = hi - lo || 1;
+  const rawStep = span / 5;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const options = [1, 2, 5, 10];
+  let step = magnitude;
+  for (const o of options) { if (o * magnitude >= rawStep) { step = o * magnitude; break; } }
+  const ticks = [];
+  for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) ticks.push(Number(t.toPrecision(10)));
+  return ticks;
+}
+
+function drawChart(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right;
+  const plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+
+  // Work out the data ranges from all series.
+  let xmin = Infinity, xmax = -Infinity, ymax = 0;
+  for (const s of spec.series) {
+    for (const x of s.xs) { xmin = Math.min(xmin, x); xmax = Math.max(xmax, x); }
+    for (const y of s.ys) ymax = Math.max(ymax, y);
+  }
+  if (spec.xrange) [xmin, xmax] = spec.xrange;
+  if (spec.yrange) ymax = spec.yrange[1];
+  ymax = ymax * 1.08 || 1;
+  const hasBars = spec.series.some(s => s.kind === "bar");
+  const pad = (hasBars && !spec.series.some(s => s.width)) ? 0.7 : 0;               // keep the first and last bar inside the axes
+  const x0 = xmin - pad, x1 = xmax + pad || 1;
+  const sx = x => margin.left + (x - x0) / (x1 - x0) * plotW;
+  const sy = y => margin.top + plotH - y / ymax * plotH;
+
+  // Title, grid and axes.
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (const t of niceTicks(0, ymax)) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(t), y2: sy(t), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(t) + 4, "text-anchor": "end" }, String(t)));
+  }
+  for (const t of niceTicks(x0, x1)) {
+    svg.appendChild(svgEl("text", { x: sx(t), y: H - margin.bottom + 16, "text-anchor": "middle" }, String(t)));
+  }
+  svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(0), y2: sy(0), class: "axisline" }));
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  const yl = svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || "");
+  svg.appendChild(yl);
+
+  // Shaded region for the probability calculator.
+  if (spec.shade) {
+    const [a, b] = spec.shade;
+    svg.appendChild(svgEl("rect", { x: sx(a - (hasBars ? 0.5 : 0)), y: margin.top,
+      width: Math.max(0, sx(b + (hasBars ? 0.5 : 0)) - sx(a - (hasBars ? 0.5 : 0))), height: plotH,
+      fill: "var(--highlight)", opacity: 0.15 }));
+  }
+
+  // Area under a curve between a and b (continuous distributions): spec.fillUnder = [a, b]
+  if (spec.fillUnder) {
+    const curve = spec.series.find(s => s.kind === "line");
+    const regions = Array.isArray(spec.fillUnder[0]) ? spec.fillUnder : [spec.fillUnder];   // one [a, b] or several
+    for (const [a, b] of regions) {
+      const heightAt = x => {                          // curve height at x (linear interpolation; at a vertical edge take the top)
+        const exact = curve.ys.filter((_, i) => curve.xs[i] === x);
+        if (exact.length) return Math.max(...exact);
+        for (let i = 1; i < curve.xs.length; i++) {
+          if (x <= curve.xs[i] && curve.xs[i] > curve.xs[i - 1]) {
+            return curve.ys[i - 1] + (curve.ys[i] - curve.ys[i - 1]) * (x - curve.xs[i - 1]) / (curve.xs[i] - curve.xs[i - 1]);
+          }
+        }
+        return 0;
+      };
+      const left = Math.max(a, curve.xs[0]), right = Math.min(b, curve.xs[curve.xs.length - 1]);
+      let points = `${sx(left)},${sy(0)} ${sx(left)},${sy(heightAt(left))}`;
+      curve.xs.forEach((x, i) => { if (x > left && x < right) points += ` ${sx(x)},${sy(curve.ys[i])}`; });
+      points += ` ${sx(right)},${sy(heightAt(right))} ${sx(right)},${sy(0)}`;
+      svg.appendChild(svgEl("polygon", { points, fill: "var(--highlight)", opacity: 0.35 }));
+    }
+  }
+
+  // Draw each series.
+  const legendItems = [];
+  for (const s of spec.series) {
+    const color = s.color || "var(--main)";
+    if (s.kind === "bar") {
+      const barW = s.width ? Math.max(1, plotW / (x1 - x0) * s.width) : Math.max(1, plotW / (x1 - x0) * 0.8);   // s.width is in data units (histograms)
+      s.xs.forEach((x, i) => {
+        const inside = spec.shade && x >= spec.shade[0] && x <= spec.shade[1];
+        svg.appendChild(svgEl("rect", { x: sx(x) - barW / 2, y: sy(s.ys[i]), width: barW,
+          height: Math.max(0, sy(0) - sy(s.ys[i])), fill: inside ? "var(--highlight)" : color,
+          opacity: s.opacity || 0.9 }));
+      });
+    } else if (s.kind === "points") {
+      s.xs.forEach((x, i) => svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 3, fill: color })));
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => {
+        if (s.kind === "step" && i > 0) d += ` L${sx(x)},${sy(s.ys[i - 1])}`;
+        d += (i === 0 ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`;
+      });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) legendItems.push({ label: s.label, color });
+  }
+  legendItems.forEach((item, i) => {
+    const lx = W - margin.right - 130, ly = margin.top + 6 + i * 16;
+    svg.appendChild(svgEl("rect", { x: lx, y: ly - 8, width: 12, height: 10, fill: item.color }));
+    svg.appendChild(svgEl("text", { x: lx + 18, y: ly + 1 }, item.label));
+  });
+}
+
+// Log-log scatter/line chart for power laws. spec: { title, xlabel, ylabel, series: [{kind: "points"|"line", xs, ys, color, label}] }
+// Axes show decades (1, 10, 100, ...); all x and y values must be positive.
+function drawLogLog(svg, spec) {
+  const W = 480, H = 300;
+  const margin = { left: 52, right: 14, top: 34, bottom: 44 };
+  const plotW = W - margin.left - margin.right, plotH = H - margin.top - margin.bottom;
+  svg.innerHTML = "";
+  let xlo = Infinity, xhi = -Infinity, ylo = Infinity, yhi = -Infinity;
+  for (const s of spec.series) {
+    s.xs.forEach((x, i) => {
+      if (x > 0 && s.ys[i] > 0) {
+        xlo = Math.min(xlo, Math.log10(x)); xhi = Math.max(xhi, Math.log10(x));
+        ylo = Math.min(ylo, Math.log10(s.ys[i])); yhi = Math.max(yhi, Math.log10(s.ys[i]));
+      }
+    });
+  }
+  xlo = Math.floor(xlo); xhi = Math.max(Math.ceil(xhi), xlo + 1);
+  ylo = Math.floor(ylo); yhi = Math.max(Math.ceil(yhi), ylo + 1);
+  const sx = x => margin.left + (Math.log10(x) - xlo) / (xhi - xlo) * plotW;
+  const sy = y => margin.top + plotH - (Math.log10(y) - ylo) / (yhi - ylo) * plotH;
+  svg.appendChild(svgEl("text", { x: W / 2, y: 20, "text-anchor": "middle", class: "title" }, spec.title || ""));
+  for (let e = ylo; e <= yhi; e++) {
+    svg.appendChild(svgEl("line", { x1: margin.left, x2: W - margin.right, y1: sy(Math.pow(10, e)), y2: sy(Math.pow(10, e)), class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: margin.left - 6, y: sy(Math.pow(10, e)) + 4, "text-anchor": "end" }, "1e" + e));
+  }
+  for (let e = xlo; e <= xhi; e++) {
+    svg.appendChild(svgEl("line", { x1: sx(Math.pow(10, e)), x2: sx(Math.pow(10, e)), y1: margin.top, y2: margin.top + plotH, class: "gridline" }));
+    svg.appendChild(svgEl("text", { x: sx(Math.pow(10, e)), y: H - margin.bottom + 16, "text-anchor": "middle" }, "1e" + e));
+  }
+  svg.appendChild(svgEl("text", { x: W / 2, y: H - 6, "text-anchor": "middle" }, spec.xlabel || ""));
+  svg.appendChild(svgEl("text", { x: 14, y: H / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${H / 2})` }, spec.ylabel || ""));
+  spec.series.forEach((s, idx) => {
+    const color = s.color || "var(--main)";
+    if (s.kind === "points") {
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) svg.appendChild(svgEl("circle", { cx: sx(x), cy: sy(s.ys[i]), r: 2.2, fill: color })); });
+    } else {
+      let d = "";
+      s.xs.forEach((x, i) => { if (x > 0 && s.ys[i] > 0) d += (d === "" ? "M" : " L") + `${sx(x)},${sy(s.ys[i])}`; });
+      svg.appendChild(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": 2.2 }));
+    }
+    if (s.label) {
+      svg.appendChild(svgEl("rect", { x: W - margin.right - 130, y: margin.top + idx * 16 - 2, width: 12, height: 10, fill: color }));
+      svg.appendChild(svgEl("text", { x: W - margin.right - 112, y: margin.top + idx * 16 + 7 }, s.label));
+    }
+  });
+}
+
+/* =====================================================================
+   SECTION D. OPTIONAL 3D (Plotly gl3d partial bundle, loaded on demand)
+   ===================================================================== */
+function loadPlotlyThen(callback) {
+  if (window.Plotly) { callback(); return; }
+  const script = document.createElement("script");
+  script.src = "https://cdn.plot.ly/plotly-gl3d-2.35.2.min.js";
+  script.onload = callback;
+  script.onerror = () => { document.getElementById("plot3d").textContent = "Could not load Plotly from the CDN (check your connection)."; };
+  document.head.appendChild(script);
+}
+
+
+
+/* =====================================================================
+   SECTION M. SPECIAL FUNCTIONS for continuous distributions (Numerical Recipes style, plain loops)
+   ===================================================================== */
+function lgamma(z) {                      // log Gamma(z), Lanczos approximation, z > 0
+  const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  let y = z, tmp = z + 5.5;
+  tmp -= (z + 0.5) * Math.log(tmp);
+  let series = 1.000000000190015;
+  for (let j = 0; j < 6; j++) series += c[j] / ++y;
+  return -tmp + Math.log(2.5066282746310005 * series / z);
+}
+function gammaP(a, x) {                   // regularized lower incomplete gamma P(a, x)
+  if (x <= 0) return 0;
+  if (x < a + 1) {
+    let sum = 1 / a, term = sum;
+    for (let n = 1; n < 1000; n++) { term *= x / (a + n); sum += term; if (Math.abs(term) < Math.abs(sum) * 1e-14) break; }
+    return sum * Math.exp(-x + a * Math.log(x) - lgamma(a));
+  }
+  let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+  for (let i = 1; i < 1000; i++) {
+    const an = -i * (i - a);
+    b += 2;
+    d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+    c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+    d = 1 / d;
+    const delta = d * c;
+    h *= delta;
+    if (Math.abs(delta - 1) < 1e-14) break;
+  }
+  return 1 - Math.exp(-x + a * Math.log(x) - lgamma(a)) * h;
+}
+function betaI(x, a, b) {                 // regularized incomplete beta I_x(a, b)
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const front = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  const cf = (xx, aa, bb) => {
+    let c = 1, d = 1 - (aa + bb) * xx / (aa + 1);
+    if (Math.abs(d) < 1e-300) d = 1e-300;
+    d = 1 / d;
+    let h = d;
+    for (let m = 1; m < 1000; m++) {
+      const m2 = 2 * m;
+      let an = m * (bb - m) * xx / ((aa + m2 - 1) * (aa + m2));
+      d = 1 + an * d; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = 1 + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d; h *= d * c;
+      an = -(aa + m) * (aa + bb + m) * xx / ((aa + m2) * (aa + m2 + 1));
+      d = 1 + an * d; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = 1 + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d;
+      const delta = d * c;
+      h *= delta;
+      if (Math.abs(delta - 1) < 1e-14) break;
+    }
+    return h;
+  };
+  if (x < (a + 1) / (a + b + 2)) return front * cf(x, a, b) / a;
+  return 1 - front * cf(1 - x, b, a) / b;
+}
+function erf(x) { const v = gammaP(0.5, x * x); return x >= 0 ? v : -v; }
+function normPdf(x, mu = 0, sigma = 1) { return Math.exp(-0.5 * ((x - mu) / sigma) ** 2) / (sigma * Math.sqrt(2 * Math.PI)); }
+function normCdf(x, mu = 0, sigma = 1) { return 0.5 * (1 + erf((x - mu) / (sigma * Math.SQRT2))); }
+// Invert any increasing function by bisection (used for quantiles when no formula exists).
+function bisect(f, target, lo, hi) {
+  for (let i = 0; i < 200; i++) { const mid = (lo + hi) / 2; if (f(mid) < target) lo = mid; else hi = mid; }
+  return (lo + hi) / 2;
+}
+function linspace(a, b, n) { const out = []; for (let i = 0; i < n; i++) out.push(a + (b - a) * i / (n - 1)); return out; }
+
+
+function gauss() { let u = 0, v = 0; while (u === 0) u = Math.random(); while (v === 0) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+function expo() { return -Math.log(1 - Math.random()); }
+function boxOut(values, id) {
+  const box = document.getElementById(id); box.innerHTML = "";
+  for (const [name, value] of Object.entries(values)) {
+    const cell = document.createElement("div"); cell.className = "readout";
+    const text = typeof value === "string" ? value : (Number.isInteger(value) ? value.toLocaleString("en-US") : (Math.abs(value) < 1e-3 && value !== 0 ? value.toExponential(2) : (Math.abs(value) < 0.1 && value !== 0 ? value.toPrecision(3) : fmt(value, 4))));
+    cell.innerHTML = `<div class="name">${name}</div><div class="value">${text}</div>`; box.appendChild(cell);
+  }
+}
+function histo(vals, lo, hi, bins) {
+  const w = (hi - lo) / bins, c = new Array(bins).fill(0);
+  for (const v of vals) { const k = Math.floor((v - lo) / w); if (k >= 0 && k < bins) c[k]++; }
+  return { xs: c.map((_, i) => lo + (i + 0.5) * w), ys: c.map(x => x / (vals.length * w)), w };
+}
+function momentsOf(v) {
+  const n = v.length; let m = 0; for (const x of v) m += x; m /= n;
+  let s2 = 0, s3 = 0, s4 = 0; for (const x of v) { const d = x - m; s2 += d * d; s3 += d * d * d; s4 += d * d * d * d; }
+  s2 /= n; return { mean: m, sd: Math.sqrt(s2), skew: s3 / n / Math.pow(s2, 1.5), kurt: s4 / n / (s2 * s2) - 3 };
+}
+function quantileOf(arr, q) { const s = Float64Array.from(arr).sort(); const pos = (s.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos); return s[lo] + (s[hi] - s[lo]) * (pos - lo); }
+function lbinom(n, k) { return lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1); }
+function binomPmf(k, n, p) { if (p <= 0) return k === 0 ? 1 : 0; if (p >= 1) return k === n ? 1 : 0; return Math.exp(lbinom(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p)); }
+function overlayChart(svg, h, pdf, lo, hi, title, xlabel) {
+  const gx = linspace(lo, hi, 160);
+  drawChart(svg, { title, xlabel, ylabel: "density", xrange: [lo, hi], series: [
+    { kind: "bar", xs: h.xs, ys: h.ys, color: "var(--sim)", width: h.w * 0.95, opacity: 0.6, label: "simulated" },
+    { kind: "line", xs: gx, ys: gx.map(pdf), color: "var(--highlight)", label: "theory" }] });
+}
+
+const D = {"data": [[-0.931, 1.216], [-2.511, -0.174], [0.743, 0.307], [-2.36, -0.182], [0.1, 0.756], [-0.577, 1.192], [-2.342, 0.548], [-0.27, 1.018], [-1.26, 0.946], [0.822, -0.273], [-1.816, 0.762], [-0.844, 1.271], [-0.077, 0.956], [-2.143, 0.554], [0.075, 0.879], [-0.439, 1.127], [0.543, 0.191], [-0.369, 1.068], [0.465, 0.511], [0.391, 0.86], [-2.008, 0.822], [0.351, 0.833], [-0.808, 1.238], [-2.406, -0.272], [-2.492, -0.008], [-1.858, 0.867], [-1.065, 1.201], [0.011, 0.697], [0.363, 0.468], [-2.526, -0.399], [-0.772, 1.151], [0.68, 0.273], [-1.357, 1.112], [-1.958, 0.447], [-1.231, 1.229], [-2.167, -0.189], [0.707, -0.254], [-0.778, 1.25], [-0.424, 1.232], [0.71, -0.211], [-1.54, 1.182], [-2.311, 0.146], [-1.231, 1.267], [0.531, 0.889], [-2.106, 0.202], [-0.881, 1.166], [-0.839, 1.112], [-1.863, 0.843], [0.643, 0.291], [-2.13, 0.498], [-1.593, 0.861], [-1.914, 0.597], [0.504, 0.574], [-2.167, 0.617], [0.727, 0.548], [0.769, -0.039], [-2.092, 0.413], [-2.395, 0.37], [-2.345, 0.092], [-0.666, 1.13], [0.355, 0.692], [0.676, -0.456], [-1.521, 1.092], [-1.925, 0.763], [-2.343, 0.371], [0.114, 1.047], [0.632, 0.511], [-1.466, 1.089], [-2.163, 0.481], [-2.329, -0.245], [0.594, 0.325], [-0.593, 1.171], [-2.277, 0.142], [-0.348, 1.133], [-1.292, 1.07], [0.817, -0.265], [-1.655, 0.989], [-2.122, 0.077], [-2.346, 0.552], [-2.285, 0.065], [-1.444, 0.993], [0.444, 0.656], [-1.895, 0.636], [0.55, 0.665], [-2.292, 0.443], [0.813, -0.093], [-2.337, 0.46], [0.56, 0.505], [-0.291, 1.172], [0.083, 1.185], [-1.802, 1.01], [0.503, 0.359], [-0.185, 1.173], [0.9, -0.526], [0.17, 0.831], [-0.49, 1.277], [0.872, 0.11], [-1.447, 1.064], [-0.241, 1.085], [-1.863, 0.857], [-1.576, 0.967], [-0.486, 1.104], [-2.271, 0.3], [-1.248, 0.908], [-2.256, 0.492], [-0.034, 1.002], [-0.839, 1.01], [0.49, 0.403], [-2.429, -0.331], [0.217, 0.805], [0.225, 0.655], [0.6, -0.103], [0.232, 0.838], [-2.127, 0.704], [-1.651, 0.876], [0.745, 0.163], [-0.154, 1.049], [-0.199, 1.124], [-1.621, 1.029], [-0.63, 1.166], [-1.197, 1.225], [-2.259, 0.378], [-1.861, 0.879], [-0.063, 1.097], [-0.516, 1.351], [-0.238, 1.221], [0.758, -0.006], [0.497, 0.418], [0.193, 0.65], [0.152, 0.859], [0.245, 0.862], [-1.176, 1.024], [-2.406, -0.253], [-1.967, 0.878], [-1.909, 0.652], [-1.995, 0.671], [-1.309, 1.045], [-2.281, 0.005], [-1.646, 0.902], [-0.764, 1.371], [0.79, 0.075], [-0.82, 1.188], [0.423, 0.644], [0.696, 0.188], [-0.792, 1.217], [-2.194, 0.603], [0.281, 0.801], [-1.884, 0.737], [-0.905, 1.245], [0.558, 0.398], [-2.518, -0.324], [-0.253, 1.027], [0.361, 0.922], [-2.122, 0.442], [0.651, 0.222], [-1.816, 0.799], [0.691, 0.6], [-0.238, 1.242], [0.411, 0.751], [-2.179, 0.35], [-0.338, 1.047], [-2.38, -0.222], [-1.609, 1.048], [-1.65, 0.906], [-1.006, 1.107], [0.273, 0.775], [-0.309, 1.201], [-2.557, -0.033], [0.348, 0.649], [-2.136, -0.454], [-1.961, 0.743], [-0.166, 1.106], [-1.55, 0.997], [-0.288, 1.091], [-0.166, 1.19], [-0.823, 1.103], [0.757, -0.36], [-0.799, 1.261], [-2.401, -0.243], [0.209, 0.847], [-1.965, 0.813], [-0.518, 1.168], [0.363, 0.515], [-2.383, 0.129], [0.633, -0.242], [0.141, 0.84], [-2.479, -0.343], [0.311, 0.586], [-2.287, 0.245], [-1.326, 1.054], [-2.065, 0.468], [-1.461, 1.189], [-0.152, 1.008], [-1.963, 0.57], [0.643, -0.268], [-0.589, 1.042], [-0.083, 1.139], [-0.662, 1.145], [0.655, 0.17], [0.508, 0.492], [-1.084, 1.172], [-0.356, 1.161], [-2.102, 0.754], [-1.206, 1.108], [-2.286, 0.21], [-1.936, 0.823], [-1.441, 1.212], [0.257, 0.844], [-1.97, 0.83], [0.355, 0.901], [0.727, -0.084], [-2.293, -0.398], [-0.908, 1.187], [-2.059, 0.652], [-0.936, 1.313], [-1.269, 1.122], [0.77, -0.321], [0.551, 0.239], [-1.542, 0.965], [-1.311, 1.215], [0.52, 0.32], [-2.553, -0.232], [0.631, 0.338], [-0.824, 1.129], [0.693, 0.157], [-1.865, 0.586], [0.204, 0.768], [0.641, 0.308], [0.908, -0.284], [0.54, 0.246], [0.692, 0.63], [-0.942, 1.304], [-0.474, 1.119], [-2.317, -0.074], [-2.307, -0.179], [-2.121, 0.782], [-1.595, 1.026], [-2.349, 0.414], [-2.347, -0.177], [0.92, -0.287], [0.753, 0.224], [-0.187, 1.076], [0.864, -0.042], [-1.392, 1.035], [0.365, 0.723], [0.307, 0.891], [0.079, 1.0], [0.728, 0.067], [-1.752, 0.807], [-1.656, 1.018], [-1.4, 1.137], [0.746, -0.262], [-0.356, 0.998], [-1.652, 0.914], [0.642, 0.127], [-0.329, 1.059], [0.955, -0.421], [0.639, -0.012], [0.474, 0.547], [-0.368, 0.986], [-0.454, 1.157], [-2.284, 0.427], [0.017, 0.823], [0.701, -0.132], [-2.186, 0.355], [0.766, -0.096], [0.829, 0.13], [-2.353, -0.169], [-2.021, 0.598], [0.019, 1.047], [0.681, 0.273], [-0.182, 0.99], [-0.058, 0.917], [-2.456, 0.266], [-0.418, 1.187], [0.808, -0.079], [-2.213, -0.006], [-1.303, 1.246], [0.648, 0.115], [0.717, 0.264], [-0.519, 1.002], [0.871, 0.014], [-1.396, 0.938], [-1.457, 1.129], [0.621, -0.161], [-2.168, 0.537], [-2.04, 0.54], [-2.218, 0.245], [-1.555, 0.812], [-1.699, 0.894], [0.68, 0.393], [1.001, -0.213], [0.824, -0.106], [-2.475, -0.23], [-1.488, 1.081], [-2.358, -0.161], [-0.066, 0.98], [-2.045, 0.629], [0.814, -0.004], [0.566, 0.385], [0.283, 0.81], [-0.75, 1.192], [-1.137, 1.0], [-0.775, 1.298], [-0.429, 1.274], [-1.234, 1.145], [-2.409, -0.305], [-0.732, 1.095], [-2.378, 0.455], [0.759, -0.131], [-0.292, 1.189], [-1.184, 1.333], [-1.286, 1.02], [0.312, 0.792], [-0.182, 1.045], [-2.426, 0.106], [-1.433, 1.114], [-1.036, 1.186], [0.723, -0.24], [0.861, -0.248], [0.524, 0.397], [0.607, 0.27], [-2.518, -0.371], [0.72, -0.374], [-0.266, 1.035], [0.905, 0.026], [-1.3, 1.088], [0.744, -0.135], [0.831, -0.032], [0.889, -0.066], [0.231, 0.66], [-1.221, 1.273], [-2.105, 0.59], [0.31, 0.883], [0.127, 0.894], [-2.098, 0.549], [-1.783, 0.698], [0.537, 0.159], [-1.986, 0.419], [-2.313, 0.283], [0.432, 0.517], [-1.495, 1.014], [0.614, 0.617], [0.439, 0.635], [-0.933, 1.234], [-0.743, 1.162], [-0.721, 0.885], [-0.84, 1.168], [0.287, 0.587], [-2.085, 0.686], [0.435, 0.749], [-2.325, -0.004], [-0.94, 1.242], [0.274, 0.947], [0.525, 0.483], [-0.703, 1.277], [-0.247, 1.094], [-1.245, 1.084], [-0.698, 1.199], [0.796, -0.286], [-1.911, 0.516], [0.892, -0.03], [-2.269, 0.352], [-2.148, 0.326], [-2.441, 0.058], [-1.795, 0.905], [0.591, 0.364], [-0.513, 1.1], [-0.41, 0.944], [-1.407, 0.918], [-0.286, 1.082], [-1.485, 0.875], [0.343, 0.65], [-0.097, 1.034], [-0.963, 1.281], [-0.424, 0.956], [0.663, 0.203], [-2.502, -0.327], [-1.644, 0.943], [-2.272, 0.455], [-0.094, 0.918], [-2.403, -0.251], [-2.214, 0.518], [-2.515, -0.417], [0.538, 0.433], [-0.712, 1.171], [-0.254, 1.135], [-1.402, 1.024], [0.286, 0.844], [0.81, 0.091], [-0.564, 1.264], [-1.582, 1.194], [0.04, 1.13], [-2.555, -0.192], [-0.276, 1.12], [-0.054, 0.884], [-2.163, 0.453], [-0.673, 1.284], [0.205, 0.852], [0.011, 0.758], [-2.379, -0.221], [-2.385, -0.213], [-1.491, 1.003], [0.286, 0.698], [-1.824, 1.007], [0.403, 0.755], [0.082, 0.934], [-1.0, 1.34], [-0.341, 1.017], [-0.03, 1.098], [-2.312, -0.416], [0.615, 0.422], [-1.383, 1.054], [0.834, -0.213], [0.73, 0.247], [0.47, 0.469], [-2.488, -0.431], [-2.0, 0.916], [-2.086, 0.184], [0.868, -0.225], [-1.73, 0.778], [-0.506, 1.29], [-0.264, 1.196], [-1.8, 0.985], [0.273, 0.845], [-0.842, 1.193], [0.231, 0.656], [-0.345, 1.118], [-0.943, 1.205], [0.73, 0.295], [0.114, 0.707], [-0.366, 1.098], [-0.822, 1.283], [-1.96, 0.558], [-1.433, 0.907], [-1.248, 1.185], [-2.248, 0.218], [0.474, 0.469], [0.854, 0.032], [-0.288, 1.211], [0.556, 0.282], [-1.091, 1.235], [-1.402, 1.129], [0.59, 0.348], [-1.81, 0.791], [-0.998, 1.236], [-0.32, 1.258], [-2.273, -0.045], [-2.21, 0.328], [0.464, 0.656], [0.595, 0.359], [-2.351, -0.075], [0.523, 0.428], [-1.987, 0.714], [0.037, 0.774], [-0.163, 1.205], [-1.079, 1.112], [-2.29, -0.078], [0.741, -0.54], [0.432, 0.421], [-1.808, 0.836], [-0.213, 1.069], [0.191, 0.774], [-2.472, -0.286], [0.373, 0.848], [-1.894, 0.821], [-2.379, -0.298], [-1.911, 0.609], [-1.811, 0.834], [-2.01, 0.654], [-2.193, 0.632], [0.309, 0.847], [-1.481, 1.03], [-2.099, 0.554], [-2.449, 0.082], [-2.405, 0.192], [-2.381, -0.003], [0.803, 0.04], [-0.106, 0.987], [-0.401, 1.176], [-2.296, 0.11], [-0.404, 1.15], [0.245, 0.901], [0.58, -0.418], [0.149, 0.847], [-1.898, 0.669], [0.796, -0.377], [0.778, 0.476], [0.339, 0.782], [-0.796, 1.182], [-0.215, 1.066], [-2.281, 0.146], [0.332, 0.537], [-1.231, 1.178], [-2.157, 0.649], [-2.401, 0.042], [-2.351, 0.089], [0.521, 0.285], [-1.692, 0.44], [-1.699, 1.11], [-0.349, 1.272], [0.822, -0.227], [0.585, 0.296], [-1.912, 0.637], [0.802, -0.248], [-0.115, 0.912], [0.316, 0.921], [-2.003, 0.799], [-0.295, 1.266], [0.482, 0.169], [-0.211, 0.885], [-0.037, 1.042], [-1.834, 0.749], [0.061, 0.938], [-1.64, 0.965], [-1.053, 1.1], [-2.312, 0.123], [-1.86, 0.676], [-0.346, 1.04], [-0.685, 1.209], [-0.695, 1.027], [-2.178, 0.131], [0.592, 0.25], [-0.398, 1.088], [-1.04, 1.039], [-0.395, 1.107], [-1.344, 0.911], [-0.865, 1.271], [-0.283, 1.028], [-1.694, 0.98], [-0.133, 0.926], [-1.272, 1.203], [-2.004, 0.686], [0.766, 0.187], [0.052, 0.844], [-2.277, -0.099], [-2.268, -0.333], [-2.465, -0.492], [0.654, -0.329], [-2.167, 0.324], [-2.387, -0.163], [-2.31, 0.145], [-1.743, 0.913], [-1.672, 1.011], [-1.863, 0.737], [-1.311, 1.132], [-2.052, 0.726], [-0.873, 1.324], [0.247, 0.617], [0.939, 0.019], [-2.436, -0.059], [-1.749, 0.819], [0.491, 0.388], [-2.411, 0.416], [0.275, 0.696], [-1.37, 1.104], [0.038, 0.976], [0.466, 0.717], [0.6, 0.497], [0.72, -0.073], [0.691, -0.027], [0.757, -0.089], [0.522, -0.099], [-2.203, 0.501], [-0.984, 1.138], [0.658, 0.314], [-0.774, 1.213], [-1.022, 1.1], [-0.754, 1.163], [0.481, 0.472], [-0.376, 1.118], [-2.427, 0.219], [-0.344, 1.138], [-0.701, 1.244], [-2.385, -0.14], [0.336, 0.866], [-1.746, 0.71], [-0.817, 1.227], [-2.053, 0.596], [-0.063, 0.938], [-1.094, 1.279], [-0.13, 1.037], [-2.273, 0.312], [-2.317, -0.044], [-1.559, 1.138], [-2.517, -0.111], [-1.979, 0.732], [-2.076, 0.549], [-2.309, -0.139], [0.237, 0.603], [-2.449, -0.254], [-0.186, 1.116], [-0.764, 1.258], [0.51, 0.421], [-2.041, 0.496], [0.099, 1.032], [-1.661, 1.003], [0.505, 0.777], [-0.024, 0.982], [-0.27, 1.003], [0.399, 0.614], [0.663, -0.164], [-1.861, 0.502], [-2.289, -0.132], [0.313, 0.576], [0.576, 0.601], [-0.042, 1.171], [0.687, 0.112], [-1.449, 0.96], [-0.215, 1.111], [-1.265, 1.165], [-2.456, 0.065], [-2.211, 0.339], [-2.315, -0.029], [-2.419, -0.159], [-1.305, 1.095], [-0.862, 1.216], [0.722, -0.365], [0.781, 0.032], [-1.082, 1.105], [-2.274, 0.276], [-0.446, 1.347], [0.672, -0.229], [0.471, 0.557], [-2.183, 0.666], [0.667, 0.261], [0.347, 0.411], [0.212, 0.852], [-1.188, 1.058], [-2.119, 0.267], [0.412, 0.718], [-1.322, 1.17], [-1.075, 1.1], [-0.579, 1.064], [-1.248, 1.287], [-2.16, 0.504], [0.589, 0.61], [-0.803, 1.151], [0.83, 0.17], [-0.671, 1.396], [-2.212, 0.65], [-2.197, -0.362], [-0.662, 1.085], [0.265, 0.788], [-1.178, 1.119], [-0.127, 1.032], [0.654, 0.276], [-0.925, 1.284], [-2.155, 0.688], [-2.255, 0.256], [-2.32, -0.44], [-0.4, 1.167], [0.28, 0.699], [0.625, 0.093], [-0.452, 1.254], [-2.142, 0.302], [0.442, 0.704], [-2.284, 0.204], [-1.916, 0.979], [0.432, 0.66], [-1.467, 1.149], [-2.239, 0.337], [-2.384, -0.232], [0.468, 0.425], [-2.006, 0.466], [-2.179, 0.537], [0.37, 0.695], [0.393, 1.06], [-2.414, 0.017], [-0.219, 0.961], [0.323, 0.76], [-1.874, 0.988], [0.623, 0.381], [-0.646, 1.158], [-0.047, 1.154], [-0.939, 1.104], [-1.218, 0.891], [-1.511, 1.052], [-0.372, 1.297], [-2.431, 0.102], [-2.205, 0.343], [-2.33, -0.006], [-0.464, 1.143], [-1.55, 0.687], [-0.475, 1.313], [0.304, 0.906], [-1.411, 1.005], [-2.365, -0.018], [-1.947, 0.402], [0.153, 0.854], [0.498, 0.536], [-1.91, 0.591], [-1.683, 0.909], [-2.107, 0.171], [0.695, 0.288], [-2.314, 0.37], [-0.552, 1.241], [0.15, 0.701], [0.028, 1.222], [-2.351, -0.455], [-2.349, -0.206], [0.683, 0.039], [0.132, 1.019], [-1.915, 0.994], [0.763, -0.376], [0.71, -0.207], [0.703, -0.155], [-2.352, 0.342], [0.015, 0.961], [0.157, 0.856], [-2.091, 0.623], [0.098, 0.951], [-1.807, 0.72], [-0.165, 0.981], [0.142, 0.773], [-0.36, 1.097], [0.481, 0.477], [0.847, 0.027], [-2.201, 0.277], [-2.413, 0.134], [-0.575, 1.081], [-1.761, 0.921], [-2.226, 0.115], [-0.262, 1.186], [-1.754, 1.0], [-1.996, 0.834], [0.958, 0.055], [0.745, 0.368], [-2.144, 0.661], [-1.661, 0.753], [0.563, 0.53], [-2.049, 0.414], [-2.016, 0.533], [0.152, 0.92], [-0.084, 1.039], [0.863, 0.167], [-0.533, 1.114], [0.804, 0.072], [-1.044, 1.155], [-1.306, 0.994], [-1.291, 1.164], [0.761, -0.188], [-1.485, 1.02], [-1.938, 0.64], [0.83, 0.313], [-1.158, 1.158], [-2.128, 0.529], [0.477, 0.337], [-2.302, -0.045], [-2.27, -0.349], [-1.775, 0.859], [-2.33, 0.187], [0.232, 0.821], [-1.571, 0.992], [-2.361, -0.248], [0.914, -0.113], [-2.277, 0.371], [0.169, 0.398], [-2.145, 0.694], [-1.48, 1.062], [-2.093, 0.589], [-0.316, 1.042], [-0.609, 1.245], [-2.394, -0.208], [0.812, -0.024], [0.739, 0.364], [-2.393, -0.275], [-2.418, 0.056], [0.582, 0.213], [-2.405, -0.258], [0.309, 0.849], [-2.099, 0.106], [-2.2, 0.071], [0.807, -0.203], [0.717, -0.359], [0.093, 0.83], [-2.454, -0.101], [-2.072, 0.649], [-0.367, 1.233], [-2.177, 0.348], [-0.08, 0.947], [-0.138, 1.089], [0.512, 0.459], [-2.477, -0.221], [-2.042, 0.367], [-0.685, 1.163], [0.259, 0.734], [-2.374, -0.223], [-0.493, 1.213], [0.324, 0.694], [-0.352, 0.985], [-1.808, 0.965], [-1.87, 0.672], [0.632, 0.252], [-2.522, -0.274], [-1.561, 0.848], [0.821, -0.192], [-2.257, 0.493], [-2.402, -0.198], [-2.215, 0.336], [0.732, -0.44], [-0.627, 1.237], [-1.083, 1.165], [-2.327, 0.199], [-0.676, 1.061], [0.913, -0.093], [-2.443, 0.179], [-2.277, -0.211], [-0.648, 1.329], [0.843, -0.027], [-2.165, 0.426], [-2.011, 0.662], [-2.375, -0.385], [0.864, -0.371], [-0.364, 1.253], [0.166, 0.586], [0.57, 0.131], [-1.681, 0.785], [0.022, 1.003], [0.532, -0.147], [0.637, 0.108], [-2.045, 0.511], [-1.039, 0.899], [0.371, 0.605], [-1.761, 0.969], [0.753, 0.283], [-1.622, 0.902], [-1.531, 1.1], [0.812, -0.574], [-0.696, 1.152], [-1.759, 0.765], [-1.857, 0.669], [-1.62, 1.003], [-2.358, -0.114], [-1.92, 0.615], [-2.257, 0.025], [-0.412, 1.052], [0.71, -0.087], [0.641, 0.441], [0.221, 0.946], [0.769, -0.364], [0.869, 0.103], [-0.953, 1.2], [0.231, 0.637], [0.22, 0.783], [-1.859, 0.801], [-2.045, 0.281], [-2.242, 0.221], [-0.052, 1.118], [-1.741, 1.049], [-2.201, 0.344], [0.499, 0.165], [0.445, 0.554], [-1.62, 0.94], [0.349, 0.733], [0.461, 0.48], [-0.256, 1.148], [0.937, -0.218], [-0.342, 0.983], [0.872, -0.174], [0.485, 0.653], [0.522, 0.785], [0.079, 0.992], [0.666, 0.269], [-0.669, 1.087], [-1.625, 1.095], [0.02, 1.109], [-2.235, -0.027], [-2.247, 0.212], [0.145, 0.967], [0.705, -0.226], [-1.886, 0.608], [0.445, 0.738], [-0.017, 1.076], [-1.128, 1.152], [-2.383, -0.349], [0.197, 0.943], [-0.566, 1.152], [-1.275, 1.071], [-1.681, 1.075], [0.561, 0.418], [-1.265, 1.21], [-0.961, 1.032], [-1.625, 0.939], [0.765, 0.257], [0.718, 0.223], [-2.465, -0.167], [-2.358, 0.512], [-2.105, 0.462], [-2.359, -0.05], [-2.316, -0.259], [-0.197, 1.119], [-1.929, 0.469], [-1.61, 1.029], [-1.156, 1.265], [-1.791, 1.075], [0.143, 0.976], [-2.293, 0.165], [-0.45, 1.069], [0.634, 0.388], [0.873, -0.236], [-1.374, 0.988], [0.349, 0.773], [-2.456, -0.076], [0.52, 0.394], [0.122, 0.968], [-2.469, -0.544], [-0.867, 1.245], [-2.267, 0.035], [-2.1, 0.46], [0.683, 0.283], [0.442, 0.493], [-0.399, 0.854], [-2.265, 0.234], [-0.205, 0.935], [-0.473, 0.991], [-0.554, 1.314], [0.126, 1.018], [-1.998, 0.662], [0.941, -0.225], [0.251, 0.459], [-2.136, 0.541], [-1.434, 1.142], [-0.832, 1.318], [-0.085, 1.115], [0.611, 0.206], [-0.491, 1.208], [-2.266, -0.389], [-1.173, 1.118], [-1.135, 0.996], [-2.327, -0.431], [-2.178, 0.252], [-2.454, -0.248], [-2.232, 0.006], [-1.478, 0.957], [0.265, 0.799], [-1.449, 1.113], [-0.211, 1.145], [-2.057, 0.492], [0.458, 0.214], [-0.527, 1.26], [-2.282, 0.252], [-0.561, 1.081], [-1.446, 1.266], [0.733, 0.129], [0.184, 0.948], [-2.284, -0.18], [-1.591, 0.978], [-0.048, 1.078], [-0.992, 1.332], [-2.007, 0.694], [-1.913, 0.646], [-2.087, 0.422], [0.246, 0.957], [0.417, 0.688], [-1.484, 1.032], [-0.906, 1.155], [-1.064, 1.13], [0.552, 0.617], [0.008, 0.995], [-2.035, 1.015], [-0.171, 1.037], [-1.818, 0.658], [0.702, -0.253], [-2.268, -0.255], [0.636, 0.637], [-0.697, 1.309], [-2.346, -0.028], [0.204, 0.613], [0.437, 0.461], [-2.543, -0.47], [-2.332, -0.056], [-0.978, 1.432], [0.773, 0.071], [-1.303, 1.009], [0.271, 0.672], [0.491, 0.659], [-2.35, -0.103], [-1.464, 1.046], [-0.609, 1.096], [1.0, -0.007], [-0.276, 1.068], [-2.229, 0.254], [0.06, 0.931], [0.053, 0.999], [-1.226, 1.053], [0.337, 0.688], [-1.172, 1.117], [-1.982, 0.603], [0.097, 0.779], [-0.655, 1.324], [-1.062, 1.0], [-0.168, 1.105], [0.377, 0.615], [0.605, 0.174], [-1.144, 1.08], [-2.323, 0.007], [0.84, -0.418], [-2.238, 0.326], [-2.287, -0.101]], "gen": [[-2.192, 0.177], [0.035, 0.775], [-0.609, -0.257], [2.096, -0.172], [-0.408, 0.786], [-0.458, -0.121], [-2.276, 0.216], [-0.774, 1.186], [-2.446, -0.257], [-1.873, 0.938], [-1.969, 0.71], [-1.709, 0.734], [1.047, 0.276], [2.471, -0.013], [1.302, 0.4], [-1.695, 0.636], [-1.804, 0.604], [-2.541, 0.082], [-2.599, 0.377], [-1.367, 1.376], [-0.128, -0.141], [2.578, -0.524], [-2.252, -0.052], [-0.899, -0.512], [1.749, -0.882], [0.371, -1.102], [-0.295, 0.365], [-0.99, 1.012], [-0.657, -0.665], [-0.81, 1.125], [-0.258, 0.397], [-2.368, -0.003], [-0.035, -0.95], [1.657, -0.877], [2.104, -0.368], [2.095, -0.838], [0.296, -0.909], [-0.24, 1.091], [-0.567, -0.42], [0.6, -1.323], [-1.321, -0.445], [1.515, -1.236], [-0.055, 0.669], [-0.961, -0.252], [0.574, -1.4], [-0.802, 1.402], [-2.126, 0.096], [2.252, -0.446], [0.453, 0.564], [-0.724, 1.533], [1.613, -1.106], [1.016, -1.136], [0.004, 0.755], [1.336, -1.204], [1.993, -0.539], [1.652, -0.641], [-0.122, 1.011], [2.017, -0.625], [1.262, 0.57], [-0.384, -0.73], [-1.644, 0.661], [0.252, -1.121], [2.485, 0.027], [2.021, -0.577], [-2.625, -0.247], [-0.317, 0.913], [-1.76, 0.638], [2.006, -0.865], [-0.308, -1.171], [-0.899, -0.022], [-2.243, -0.116], [-0.204, -0.337], [-0.629, -0.717], [-0.195, 0.648], [-1.501, 0.696], [-1.392, 0.693], [1.318, -1.103], [1.616, -1.153], [-1.207, -0.457], [0.125, 0.595], [-0.994, 0.954], [-1.505, 0.404], [1.394, -1.173], [-2.142, 0.221], [0.817, -1.092], [-1.09, 1.137], [-1.592, 0.522], [1.412, -1.206], [1.728, -0.374], [-0.889, 1.185], [0.218, 0.078], [1.026, -0.872], [-2.221, 0.163], [2.248, -0.138], [0.309, 0.074], [2.329, 0.076], [1.263, -1.313], [-0.006, -0.204], [0.287, 0.988], [1.185, -1.092], [2.213, 0.067], [-2.356, 0.093], [-2.031, 0.182], [-0.98, 0.031], [-0.998, 0.594], [0.754, -0.975], [2.338, -0.255], [1.726, -0.691], [0.794, 0.352], [-1.685, 1.103], [0.147, -0.392], [-0.074, 0.63], [0.191, -0.552], [-2.092, 0.025], [1.443, -0.093], [-0.668, -0.156], [-2.125, 0.335], [1.759, -1.045], [-1.727, 1.056], [-0.512, -0.638], [1.439, -1.237], [-0.253, 0.053], [-2.219, 0.193], [-0.48, -0.337], [-2.186, -0.246], [0.248, -0.66], [-0.016, -1.167], [-2.377, 0.624], [-0.244, 0.839], [-1.831, 0.256], [1.874, -0.475], [0.382, 0.674], [2.315, 0.15], [-0.92, 1.366], [2.039, -0.426], [-1.814, 0.808], [-0.091, -0.65], [-1.041, 1.051], [1.15, -1.155], [0.247, -0.682], [-1.258, 0.046], [-0.382, 1.098], [-0.074, -0.81], [1.317, -0.722], [0.164, 0.435], [-0.622, 1.319], [2.43, 0.056], [0.823, -1.506], [2.279, -0.521], [-0.899, -0.451], [-2.175, 0.786], [0.391, 0.779], [-0.922, -0.196], [0.71, -1.248], [0.509, 0.419], [-0.67, 0.456], [-1.481, -0.153], [-1.999, 0.566], [-0.746, -0.167], [-1.402, 1.111], [-0.747, 1.602], [0.608, -1.108], [-0.125, -0.07], [0.141, -1.008], [1.004, -1.271], [1.195, 0.111], [1.003, 0.746], [1.379, -0.683], [-1.029, 0.802], [-2.575, 0.278], [0.279, -0.985], [-2.266, 0.201], [-2.663, 0.33], [0.008, 0.845], [1.51, -0.89], [1.584, -0.275], [-0.883, 1.018], [0.457, 0.293], [-0.707, 1.369], [1.183, 0.72], [1.878, -0.95], [1.747, -0.76], [-1.286, 0.708], [-1.96, 0.828], [0.33, -0.884], [-1.757, 0.862], [-1.869, 1.085], [-1.9, 0.714], [-1.252, 0.43], [1.849, -0.767], [2.224, -0.683], [1.975, -1.041], [0.962, -1.102], [-0.271, 1.377], [-0.582, -0.063], [0.494, 0.553], [0.594, 0.557], [-1.93, 0.575], [2.318, -0.083], [1.632, -0.492], [1.066, -1.281], [-1.491, -0.48], [0.356, 0.559], [1.106, -1.117], [0.178, -1.194], [-0.828, -0.652], [-1.05, 1.359], [-1.403, 1.008], [1.749, -0.34], [-1.125, 1.185], [2.368, -0.037], [1.406, -1.28], [-0.986, -0.868], [0.033, 1.014], [0.08, -0.951], [1.273, -1.115], [-1.283, 1.259], [0.665, 0.506], [-0.036, -1.017], [0.56, -0.955], [-0.827, 1.316], [-2.43, -0.107], [-1.009, -0.58], [-0.956, 1.158], [-0.277, 0.673], [-1.033, 0.944], [0.153, 0.865], [1.746, -0.749], [-0.7, 1.277], [0.177, 0.841], [-0.213, 0.933], [-0.866, -0.461], [2.535, 0.429], [-2.449, -0.098], [1.969, -0.006], [0.504, -0.8], [-1.007, -0.456], [-0.673, 1.291], [1.287, -0.888], [1.774, -0.971], [-0.071, -0.491], [-1.788, 0.795], [-2.901, 0.012], [2.007, 0.025], [-0.201, 1.11], [0.979, 0.588], [-2.061, 0.462], [-0.849, 1.412], [1.68, -0.058], [1.651, -0.864], [-0.567, 0.961], [-0.225, -0.641], [-1.88, 0.915], [0.863, 0.682], [0.277, -0.934], [1.004, -0.648], [-2.073, 0.181], [-0.063, 0.806], [0.514, -1.332], [0.371, 0.789], [-0.386, 0.551], [0.04, 0.606], [-0.066, 0.608], [0.885, -0.969], [-2.04, 0.602], [1.991, -0.451], [-0.464, 1.146], [-2.209, 0.0], [1.66, -0.761], [-0.21, 0.3], [-0.994, 0.487], [-0.974, 1.312], [1.288, -0.97], [0.219, -0.911], [-0.417, 0.754], [-0.5, 1.285], [1.132, -0.773], [-1.057, 0.281], [0.197, 0.137], [1.989, -0.548], [0.109, 0.963], [0.263, -1.154], [1.898, -0.66], [2.007, -0.317], [0.537, -1.124], [0.239, 0.588], [-2.24, 0.102], [1.606, -0.953], [2.051, 0.139], [2.122, -0.273], [-2.169, -0.152], [-0.095, 1.034], [1.869, -0.375], [-1.337, 0.193], [-2.158, -0.053], [-1.408, 0.251], [0.397, 0.122], [2.359, 0.128], [-2.287, 0.28], [-0.956, 0.718], [1.614, -0.881], [1.188, -0.551], [-0.382, 1.056], [-0.672, -0.574], [-0.07, 0.537], [2.101, -0.692], [-0.243, -0.379], [-1.881, 0.603], [1.414, 0.527], [-0.947, 1.05], [-1.454, -0.719], [-0.859, 1.148], [-2.055, 0.18], [-0.095, 0.792], [1.81, -0.278], [-1.97, 0.152], [-0.707, -0.666], [1.611, 0.169], [-0.121, 0.854], [-0.878, -0.588], [-1.982, 0.598], [-2.015, -0.061], [1.432, -1.033], [0.075, 0.633], [0.936, -1.495], [1.565, -0.985], [-0.473, 0.166], [-1.484, -0.161], [-0.967, 0.491], [1.215, -0.975], [0.917, 0.189], [0.922, -1.204], [-0.276, 1.006], [0.431, 0.808], [0.456, -1.121], [-1.299, 1.08], [0.365, -0.836], [2.042, 0.003], [-0.301, -0.593], [2.39, -0.04], [-1.125, 1.106], [-0.637, -1.251], [0.125, 0.891], [0.319, 0.553], [0.013, 0.14], [1.885, -0.831], [1.953, -0.432], [-0.184, 0.465], [-1.975, 0.042], [-0.074, -0.967], [0.491, 0.241], [-0.961, 0.956], [-1.878, -0.254], [-1.818, 0.232], [-1.57, 0.896], [-2.187, -0.036], [-2.181, 0.615], [0.031, 0.949], [2.081, -0.846], [0.096, -0.766], [-0.628, -0.111], [-0.474, -0.582], [1.443, 0.149], [2.295, -0.709], [-2.086, 0.609], [-2.082, 0.828], [-0.927, 1.078], [-2.194, 0.095], [-1.002, 1.004], [1.117, -1.086], [-2.679, 0.349], [-1.973, 0.114], [-1.12, 0.008], [-0.329, -1.146], [-1.681, 0.108], [-1.604, 0.819], [0.831, 0.752], [-2.107, -0.028], [-2.238, 0.707], [-2.314, 0.107], [0.41, -0.838], [1.763, -0.848], [0.211, 0.478], [-0.67, -0.39], [1.682, -0.922], [-0.612, 0.85], [0.083, -1.088], [1.176, -0.217], [-0.21, -0.694], [-0.114, 0.209], [0.434, -0.666], [2.222, -0.5], [-0.468, 0.499], [0.501, -0.763], [-1.2, 1.073], [1.023, -1.228], [-2.602, -0.163], [0.952, -1.192], [-1.092, 1.021], [-0.222, -0.249], [-0.983, -0.894], [-1.024, 0.692], [-0.624, -0.467], [-1.099, 1.361], [1.176, -1.276], [1.08, -0.089], [-0.174, -0.265], [1.803, -0.805], [-2.432, 0.265], [-0.261, 0.992], [2.658, -0.024], [-2.333, -0.49], [2.459, -0.108], [0.499, -0.899], [-0.076, 0.865], [2.212, -0.634], [-2.314, -0.21], [0.711, 0.171], [0.77, -0.646], [-1.727, 1.301], [2.274, 0.173], [-2.42, 0.019], [1.882, -0.373], [-0.778, 0.912], [1.553, -0.252], [-1.58, -0.109], [1.153, -1.157], [0.609, -0.947], [-1.775, 0.953], [0.351, 0.656], [-2.576, 0.715], [2.322, -0.367], [-0.396, -0.321], [-0.827, 0.906], [-0.639, 0.772], [2.074, -0.397], [0.686, 0.68], [1.383, 0.364], [0.542, 0.341], [-2.504, 0.332], [0.312, 0.353], [1.273, -1.124], [-1.042, 0.401], [-2.423, -0.104], [-0.735, -0.946], [1.918, -0.343], [0.856, 0.466], [-1.096, 1.335], [0.98, -1.154], [1.649, -0.994], [-1.634, 0.731], [-1.157, 1.065], [1.861, -0.859], [-1.464, 0.584], [0.126, -0.955], [2.682, 0.259], [1.612, -0.575], [1.034, -1.23], [1.915, -0.638], [-1.897, 0.774], [1.438, -1.172], [-1.161, 0.985], [0.865, 0.507], [-2.042, 0.005], [0.034, -0.763], [-2.043, 0.387], [-0.837, -0.76], [0.572, -1.177], [-0.739, 1.137], [1.963, -0.227], [0.841, -1.068], [-0.209, 1.068], [-1.385, -0.449], [-1.75, 0.68], [-0.203, -0.65], [1.804, -0.665], [-0.096, -0.693], [1.732, -0.703], [0.411, -0.933], [-0.75, 1.149], [0.103, 0.541], [1.009, -0.861], [0.421, 0.25], [-2.379, 0.12], [-2.194, 0.707], [-1.55, 0.29], [-0.504, 1.391], [0.901, 0.542], [0.275, 0.499], [-0.689, 1.061], [-0.993, -0.007], [0.842, -1.214], [-0.922, -0.992], [1.897, -0.429], [-0.185, -0.92], [1.718, -1.106], [2.133, 0.003], [-1.782, -0.236], [2.099, -0.826], [-1.586, -0.374]], "traj": {"0": [[-0.652, -0.175], [-1.608, 0.242], [-1.916, 1.102], [1.483, -1.83], [-1.484, 0.985], [0.748, 0.851], [2.058, -0.506], [-1.316, 1.371], [-0.02, 0.316], [-1.179, 1.852], [-0.976, -0.078], [-1.481, -1.479], [0.165, 1.137], [0.366, 0.799], [0.599, -0.01], [1.656, -0.171], [1.682, -0.131], [-0.859, -2.641], [-0.008, 0.083], [0.826, -0.778], [-0.653, -0.204], [1.665, 0.006], [1.441, 0.821], [-2.934, 1.557], [-0.23, -0.353], [-0.878, 0.718], [-1.365, -1.517], [0.12, 0.235], [-1.176, -0.754], [-1.025, 1.122], [0.847, -0.009], [-0.142, 0.08], [0.635, 0.16], [-0.249, -0.898], [-0.099, 0.852], [0.397, 0.414], [-0.819, -0.651], [-0.251, 0.186], [1.283, -0.338], [1.13, -1.543], [-0.168, 1.574], [0.717, 0.079], [-0.081, 0.187], [1.607, 0.351], [-1.137, 1.098], [-0.306, 0.728], [-0.351, 0.9], [-0.009, 0.861], [0.138, -1.464], [1.793, -1.631], [-2.498, -1.115], [0.252, -0.074], [-0.565, -0.195], [-0.977, -0.625], [1.241, 2.033], [-1.039, -0.945], [0.342, -2.456], [0.183, -1.427], [2.044, -0.572], [0.82, -0.056], [-2.174, -1.131], [-1.284, 0.584], [0.129, -0.264], [1.164, 0.511], [-0.999, 0.105], [0.833, 0.238], [-0.488, 0.713], [-0.454, -0.902], [1.242, -2.853], [0.514, -0.101], [-2.393, -0.8], [0.429, -0.297], [0.224, 0.3], [0.117, 2.14], [-1.143, -0.247], [-0.497, 2.585], [-0.06, 0.379], [-0.953, 0.37], [2.308, -1.095], [-2.448, -0.179], [-0.538, 0.615], [-0.566, 0.112], [1.399, 0.367], [0.386, 0.153], [-0.391, -0.205], [-0.792, 1.768], [-0.201, -0.444], [-0.431, 0.948], [-0.249, 0.501], [-1.001, -0.096], [1.091, -1.775], [-0.118, 0.581], [0.193, -1.602], [0.917, 1.649], [0.244, 0.817], [0.376, -1.003], [-0.991, 0.601], [0.351, -1.297], [0.861, -0.379], [-1.656, -0.426], [0.981, -0.176], [-0.2, -0.811], [0.856, -0.646], [-0.161, 0.77], [0.315, 0.589], [0.251, -2.341], [0.244, 0.937], [-0.29, 0.757], [0.341, 0.228], [-2.008, 0.135], [-0.436, -0.781], [-0.129, -0.485], [-0.654, -1.178], [-1.491, 0.696], [1.315, 0.427], [0.159, 0.941], [-1.24, 0.221], [1.33, 1.027], [-1.677, 0.002], [1.246, 0.018], [1.981, 1.578], [-2.036, -0.056], [-0.9, 0.091], [-1.352, 2.151], [-0.203, -0.577], [0.648, -0.481], [0.01, 1.082], [-0.328, -0.179], [-2.537, -0.823], [0.231, -0.022], [0.511, -0.339], [-0.524, 0.285], [1.085, 0.669], [0.711, 1.322], [1.135, -0.141], [-0.2, 0.902], [-0.884, -1.551], [0.681, 1.817], [-1.463, -1.174], [0.812, -0.608], [-0.362, 0.201], [0.354, 0.329], [1.952, 0.344], [-0.334, 0.059], [-0.658, -0.483], [-0.147, -1.163], [0.341, 1.326], [-0.169, 2.128], [-0.576, -0.293], [-0.16, -0.858], [-1.476, 0.44], [1.346, 2.499], [0.157, 0.868], [-1.464, 1.062], [0.473, 0.003], [1.049, 1.39], [-0.192, 1.28], [-0.993, -0.008], [-0.274, -0.816], [1.6, -0.166], [1.605, 1.675], [0.097, 0.815], [0.032, 0.429], [0.62, -0.21], [-0.64, -1.95], [-0.36, -0.028], [0.529, -0.37], [0.705, 0.609], [-0.41, 0.199], [-0.272, -0.487], [-0.043, 0.836], [-2.601, -0.142], [-0.94, -0.543], [0.185, 0.111], [-0.464, 0.286], [-0.947, 0.44], [1.195, 0.277], [-1.062, 1.377], [-0.018, -0.477], [0.299, 0.322], [1.177, -1.124], [0.883, -0.741], [0.806, 0.757], [-0.582, -0.985], [0.07, -1.001], [-0.307, 1.756], [1.108, -0.942], [0.794, -0.599], [0.562, 0.155], [-0.053, -0.574], [1.526, 0.915], [-0.959, -0.079], [0.356, -0.38], [-0.832, 0.636], [0.139, 0.502], [1.123, 0.215], [0.149, -1.212], [-1.903, 1.751], [0.486, -0.948], [-0.173, 1.421], [0.445, -0.326], [0.221, 1.241], [-0.077, -1.22], [1.847, -0.732], [-0.081, 0.215], [0.479, 1.629], [-1.045, -0.352], [0.863, 0.334], [-0.654, 1.545], [-0.204, -0.035], [0.097, 0.769], [-0.688, 0.595], [-1.003, 0.366], [1.359, -0.562], [-0.416, 0.032], [1.187, -0.317], [-0.337, 0.965], [0.664, 0.533], [-1.418, -1.201], [0.837, 0.83], [0.799, 0.717], [-0.762, 0.372], [-0.465, 0.166], [-1.22, 0.455], [0.134, 1.309], [-0.275, 0.63], [-1.899, -0.044], [0.586, -0.35], [0.562, -2.133], [-0.426, -0.197], [-0.402, -0.128], [0.319, -0.713], [-0.449, 1.561], [-0.202, -0.101], [-0.313, 0.792], [0.596, -1.767], [-1.846, -0.51], [0.732, -1.378], [0.757, -1.553], [1.381, 1.847], [0.515, -1.022], [-0.601, -0.667], [1.369, -0.281], [0.474, -0.162], [-1.723, 0.045], [0.174, -2.211], [-1.313, 0.453], [0.045, -0.779], [0.646, 2.595], [-1.463, 1.202], [-0.621, -1.476], [0.964, -0.752], [-0.661, -1.173], [1.219, -0.836], [2.015, 0.329], [-0.075, 1.142], [-1.564, 0.631], [-0.338, 0.015], [0.165, 0.961], [-0.096, -1.581], [0.397, 0.985], [-0.224, -0.728], [-1.268, 0.026], [1.367, 0.2], [0.139, -1.45], [0.353, 0.107], [-0.217, 0.374], [-0.484, -0.519], [1.226, -0.72], [-1.204, -1.094], [0.172, 0.0], [-0.274, 0.874], [1.018, 0.113], [1.709, -1.412], [0.059, -0.381], [1.192, 0.987], [1.102, 0.433], [1.112, -1.699], [2.004, 0.264], [0.533, 0.364], [2.178, -0.086], [-0.204, -0.258], [0.473, -0.312], [0.49, 0.59], [-0.195, -1.096], [1.066, 0.295], [-0.03, -0.697], [-0.262, -1.914], [0.504, -1.492], [0.324, 0.692], [-0.653, 0.014], [0.63, -0.804], [0.208, 0.946], [-0.81, -0.068], [0.519, 0.459], [0.823, 1.425], [-0.361, 1.048], [-0.337, 0.41], [-0.615, 0.606], [-1.319, 0.434], [-0.346, -1.204], [0.977, 1.98], [-0.091, 1.533], [-1.241, -2.244], [0.265, 1.359], [0.238, -0.031], [-1.796, -0.64], [-0.953, -0.723], [-1.789, -0.445], [0.462, 0.063], [-1.094, -0.149], [0.372, -0.447], [0.245, 1.228], [0.634, -1.817], [-2.672, 1.333], [-0.086, -0.36], [0.611, -1.2], [-0.636, -0.482], [0.223, 0.828], [1.489, 0.437], [-0.711, 0.592], [0.935, -0.226], [-1.159, -0.081], [-0.061, -0.434], [1.118, -1.051], [0.883, -1.074], [2.634, 1.274], [0.422, -0.651], [1.034, -0.638], [-1.314, -0.7], [-0.209, -0.268], [0.678, 0.777], [-1.513, -1.043], [0.626, -0.605], [1.195, -0.123], [-0.926, -2.141], [0.451, 1.228], [-0.882, 0.359], [-2.079, 1.657], [0.948, 0.206], [-2.232, 0.648], [0.529, -2.079], [0.818, 0.017], [-0.422, -1.131], [-0.765, 2.134], [-0.856, 0.059], [-1.061, 0.279], [-0.906, -0.48], [0.172, 0.471], [-0.51, 1.754], [-0.971, 0.843], [0.459, -0.978], [0.015, 0.394], [-1.654, -0.8], [-0.76, 0.831], [0.367, 1.073], [-0.078, 1.266], [-1.669, -0.852], [-0.966, 0.014], [-0.647, 1.413], [0.703, 0.354], [0.375, 0.958], [0.222, 1.386], [0.478, -0.706], [-1.009, 0.384], [0.179, -0.405], [1.148, 0.045], [1.496, 0.065], [-1.778, -0.777], [-1.214, -0.881], [0.47, -0.46], [0.938, -0.705], [0.997, -0.083], [-0.708, -0.78], [1.405, 0.528], [-1.789, -0.258], [0.058, 0.303], [-1.189, 0.688], [0.484, 0.882], [0.913, -1.468], [-0.324, 0.402], [0.411, 0.263], [-1.1, 0.64], [0.86, -0.731], [1.246, 0.005], [-0.135, -1.112], [0.368, -0.078], [-0.077, -0.218], [-0.488, -0.418], [-0.739, -0.676], [0.947, 0.929], [0.225, 0.889], [0.29, 0.105], [1.227, -0.82], [-1.441, -0.623], [-0.382, 0.742], [-0.554, 0.371], [-1.778, -0.142], [0.579, 0.374], [0.316, 0.762], [-0.217, -1.229], [-0.568, -1.252], [-1.07, -0.249], [-0.575, 0.411], [0.631, -0.243], [0.405, -0.295], [-1.007, 0.787], [-0.056, 2.1], [0.249, -1.413], [1.397, 0.52], [1.219, -1.02], [0.722, -1.122], [-0.168, 0.657], [0.06, -0.594], [-0.422, 0.034], [0.007, -1.502], [-0.249, 0.403], [-1.448, 0.526], [0.24, 0.264], [-0.639, -0.412], [-0.409, 1.055], [1.765, -0.392], [-0.17, -1.033], [1.287, 0.299], [-0.336, 2.37], [1.094, -0.515], [-0.549, -1.129], [-1.343, 0.841], [-0.072, -0.752], [-0.182, -2.016], [-0.759, -0.364], [0.337, 0.063], [0.696, -0.48], [1.368, -0.481], [-0.192, 0.132], [1.022, 1.828], [-1.162, -0.419], [1.003, -0.002], [1.652, 0.543], [0.456, -1.302], [-0.14, -0.609], [-0.116, 0.032], [0.865, 0.728], [0.888, -2.024], [-1.131, 0.088], [-0.307, 0.329], [1.674, 0.587], [-0.788, 0.761], [-0.643, 0.308], [-0.35, -1.365], [-2.161, -0.526], [0.778, 1.761], [0.653, -1.272], [-0.866, 0.663], [2.156, -0.665], [-0.658, 1.081], [0.772, 0.056], [0.149, -0.674], [-1.167, 1.153], [0.59, -0.075], [-0.099, -2.333], [0.295, -0.109], [0.347, -0.153], [-0.635, -0.147], [0.197, -0.272], [0.244, -1.273], [-0.144, -0.478], [1.367, -0.722], [0.719, 1.458], [0.33, 0.673], [-0.284, 0.439], [-0.209, 1.511], [-0.785, -0.749], [0.423, 0.229], [-1.69, 0.975], [0.949, 0.236], [1.381, 0.117], [0.461, -1.178], [0.165, -0.088], [0.828, -0.694], [0.151, -0.756], [0.805, -1.09], [0.708, -1.169], [1.233, -1.469], [-0.54, 0.935], [-0.207, -1.302], [0.149, -0.651], [0.666, -1.343], [-0.498, 0.905], [1.605, -0.429], [0.157, 0.324], [0.384, 0.384], [0.169, 0.268], [0.781, -0.741], [0.768, 0.725], [0.121, 1.022], [1.745, -1.753], [0.169, -0.59], [1.674, 2.278], [0.186, -0.588]], "50": [[-0.597, 1.365], [-0.859, 1.781], [-0.385, -0.159], [1.256, -0.75], [0.542, 1.486], [-0.201, -0.829], [-0.247, -0.738], [-0.646, 0.294], [-0.934, -0.301], [-1.702, 0.674], [-0.775, 1.007], [-2.22, -1.123], [1.187, 1.875], [2.879, 0.146], [0.7, 0.525], [0.112, 1.138], [0.265, 0.013], [-1.602, -0.659], [-1.651, 0.115], [-1.084, 1.456], [0.625, -0.778], [3.237, 0.897], [-1.459, 0.056], [0.062, 0.596], [0.751, -1.19], [0.336, -0.38], [-0.3, 0.075], [-0.066, 1.153], [-2.22, -1.282], [0.47, 1.609], [-0.087, -0.116], [-0.424, -0.059], [0.807, 0.033], [1.383, -0.026], [0.545, -0.621], [0.398, -1.241], [0.446, -0.532], [0.039, 0.611], [-1.449, -0.667], [1.77, -0.28], [-2.348, -0.339], [1.784, -1.75], [0.743, -0.312], [-0.607, 0.805], [-0.876, 0.593], [-1.749, 1.66], [-1.29, 1.274], [1.571, -0.313], [0.716, 0.85], [0.516, -1.226], [0.526, -1.343], [1.956, -1.499], [0.554, -1.184], [2.483, -0.416], [1.174, -0.813], [0.745, -1.276], [-0.394, -0.32], [0.517, 0.137], [2.021, 2.43], [-0.43, -0.129], [-1.685, -0.564], [-0.27, -0.412], [0.248, 0.574], [1.029, -0.821], [-0.171, 0.103], [0.661, -0.814], [-1.38, 1.315], [0.87, -1.792], [1.33, 0.276], [0.264, 0.566], [-0.856, -0.263], [-0.609, -0.016], [0.729, 0.588], [-0.071, 1.891], [0.111, 0.658], [0.674, 1.59], [0.613, -0.305], [-0.722, -2.02], [-1.576, -0.959], [0.113, -0.312], [-0.484, 0.581], [-1.259, 1.427], [1.531, -0.728], [-0.986, 0.915], [0.356, -2.2], [0.741, -0.82], [-1.135, 2.045], [0.335, -0.844], [1.276, -0.891], [1.168, 1.095], [-1.109, -0.62], [1.626, 0.045], [-1.622, -0.418], [0.743, -0.818], [0.154, 0.129], [2.25, -0.317], [1.147, -0.361], [2.309, -0.466], [-0.713, 1.518], [1.903, -3.734], [2.626, -0.121], [-0.556, -0.178], [-1.678, -0.275], [-1.219, 0.084], [-1.575, 1.621], [0.95, -0.898], [1.46, -0.073], [0.625, 0.55], [0.713, 0.941], [-1.049, 0.821], [-1.086, -0.63], [-0.463, -0.441], [1.144, -0.014], [-1.829, -0.202], [0.359, 0.262], [1.066, 1.059], [-0.776, -0.231], [0.909, -2.722], [-2.34, 0.316], [0.275, 0.486], [0.64, -0.023], [-0.064, 0.986], [-1.249, -0.08], [-0.472, 0.047], [-1.228, -0.027], [0.698, 0.934], [1.426, -1.295], [-0.242, -0.457], [-0.816, -1.97], [-1.92, 1.78], [0.083, 0.664], [0.234, 0.583], [1.694, 0.666], [0.442, -0.199], [1.315, -0.608], [-1.664, 1.841], [-0.233, -1.539], [-1.361, 0.771], [0.9, 0.015], [0.849, 1.365], [0.524, 0.655], [-0.005, 0.635], [1.326, 0.066], [0.203, -0.827], [0.481, 0.869], [0.414, 0.0], [0.964, 0.339], [2.114, -0.012], [2.702, 0.263], [-0.292, -0.089], [-0.484, 0.785], [0.64, 0.019], [-0.505, 0.057], [-0.364, -0.377], [-0.514, 0.046], [-1.123, -0.59], [-1.104, -1.278], [-1.653, 0.133], [-0.755, -0.776], [0.533, 1.502], [0.035, -0.328], [0.537, -0.721], [-0.01, 0.558], [-1.394, 0.564], [0.344, -0.075], [0.706, -0.019], [2.248, -0.421], [-1.323, -0.633], [0.063, 0.432], [-2.521, -0.754], [0.694, 1.035], [-0.72, 0.012], [-1.884, 0.089], [-0.681, 1.045], [-0.188, 0.178], [-0.069, -0.344], [-0.608, 1.416], [-0.487, 1.003], [0.234, 0.43], [0.21, -0.826], [2.473, 0.371], [0.809, -1.25], [0.097, -1.317], [-0.593, 0.852], [-0.411, -0.007], [-0.286, 0.973], [-0.93, 0.894], [-2.308, -1.174], [-0.418, 0.181], [1.549, -1.138], [1.996, -0.812], [0.388, -0.201], [0.067, -1.54], [1.093, 0.349], [-1.678, 2.404], [1.607, 0.099], [-0.079, 2.612], [-0.598, 0.868], [2.179, -0.336], [0.16, -0.207], [-1.344, 0.009], [-1.247, 1.073], [0.368, 0.797], [0.123, 0.896], [-0.203, -1.212], [-1.73, -0.751], [-1.849, 1.347], [-1.331, 2.324], [1.007, 1.092], [-0.681, 1.568], [1.885, -0.416], [0.031, -1.072], [0.518, -1.412], [0.199, 0.586], [-0.894, 1.032], [1.124, -0.016], [0.09, 1.671], [0.028, -0.572], [-1.918, -1.468], [0.019, -0.903], [-0.4, -0.234], [-1.878, 0.999], [-0.327, 0.056], [0.266, 1.812], [0.359, 0.559], [-0.699, 0.721], [-1.233, 0.058], [1.406, -1.586], [-0.528, 0.83], [0.661, 1.053], [-0.214, -0.042], [0.159, -0.081], [0.949, 0.639], [0.313, 0.522], [2.432, -1.016], [1.156, 1.605], [-0.47, -0.902], [-1.522, 0.324], [0.054, 0.635], [1.829, 1.636], [1.541, -0.154], [0.51, 0.826], [-1.609, 0.435], [2.224, -0.192], [-0.795, 1.831], [0.322, 2.551], [-1.821, -1.06], [0.538, 1.08], [1.497, 1.72], [1.931, -1.222], [-0.427, 1.899], [0.249, -0.059], [-0.146, 0.107], [0.938, -0.46], [0.274, -0.88], [0.218, -0.291], [-1.635, 2.117], [-0.48, 0.561], [0.483, -0.408], [-0.162, 0.416], [0.762, 0.388], [0.135, 0.028], [-1.72, -0.942], [1.625, -0.204], [-1.768, 1.422], [0.677, -0.258], [-0.123, 0.51], [-2.092, 0.754], [2.115, -1.864], [-1.83, -0.849], [-0.351, 1.442], [0.278, 1.378], [0.167, -0.221], [-0.248, -0.06], [-0.307, 0.016], [-0.861, 0.302], [1.674, 0.018], [-0.774, -0.626], [0.48, -1.414], [0.072, -1.135], [0.478, 0.072], [0.714, -2.563], [-0.071, -0.194], [0.928, -1.163], [-2.098, -1.783], [1.264, 1.271], [-0.614, -0.391], [1.134, -0.232], [2.34, -0.84], [3.406, -0.854], [-1.104, 0.456], [0.001, -0.023], [1.163, -0.25], [-0.885, 1.522], [-2.716, -0.512], [0.183, 1.129], [0.167, 2.539], [1.767, 2.299], [-0.473, 0.795], [-1.347, -0.334], [0.791, -0.488], [0.415, -0.054], [-0.504, -0.096], [-1.798, -1.15], [-0.465, 1.531], [1.697, 0.187], [-1.434, -0.546], [-1.691, -0.196], [1.066, 1.457], [-0.033, -0.788], [-1.011, -1.021], [1.845, -1.113], [-1.385, -0.269], [-0.167, -0.388], [0.547, -1.351], [0.384, 0.204], [-0.923, -0.303], [0.771, 0.94], [-0.389, 0.226], [0.539, 0.272], [-0.998, 1.579], [0.229, 0.243], [0.883, -0.773], [-1.289, -0.063], [1.642, -1.116], [-0.155, -1.935], [0.258, 0.397], [-0.039, 0.093], [-0.546, -1.192], [0.625, -0.978], [-0.059, 0.858], [0.131, -0.543], [0.081, 0.83], [0.961, 1.888], [1.835, 0.565], [-0.332, 0.859], [1.765, -1.263], [-0.122, 0.503], [-1.528, 0.568], [1.202, 0.583], [0.417, -0.413], [-0.602, -0.858], [0.265, 0.864], [0.979, -0.675], [1.649, -1.733], [0.767, -0.607], [0.975, -0.976], [-0.492, 0.539], [-1.961, -0.008], [-1.035, -1.215], [-1.651, 0.002], [0.466, 1.202], [-0.277, -0.582], [-1.159, 1.777], [-1.174, -0.006], [-0.911, -0.22], [0.055, 0.625], [-1.078, 0.431], [0.89, -0.602], [-0.271, 0.411], [-0.526, -0.177], [0.081, -0.711], [-0.046, -0.727], [0.713, -0.216], [-2.007, 0.859], [0.182, -0.663], [0.241, -0.628], [-1.138, 1.286], [-0.685, -0.013], [1.074, -0.123], [0.172, 0.766], [-2.09, -0.766], [-0.119, 0.667], [0.201, -1.009], [-1.25, -1.718], [-2.591, 1.286], [1.259, 0.051], [-1.357, 0.606], [-1.754, 0.536], [-0.239, -0.472], [0.216, 0.618], [0.402, 0.666], [0.322, -0.613], [0.561, -0.78], [1.391, -0.557], [-0.161, -0.004], [0.24, -2.582], [0.196, 1.036], [0.536, -1.071], [0.596, -1.007], [0.173, 0.602], [0.023, -0.329], [0.327, 0.127], [0.83, -1.24], [0.424, -0.53], [0.742, -1.106], [-1.912, 0.452], [-0.487, -0.988], [-0.433, 0.716], [-1.283, 0.37], [1.266, -0.695], [-0.168, 1.358], [-0.11, 0.214], [0.878, 0.36], [1.339, -0.814], [0.954, -0.204], [-0.522, 0.89], [-0.169, 0.988], [-2.145, -0.644], [-0.956, 0.827], [1.889, -0.046], [-1.132, -0.365], [1.819, 1.057], [1.584, 0.398], [0.475, 0.521], [1.02, -1.505], [-1.177, 0.206], [0.811, 1.136], [1.66, -1.12], [-1.622, 0.7], [2.885, -0.593], [0.884, -1.258], [1.36, -0.587], [0.14, -0.256], [0.209, -0.2], [-1.096, -0.779], [-0.053, -0.864], [-0.596, -1.124], [0.053, 0.941], [-1.453, 1.275], [-1.85, 0.217], [1.113, 0.067], [-0.976, 0.101], [-1.147, 0.555], [0.272, 0.17], [1.068, 0.897], [1.562, 0.736], [-0.031, 0.143], [-0.488, -0.15], [-2.614, 1.318], [-0.4, 0.63], [1.541, -0.486], [-0.033, -0.961], [-2.499, -0.25], [-1.195, -2.654], [1.546, 0.052], [-1.071, 1.202], [0.284, 0.966], [1.34, 0.177], [1.327, -0.426], [0.051, -0.057], [-1.264, -0.325], [1.606, -1.27], [-0.47, -0.152], [0.134, 0.457], [2.997, 1.284], [0.554, -0.927], [2.544, -2.444], [-0.35, -1.83], [-2.279, 1.215], [1.505, -1.914], [-2.284, 0.179], [-0.467, -1.614], [-2.727, 0.966], [-0.303, -0.338], [-1.905, 0.992], [-0.877, -0.389], [1.077, -0.482], [1.416, 1.258], [0.695, -1.012], [-0.118, -1.154], [-0.433, 1.277], [-1.402, -0.554], [-0.977, 0.993], [0.652, -0.937], [-0.593, -1.219], [0.302, 0.351], [0.853, 1.359], [-0.128, 1.192], [0.276, 0.927], [0.671, 0.934], [0.796, -0.241], [-0.184, 0.885], [-0.734, 1.303], [-1.283, 1.037], [-0.852, 0.129], [-1.316, 2.275], [1.094, -1.575], [-1.411, -0.486], [-1.857, 0.593], [-0.997, 1.397], [0.149, -1.508], [0.046, 0.069], [0.354, -1.266], [0.163, -1.932], [1.475, -0.836], [1.437, -0.998], [-1.002, -1.097], [2.239, 0.931], [-2.04, 0.104]], "80": [[-1.324, 0.029], [-0.788, 0.5], [-0.204, 0.469], [1.753, 0.327], [-0.843, 0.746], [-0.185, -0.227], [-1.094, -0.161], [-0.449, 0.961], [-2.541, -0.304], [-1.372, 0.776], [-2.147, 1.583], [-2.065, -0.163], [0.239, 0.673], [2.551, 0.139], [0.662, 0.194], [-1.351, 1.421], [-0.556, 0.572], [-2.829, -0.405], [-2.144, 0.445], [-1.559, 1.553], [-0.199, 0.332], [2.562, 0.069], [-2.215, -0.016], [-1.301, -0.276], [1.266, -0.7], [-0.09, -1.092], [-0.437, 0.754], [-0.616, 1.232], [-0.484, -0.452], [-0.312, 0.556], [0.297, 0.595], [-2.446, -0.565], [-0.321, -0.465], [1.806, -0.828], [1.547, -0.395], [2.188, -0.717], [-0.05, -0.699], [0.021, 1.422], [-0.769, -0.427], [0.823, -1.858], [-1.024, -0.752], [1.737, -1.477], [0.295, 0.497], [-1.725, 0.314], [0.737, -1.012], [-1.729, 2.153], [-2.051, 0.518], [2.483, -0.28], [0.279, 0.858], [-0.884, 1.25], [1.489, -1.274], [0.992, -1.076], [0.69, -0.254], [1.328, -1.2], [2.335, -1.338], [2.784, -0.932], [-0.505, 0.446], [1.68, -0.361], [1.256, 0.906], [-0.697, 0.078], [-2.017, 0.203], [0.136, -0.812], [2.765, 0.266], [2.599, -0.497], [-2.012, -0.149], [0.161, 0.31], [-1.263, 1.171], [1.91, -1.538], [-0.274, -1.389], [-0.992, -0.189], [-1.469, 0.542], [-0.129, -0.302], [-0.52, -0.056], [0.054, 0.512], [-0.836, 0.83], [-1.652, 0.859], [1.091, -0.72], [1.597, -1.273], [-1.55, -0.195], [0.407, 0.324], [-0.515, 1.083], [-1.018, 1.698], [1.483, -1.125], [-1.759, 0.064], [0.085, -0.903], [-0.976, 0.694], [-1.822, 1.46], [0.844, -1.483], [0.838, -0.532], [-0.496, 0.51], [-0.053, 0.038], [1.165, -0.602], [-1.57, 0.553], [2.271, -0.789], [0.353, -0.007], [2.342, 0.58], [1.38, -0.976], [0.421, -0.563], [0.592, 0.677], [1.814, -2.032], [2.079, -0.179], [-2.088, -0.362], [-1.732, -0.002], [-0.176, 0.133], [-1.346, 0.448], [1.027, -1.213], [2.44, -0.657], [1.811, -0.6], [0.762, 0.505], [-0.879, 0.954], [-0.154, -0.012], [-0.406, 0.161], [0.296, -0.77], [-1.922, -0.072], [0.503, -0.694], [-0.34, -0.005], [-1.555, 0.18], [1.89, -1.113], [-1.913, 1.67], [-0.72, -0.624], [1.478, -0.628], [0.192, 0.055], [-2.103, -0.034], [-0.405, -1.097], [-2.111, -0.557], [0.033, -0.806], [0.44, -1.601], [-2.327, 0.169], [-0.686, 0.357], [-1.71, -0.021], [1.688, -0.332], [0.13, 0.686], [2.172, 0.369], [-0.696, 1.326], [1.705, 0.106], [-1.928, 0.108], [0.205, -0.831], [-1.196, 1.071], [0.868, -0.614], [0.808, -0.519], [-1.311, 0.055], [-0.121, 1.044], [0.325, -0.093], [0.909, -0.803], [0.363, 0.182], [-0.379, 0.568], [1.962, 0.315], [0.021, -1.134], [2.877, -0.709], [-0.888, -0.302], [-1.431, 0.622], [0.088, 1.151], [-0.804, -0.303], [0.519, -0.993], [0.253, 0.29], [-0.84, 0.634], [-1.404, 0.718], [-1.588, 0.334], [0.17, 0.004], [-1.031, 1.644], [-0.468, 1.559], [0.751, -1.228], [-0.157, 0.016], [0.138, -1.265], [0.552, -0.999], [0.926, -0.052], [0.888, 1.374], [1.193, -0.567], [-0.357, -0.087], [-2.509, -0.203], [-0.144, -0.735], [-1.898, 0.14], [-1.84, 0.59], [-0.468, 1.017], [1.332, -0.393], [0.786, 0.045], [-0.979, 1.485], [0.573, 0.01], [-1.004, 1.426], [1.504, 0.472], [2.251, -0.537], [1.307, -0.056], [-1.004, -0.158], [-1.277, 1.388], [0.965, -0.27], [-1.428, 1.144], [-1.558, 1.138], [-1.99, 0.093], [-1.078, 0.328], [1.702, -0.33], [2.187, -0.659], [1.586, -0.882], [-0.009, -1.291], [0.033, 1.711], [-0.631, 0.548], [0.804, 0.696], [0.856, 1.262], [-1.388, 0.878], [2.516, -0.158], [0.93, -0.54], [0.943, -0.365], [-1.815, -0.012], [0.91, 0.64], [1.15, -1.137], [-0.567, -1.397], [-0.892, -0.886], [-0.716, 1.424], [-1.394, 0.948], [1.352, 0.279], [-0.906, 1.036], [2.483, 0.01], [1.194, -1.903], [-0.098, -0.675], [0.56, 0.751], [-0.605, -0.53], [1.304, -0.613], [-1.2, 1.24], [0.728, 0.225], [-0.231, -1.021], [0.659, -0.473], [-0.307, 1.538], [-2.256, -0.019], [-0.588, -0.488], [-1.557, 1.029], [0.104, 0.432], [-1.247, 0.377], [0.482, 0.289], [1.481, -1.269], [-0.676, 0.694], [0.292, 0.534], [-0.086, 0.475], [-0.491, -0.451], [2.62, 1.157], [-2.212, 0.099], [2.623, 0.233], [1.1, -0.419], [-1.038, -0.672], [-1.156, 1.298], [1.101, -0.764], [2.365, -0.203], [0.393, -0.344], [-0.897, 0.949], [-3.021, -0.161], [2.528, -0.256], [-0.743, 1.284], [1.241, 0.41], [-1.734, 0.294], [-0.478, 1.618], [2.277, -0.119], [2.017, -0.562], [-0.16, 0.84], [0.027, -0.772], [-1.403, 0.211], [0.711, 0.31], [-0.065, -0.535], [0.133, -0.944], [-1.635, 0.796], [-0.407, 0.845], [0.434, -1.206], [0.356, 0.441], [-0.237, 0.97], [0.211, 0.118], [-0.557, -0.132], [0.531, -0.147], [-2.482, 0.604], [2.469, -0.563], [-0.273, 0.819], [-2.311, 1.412], [1.33, -1.535], [-0.632, 0.199], [-1.937, 0.599], [-0.139, 1.536], [2.209, -1.019], [0.419, -0.142], [-0.153, 0.863], [-1.086, 1.355], [1.024, -0.615], [-0.675, -0.066], [0.84, -0.269], [1.764, -1.009], [-0.052, 1.259], [0.2, -1.287], [1.561, -0.648], [1.654, -0.523], [-0.146, -1.282], [0.314, 0.869], [-2.179, -0.079], [1.897, -1.508], [2.588, -0.37], [1.922, -0.764], [-2.768, -0.31], [-0.187, 0.755], [1.337, -0.201], [-1.2, -0.356], [-1.681, -0.467], [-0.899, 0.899], [-0.054, 0.065], [1.777, 0.426], [-2.25, 0.874], [-1.392, 0.385], [1.004, -0.668], [0.922, -0.164], [-0.146, 0.553], [-0.266, -0.036], [0.096, 0.674], [2.164, -0.406], [-0.094, -0.445], [-1.677, 1.265], [1.586, 1.602], [0.044, 0.694], [-1.386, -0.728], [-0.183, 0.187], [-1.37, 0.708], [0.109, 0.744], [1.831, -0.682], [-1.596, 0.477], [-0.812, -0.38], [1.354, 0.807], [0.592, 1.284], [-0.518, -0.61], [-2.101, 0.488], [-1.93, -0.694], [1.289, -1.605], [-0.137, 0.536], [1.455, -0.857], [1.187, -1.198], [-0.834, -0.055], [-0.993, -0.255], [-0.586, -0.121], [1.592, -0.915], [0.299, 0.214], [0.912, -1.563], [-0.116, 1.181], [0.136, 0.795], [1.052, -0.905], [-1.377, 1.398], [-0.305, -0.983], [1.382, -0.017], [-0.267, -0.137], [1.708, 0.405], [-0.254, 0.812], [-0.863, -0.76], [0.106, 1.193], [0.804, -0.374], [0.016, -0.208], [1.429, -0.738], [2.155, -1.382], [0.101, 0.174], [-2.031, 0.72], [-0.371, -0.695], [0.819, 0.428], [-0.546, 0.544], [-1.73, 0.212], [-1.089, 0.625], [-1.495, 0.336], [-1.704, 0.099], [-1.994, 0.532], [-0.051, 0.888], [2.26, -0.641], [0.087, -0.946], [-0.649, -0.05], [0.288, -0.161], [1.252, 0.781], [1.731, -0.964], [-1.472, 0.747], [-1.62, 0.297], [-1.027, 1.037], [-1.838, 0.272], [-0.259, 0.578], [1.029, -0.722], [-2.153, 1.115], [-1.663, 0.131], [-0.486, 0.223], [-0.342, -1.71], [-0.948, -0.3], [-1.722, 0.317], [0.181, 1.475], [-1.672, 0.041], [-1.812, 0.598], [-1.425, -0.259], [0.381, -0.724], [1.289, -0.002], [-0.063, -0.089], [0.028, -0.238], [1.686, -0.681], [-0.279, 0.87], [0.75, -1.854], [1.103, -0.027], [0.031, -0.839], [-0.599, -0.201], [0.317, -0.651], [1.601, -0.197], [-0.497, 0.339], [0.322, -1.264], [-1.236, 0.649], [0.267, -0.974], [-2.732, -0.1], [0.579, -1.938], [-0.915, 1.104], [-0.177, 0.33], [-0.654, -1.223], [-0.713, 1.246], [-0.635, -1.236], [-0.966, 1.599], [1.095, -1.227], [1.163, -0.775], [-0.775, 0.274], [1.68, 0.193], [-1.967, -0.428], [-0.527, 0.984], [2.559, -0.502], [-1.773, -0.819], [2.745, -0.151], [0.535, -0.563], [-0.002, 0.297], [2.729, -1.046], [-2.531, -0.491], [0.744, 0.631], [1.172, -0.924], [-1.915, 1.15], [1.861, -0.162], [-1.788, 0.189], [1.772, 0.007], [-0.539, 0.317], [-0.394, -0.014], [-1.721, -0.084], [1.289, -0.994], [0.527, -0.793], [-2.144, 1.229], [-0.105, 0.648], [-2.153, 0.605], [1.942, -0.34], [-0.69, -0.697], [-0.835, 1.604], [-0.408, 0.665], [1.806, 0.347], [0.722, 1.123], [1.089, 0.765], [0.253, -0.084], [-2.696, 0.23], [0.933, 0.583], [1.088, -0.82], [-1.726, -0.143], [-1.937, -0.516], [-1.143, -0.561], [2.046, -0.405], [0.699, 0.38], [-0.34, 1.978], [1.07, -0.85], [1.697, 0.006], [-0.561, 0.879], [-0.834, 0.871], [2.354, -1.539], [-1.107, 0.981], [0.372, -1.209], [3.202, -0.124], [1.304, -1.439], [1.496, -1.267], [1.762, -1.47], [-1.52, 0.652], [1.986, -1.272], [-1.647, 1.145], [0.744, 0.25], [-2.189, -0.028], [0.23, -0.217], [-2.016, 0.954], [-0.321, -1.063], [0.481, -1.084], [-1.162, 1.612], [1.406, -0.643], [0.888, -1.009], [0.182, 1.025], [-1.194, -0.631], [-1.506, 0.867], [-0.369, 0.032], [1.569, -1.092], [0.299, -0.417], [1.461, -0.495], [0.316, -0.221], [-0.159, 0.902], [0.221, 0.866], [-0.182, -0.861], [0.355, 0.428], [-2.013, 0.407], [-1.529, 0.503], [-1.568, -0.024], [-0.243, 1.483], [1.69, -0.537], [-0.249, 0.179], [-0.724, 1.297], [-1.6, 0.739], [0.194, -0.744], [-0.385, -0.65], [1.583, -0.036], [-0.421, -1.683], [1.356, -1.473], [2.144, -0.653], [-2.058, -0.226], [2.291, -0.522], [-1.916, -0.907]], "95": [[-2.052, 0.228], [-0.023, 0.708], [-0.595, -0.231], [2.021, -0.238], [-0.568, 0.764], [-0.434, -0.162], [-2.152, 0.209], [-0.692, 1.169], [-2.478, -0.362], [-1.908, 0.876], [-1.907, 0.687], [-1.766, 0.751], [1.063, 0.305], [2.529, -0.016], [1.214, 0.452], [-1.652, 0.619], [-1.687, 0.667], [-2.566, 0.101], [-2.586, 0.443], [-1.389, 1.356], [-0.054, -0.152], [2.751, -0.402], [-2.261, -0.138], [-0.89, -0.403], [1.688, -0.932], [0.459, -1.045], [-0.366, 0.34], [-0.936, 0.951], [-0.572, -0.699], [-0.792, 1.013], [-0.292, 0.25], [-2.406, 0.011], [-0.135, -0.9], [1.705, -0.955], [2.203, -0.408], [2.063, -0.876], [0.362, -0.867], [-0.148, 1.136], [-0.702, -0.355], [0.573, -1.302], [-1.257, -0.518], [1.475, -1.254], [0.016, 0.664], [-1.094, -0.179], [0.369, -1.458], [-0.906, 1.432], [-2.185, 0.142], [2.316, -0.441], [0.517, 0.522], [-0.763, 1.562], [1.565, -1.143], [1.124, -1.172], [0.008, 0.657], [1.217, -1.151], [1.935, -0.602], [1.599, -0.652], [-0.106, 1.039], [2.01, -0.642], [1.387, 0.544], [-0.416, -0.587], [-1.504, 0.569], [0.281, -1.269], [2.455, 0.064], [2.182, -0.457], [-2.696, -0.276], [-0.295, 0.939], [-1.758, 0.729], [2.025, -1.043], [-0.309, -1.304], [-0.962, 0.075], [-2.147, -0.135], [-0.159, -0.358], [-0.614, -0.774], [-0.193, 0.562], [-1.399, 0.749], [-1.437, 0.716], [1.218, -1.051], [1.742, -1.132], [-1.268, -0.478], [0.175, 0.509], [-1.047, 0.956], [-1.554, 0.404], [1.378, -1.093], [-2.154, 0.314], [0.892, -1.182], [-1.034, 1.244], [-1.421, 0.535], [1.315, -1.166], [1.676, -0.258], [-0.919, 1.156], [0.105, -0.096], [1.09, -0.829], [-2.294, 0.324], [2.208, -0.215], [0.271, 0.149], [2.349, 0.204], [1.204, -1.201], [0.027, -0.196], [0.264, 0.956], [1.076, -1.148], [2.115, 0.151], [-2.387, 0.086], [-2.015, 0.209], [-1.013, 0.04], [-0.978, 0.569], [0.74, -0.99], [2.449, -0.214], [1.814, -0.684], [0.906, 0.43], [-1.549, 1.232], [0.148, -0.386], [-0.188, 0.595], [0.365, -0.535], [-2.118, -0.013], [1.378, -0.036], [-0.622, -0.177], [-2.159, 0.398], [1.868, -1.085], [-1.797, 1.111], [-0.399, -0.648], [1.4, -1.338], [-0.33, 0.046], [-2.252, 0.271], [-0.436, -0.256], [-2.145, -0.226], [0.164, -0.732], [0.031, -1.252], [-2.404, 0.617], [-0.25, 0.772], [-1.676, 0.217], [1.83, -0.432], [0.283, 0.687], [2.231, 0.088], [-0.834, 1.322], [2.079, -0.544], [-1.748, 0.858], [-0.112, -0.585], [-0.96, 1.051], [1.176, -1.078], [0.285, -0.553], [-1.208, 0.035], [-0.401, 1.111], [-0.043, -0.747], [1.263, -0.627], [0.058, 0.361], [-0.678, 1.347], [2.429, -0.051], [0.724, -1.507], [2.329, -0.521], [-0.895, -0.443], [-2.012, 0.758], [0.297, 0.804], [-0.872, -0.209], [0.591, -1.268], [0.557, 0.436], [-0.766, 0.386], [-1.477, 0.039], [-1.981, 0.496], [-0.716, -0.211], [-1.351, 1.118], [-0.701, 1.698], [0.612, -1.054], [-0.103, -0.144], [0.182, -0.987], [1.118, -1.456], [1.161, 0.039], [0.956, 0.737], [1.326, -0.694], [-0.904, 0.768], [-2.623, 0.285], [0.313, -0.972], [-2.219, 0.246], [-2.774, 0.414], [-0.138, 0.93], [1.491, -0.901], [1.538, -0.095], [-0.846, 1.041], [0.473, 0.293], [-0.689, 1.484], [1.331, 0.879], [1.989, -0.977], [1.603, -0.805], [-1.267, 0.605], [-1.887, 0.695], [0.364, -0.896], [-1.703, 0.875], [-1.89, 1.15], [-1.946, 0.582], [-1.219, 0.419], [1.931, -0.853], [2.303, -0.676], [1.974, -1.062], [0.885, -1.224], [-0.272, 1.48], [-0.625, 0.037], [0.421, 0.503], [0.576, 0.575], [-1.824, 0.575], [2.387, -0.136], [1.542, -0.558], [0.959, -1.326], [-1.426, -0.569], [0.355, 0.562], [0.997, -1.135], [0.163, -1.148], [-0.68, -0.582], [-1.099, 1.343], [-1.558, 0.985], [1.635, -0.235], [-1.254, 1.065], [2.361, -0.031], [1.412, -1.277], [-0.795, -0.94], [0.038, 0.988], [0.1, -0.834], [1.261, -1.085], [-1.263, 1.205], [0.593, 0.452], [-0.061, -0.995], [0.459, -0.975], [-0.815, 1.313], [-2.403, -0.17], [-0.96, -0.547], [-0.877, 1.185], [-0.272, 0.541], [-1.127, 0.91], [0.226, 0.944], [1.724, -0.773], [-0.795, 1.204], [0.096, 0.8], [-0.096, 0.834], [-0.878, -0.49], [2.582, 0.581], [-2.383, -0.078], [1.887, -0.044], [0.525, -0.851], [-1.097, -0.503], [-0.789, 1.424], [1.293, -0.859], [1.625, -0.96], [0.03, -0.483], [-1.747, 0.874], [-2.866, 0.026], [1.969, 0.098], [-0.28, 1.064], [1.012, 0.531], [-2.178, 0.449], [-0.864, 1.404], [1.59, -0.034], [1.621, -0.809], [-0.505, 0.88], [-0.231, -0.577], [-1.851, 1.022], [0.826, 0.754], [0.357, -1.013], [1.01, -0.523], [-2.219, 0.273], [-0.077, 0.821], [0.574, -1.317], [0.326, 0.854], [-0.455, 0.548], [0.097, 0.476], [-0.148, 0.615], [0.77, -0.982], [-2.139, 0.653], [1.935, -0.452], [-0.36, 1.259], [-2.238, 0.053], [1.614, -0.774], [-0.236, 0.288], [-0.933, 0.382], [-0.917, 1.273], [1.289, -0.772], [0.241, -0.868], [-0.42, 0.812], [-0.536, 1.391], [1.059, -0.677], [-0.927, 0.168], [0.162, 0.086], [2.022, -0.537], [0.127, 1.057], [0.111, -1.107], [1.796, -0.744], [1.993, -0.345], [0.552, -1.107], [0.204, 0.681], [-2.197, 0.218], [1.582, -0.945], [2.012, 0.203], [2.098, -0.246], [-2.268, -0.174], [-0.064, 1.139], [1.894, -0.341], [-1.351, 0.164], [-2.15, -0.134], [-1.431, 0.347], [0.292, 0.13], [2.209, 0.181], [-2.47, 0.417], [-1.065, 0.716], [1.644, -0.778], [1.051, -0.457], [-0.369, 1.059], [-0.604, -0.644], [-0.064, 0.479], [2.152, -0.759], [-0.195, -0.427], [-1.801, 0.765], [1.286, 0.635], [-1.034, 0.984], [-1.469, -0.686], [-0.777, 1.136], [-2.028, 0.184], [-0.042, 0.809], [1.731, -0.073], [-1.798, 0.123], [-0.709, -0.737], [1.62, 0.296], [-0.084, 0.757], [-1.01, -0.515], [-1.988, 0.585], [-1.905, -0.168], [1.325, -1.058], [0.058, 0.553], [0.998, -1.375], [1.624, -1.052], [-0.478, 0.114], [-1.59, -0.151], [-0.889, 0.459], [1.166, -0.989], [0.906, 0.222], [0.846, -1.278], [-0.312, 0.921], [0.389, 0.843], [0.37, -1.034], [-1.362, 1.073], [0.301, -0.791], [1.969, 0.142], [-0.208, -0.489], [2.4, 0.067], [-1.098, 1.177], [-0.659, -1.351], [-0.031, 0.949], [0.278, 0.61], [0.055, 0.127], [2.069, -0.931], [1.93, -0.468], [-0.23, 0.414], [-1.98, 0.002], [-0.098, -1.06], [0.48, 0.306], [-1.045, 0.783], [-1.797, -0.288], [-1.784, 0.195], [-1.52, 0.836], [-2.169, -0.065], [-2.148, 0.74], [-0.02, 0.942], [2.112, -0.918], [0.14, -0.753], [-0.62, -0.083], [-0.478, -0.492], [1.595, 0.224], [2.419, -0.812], [-2.183, 0.712], [-2.187, 0.731], [-0.816, 1.039], [-2.194, 0.114], [-0.956, 0.923], [1.192, -1.097], [-2.786, 0.437], [-1.969, 0.159], [-1.097, -0.069], [-0.45, -1.202], [-1.547, -0.024], [-1.546, 0.89], [0.867, 0.769], [-2.047, 0.003], [-2.272, 0.931], [-2.411, 0.204], [0.362, -0.819], [1.627, -0.835], [0.231, 0.445], [-0.668, -0.44], [1.733, -0.978], [-0.593, 0.781], [0.101, -1.205], [1.152, -0.144], [-0.112, -0.909], [-0.142, 0.286], [0.577, -0.647], [2.21, -0.481], [-0.358, 0.492], [0.569, -0.649], [-1.311, 1.037], [1.049, -1.174], [-2.598, -0.131], [0.866, -1.107], [-1.238, 1.016], [-0.212, -0.265], [-0.935, -0.905], [-1.003, 0.668], [-0.63, -0.498], [-1.189, 1.347], [1.173, -1.348], [1.094, 0.031], [-0.203, -0.133], [1.84, -0.685], [-2.395, 0.268], [-0.204, 1.045], [2.673, -0.102], [-2.311, -0.715], [2.451, -0.266], [0.6, -0.785], [-0.108, 0.811], [2.189, -0.693], [-2.319, -0.228], [0.777, 0.141], [0.75, -0.667], [-1.743, 1.406], [2.16, 0.263], [-2.508, 0.032], [1.789, -0.303], [-0.761, 0.817], [1.482, -0.162], [-1.55, 0.008], [1.201, -1.029], [0.625, -0.89], [-1.728, 1.0], [0.436, 0.54], [-2.733, 0.9], [2.325, -0.274], [-0.433, -0.373], [-0.878, 0.848], [-0.657, 0.698], [2.051, -0.368], [0.734, 0.65], [1.397, 0.324], [0.456, 0.172], [-2.411, 0.366], [0.284, 0.419], [1.234, -1.089], [-1.006, 0.357], [-2.475, -0.08], [-0.787, -0.874], [1.828, -0.158], [0.862, 0.375], [-1.091, 1.37], [0.923, -1.184], [1.621, -0.991], [-1.72, 0.831], [-1.118, 0.979], [1.919, -0.848], [-1.395, 0.588], [0.167, -0.921], [2.896, 0.223], [1.745, -0.588], [1.124, -1.302], [1.915, -0.72], [-1.841, 0.704], [1.501, -1.269], [-1.338, 0.937], [0.82, 0.437], [-1.938, -0.017], [-0.018, -0.744], [-1.912, 0.356], [-0.816, -0.847], [0.539, -1.122], [-0.907, 1.069], [1.995, -0.43], [0.813, -1.028], [-0.136, 0.966], [-1.414, -0.412], [-1.644, 0.771], [-0.213, -0.725], [1.748, -0.55], [-0.12, -0.636], [1.811, -0.843], [0.558, -0.895], [-0.733, 1.154], [0.102, 0.618], [0.93, -0.914], [0.371, 0.315], [-2.309, 0.124], [-2.184, 0.681], [-1.588, 0.23], [-0.381, 1.349], [0.901, 0.519], [0.074, 0.447], [-0.777, 1.108], [-0.983, 0.098], [0.827, -1.239], [-0.867, -1.135], [1.94, -0.438], [-0.175, -1.031], [1.628, -1.111], [2.055, 0.001], [-1.769, -0.182], [2.242, -0.913], [-1.661, -0.332]], "100": [[-2.192, 0.177], [0.035, 0.775], [-0.609, -0.257], [2.096, -0.172], [-0.408, 0.786], [-0.458, -0.121], [-2.276, 0.216], [-0.774, 1.186], [-2.446, -0.257], [-1.873, 0.938], [-1.969, 0.71], [-1.709, 0.734], [1.047, 0.276], [2.471, -0.013], [1.302, 0.4], [-1.695, 0.636], [-1.804, 0.604], [-2.541, 0.082], [-2.599, 0.377], [-1.367, 1.376], [-0.128, -0.141], [2.578, -0.524], [-2.252, -0.052], [-0.899, -0.512], [1.749, -0.882], [0.371, -1.102], [-0.295, 0.365], [-0.99, 1.012], [-0.657, -0.665], [-0.81, 1.125], [-0.258, 0.397], [-2.368, -0.003], [-0.035, -0.95], [1.657, -0.877], [2.104, -0.368], [2.095, -0.838], [0.296, -0.909], [-0.24, 1.091], [-0.567, -0.42], [0.6, -1.323], [-1.321, -0.445], [1.515, -1.236], [-0.055, 0.669], [-0.961, -0.252], [0.574, -1.4], [-0.802, 1.402], [-2.126, 0.096], [2.252, -0.446], [0.453, 0.564], [-0.724, 1.533], [1.613, -1.106], [1.016, -1.136], [0.004, 0.755], [1.336, -1.204], [1.993, -0.539], [1.652, -0.641], [-0.122, 1.011], [2.017, -0.625], [1.262, 0.57], [-0.384, -0.73], [-1.644, 0.661], [0.252, -1.121], [2.485, 0.027], [2.021, -0.577], [-2.625, -0.247], [-0.317, 0.913], [-1.76, 0.638], [2.006, -0.865], [-0.308, -1.171], [-0.899, -0.022], [-2.243, -0.116], [-0.204, -0.337], [-0.629, -0.717], [-0.195, 0.648], [-1.501, 0.696], [-1.392, 0.693], [1.318, -1.103], [1.616, -1.153], [-1.207, -0.457], [0.125, 0.595], [-0.994, 0.954], [-1.505, 0.404], [1.394, -1.173], [-2.142, 0.221], [0.817, -1.092], [-1.09, 1.137], [-1.592, 0.522], [1.412, -1.206], [1.728, -0.374], [-0.889, 1.185], [0.218, 0.078], [1.026, -0.872], [-2.221, 0.163], [2.248, -0.138], [0.309, 0.074], [2.329, 0.076], [1.263, -1.313], [-0.006, -0.204], [0.287, 0.988], [1.185, -1.092], [2.213, 0.067], [-2.356, 0.093], [-2.031, 0.182], [-0.98, 0.031], [-0.998, 0.594], [0.754, -0.975], [2.338, -0.255], [1.726, -0.691], [0.794, 0.352], [-1.685, 1.103], [0.147, -0.392], [-0.074, 0.63], [0.191, -0.552], [-2.092, 0.025], [1.443, -0.093], [-0.668, -0.156], [-2.125, 0.335], [1.759, -1.045], [-1.727, 1.056], [-0.512, -0.638], [1.439, -1.237], [-0.253, 0.053], [-2.219, 0.193], [-0.48, -0.337], [-2.186, -0.246], [0.248, -0.66], [-0.016, -1.167], [-2.377, 0.624], [-0.244, 0.839], [-1.831, 0.256], [1.874, -0.475], [0.382, 0.674], [2.315, 0.15], [-0.92, 1.366], [2.039, -0.426], [-1.814, 0.808], [-0.091, -0.65], [-1.041, 1.051], [1.15, -1.155], [0.247, -0.682], [-1.258, 0.046], [-0.382, 1.098], [-0.074, -0.81], [1.317, -0.722], [0.164, 0.435], [-0.622, 1.319], [2.43, 0.056], [0.823, -1.506], [2.279, -0.521], [-0.899, -0.451], [-2.175, 0.786], [0.391, 0.779], [-0.922, -0.196], [0.71, -1.248], [0.509, 0.419], [-0.67, 0.456], [-1.481, -0.153], [-1.999, 0.566], [-0.746, -0.167], [-1.402, 1.111], [-0.747, 1.602], [0.608, -1.108], [-0.125, -0.07], [0.141, -1.008], [1.004, -1.271], [1.195, 0.111], [1.003, 0.746], [1.379, -0.683], [-1.029, 0.802], [-2.575, 0.278], [0.279, -0.985], [-2.266, 0.201], [-2.663, 0.33], [0.008, 0.845], [1.51, -0.89], [1.584, -0.275], [-0.883, 1.018], [0.457, 0.293], [-0.707, 1.369], [1.183, 0.72], [1.878, -0.95], [1.747, -0.76], [-1.286, 0.708], [-1.96, 0.828], [0.33, -0.884], [-1.757, 0.862], [-1.869, 1.085], [-1.9, 0.714], [-1.252, 0.43], [1.849, -0.767], [2.224, -0.683], [1.975, -1.041], [0.962, -1.102], [-0.271, 1.377], [-0.582, -0.063], [0.494, 0.553], [0.594, 0.557], [-1.93, 0.575], [2.318, -0.083], [1.632, -0.492], [1.066, -1.281], [-1.491, -0.48], [0.356, 0.559], [1.106, -1.117], [0.178, -1.194], [-0.828, -0.652], [-1.05, 1.359], [-1.403, 1.008], [1.749, -0.34], [-1.125, 1.185], [2.368, -0.037], [1.406, -1.28], [-0.986, -0.868], [0.033, 1.014], [0.08, -0.951], [1.273, -1.115], [-1.283, 1.259], [0.665, 0.506], [-0.036, -1.017], [0.56, -0.955], [-0.827, 1.316], [-2.43, -0.107], [-1.009, -0.58], [-0.956, 1.158], [-0.277, 0.673], [-1.033, 0.944], [0.153, 0.865], [1.746, -0.749], [-0.7, 1.277], [0.177, 0.841], [-0.213, 0.933], [-0.866, -0.461], [2.535, 0.429], [-2.449, -0.098], [1.969, -0.006], [0.504, -0.8], [-1.007, -0.456], [-0.673, 1.291], [1.287, -0.888], [1.774, -0.971], [-0.071, -0.491], [-1.788, 0.795], [-2.901, 0.012], [2.007, 0.025], [-0.201, 1.11], [0.979, 0.588], [-2.061, 0.462], [-0.849, 1.412], [1.68, -0.058], [1.651, -0.864], [-0.567, 0.961], [-0.225, -0.641], [-1.88, 0.915], [0.863, 0.682], [0.277, -0.934], [1.004, -0.648], [-2.073, 0.181], [-0.063, 0.806], [0.514, -1.332], [0.371, 0.789], [-0.386, 0.551], [0.04, 0.606], [-0.066, 0.608], [0.885, -0.969], [-2.04, 0.602], [1.991, -0.451], [-0.464, 1.146], [-2.209, 0.0], [1.66, -0.761], [-0.21, 0.3], [-0.994, 0.487], [-0.974, 1.312], [1.288, -0.97], [0.219, -0.911], [-0.417, 0.754], [-0.5, 1.285], [1.132, -0.773], [-1.057, 0.281], [0.197, 0.137], [1.989, -0.548], [0.109, 0.963], [0.263, -1.154], [1.898, -0.66], [2.007, -0.317], [0.537, -1.124], [0.239, 0.588], [-2.24, 0.102], [1.606, -0.953], [2.051, 0.139], [2.122, -0.273], [-2.169, -0.152], [-0.095, 1.034], [1.869, -0.375], [-1.337, 0.193], [-2.158, -0.053], [-1.408, 0.251], [0.397, 0.122], [2.359, 0.128], [-2.287, 0.28], [-0.956, 0.718], [1.614, -0.881], [1.188, -0.551], [-0.382, 1.056], [-0.672, -0.574], [-0.07, 0.537], [2.101, -0.692], [-0.243, -0.379], [-1.881, 0.603], [1.414, 0.527], [-0.947, 1.05], [-1.454, -0.719], [-0.859, 1.148], [-2.055, 0.18], [-0.095, 0.792], [1.81, -0.278], [-1.97, 0.152], [-0.707, -0.666], [1.611, 0.169], [-0.121, 0.854], [-0.878, -0.588], [-1.982, 0.598], [-2.015, -0.061], [1.432, -1.033], [0.075, 0.633], [0.936, -1.495], [1.565, -0.985], [-0.473, 0.166], [-1.484, -0.161], [-0.967, 0.491], [1.215, -0.975], [0.917, 0.189], [0.922, -1.204], [-0.276, 1.006], [0.431, 0.808], [0.456, -1.121], [-1.299, 1.08], [0.365, -0.836], [2.042, 0.003], [-0.301, -0.593], [2.39, -0.04], [-1.125, 1.106], [-0.637, -1.251], [0.125, 0.891], [0.319, 0.553], [0.013, 0.14], [1.885, -0.831], [1.953, -0.432], [-0.184, 0.465], [-1.975, 0.042], [-0.074, -0.967], [0.491, 0.241], [-0.961, 0.956], [-1.878, -0.254], [-1.818, 0.232], [-1.57, 0.896], [-2.187, -0.036], [-2.181, 0.615], [0.031, 0.949], [2.081, -0.846], [0.096, -0.766], [-0.628, -0.111], [-0.474, -0.582], [1.443, 0.149], [2.295, -0.709], [-2.086, 0.609], [-2.082, 0.828], [-0.927, 1.078], [-2.194, 0.095], [-1.002, 1.004], [1.117, -1.086], [-2.679, 0.349], [-1.973, 0.114], [-1.12, 0.008], [-0.329, -1.146], [-1.681, 0.108], [-1.604, 0.819], [0.831, 0.752], [-2.107, -0.028], [-2.238, 0.707], [-2.314, 0.107], [0.41, -0.838], [1.763, -0.848], [0.211, 0.478], [-0.67, -0.39], [1.682, -0.922], [-0.612, 0.85], [0.083, -1.088], [1.176, -0.217], [-0.21, -0.694], [-0.114, 0.209], [0.434, -0.666], [2.222, -0.5], [-0.468, 0.499], [0.501, -0.763], [-1.2, 1.073], [1.023, -1.228], [-2.602, -0.163], [0.952, -1.192], [-1.092, 1.021], [-0.222, -0.249], [-0.983, -0.894], [-1.024, 0.692], [-0.624, -0.467], [-1.099, 1.361], [1.176, -1.276], [1.08, -0.089], [-0.174, -0.265], [1.803, -0.805], [-2.432, 0.265], [-0.261, 0.992], [2.658, -0.024], [-2.333, -0.49], [2.459, -0.108], [0.499, -0.899], [-0.076, 0.865], [2.212, -0.634], [-2.314, -0.21], [0.711, 0.171], [0.77, -0.646], [-1.727, 1.301], [2.274, 0.173], [-2.42, 0.019], [1.882, -0.373], [-0.778, 0.912], [1.553, -0.252], [-1.58, -0.109], [1.153, -1.157], [0.609, -0.947], [-1.775, 0.953], [0.351, 0.656], [-2.576, 0.715], [2.322, -0.367], [-0.396, -0.321], [-0.827, 0.906], [-0.639, 0.772], [2.074, -0.397], [0.686, 0.68], [1.383, 0.364], [0.542, 0.341], [-2.504, 0.332], [0.312, 0.353], [1.273, -1.124], [-1.042, 0.401], [-2.423, -0.104], [-0.735, -0.946], [1.918, -0.343], [0.856, 0.466], [-1.096, 1.335], [0.98, -1.154], [1.649, -0.994], [-1.634, 0.731], [-1.157, 1.065], [1.861, -0.859], [-1.464, 0.584], [0.126, -0.955], [2.682, 0.259], [1.612, -0.575], [1.034, -1.23], [1.915, -0.638], [-1.897, 0.774], [1.438, -1.172], [-1.161, 0.985], [0.865, 0.507], [-2.042, 0.005], [0.034, -0.763], [-2.043, 0.387], [-0.837, -0.76], [0.572, -1.177], [-0.739, 1.137], [1.963, -0.227], [0.841, -1.068], [-0.209, 1.068], [-1.385, -0.449], [-1.75, 0.68], [-0.203, -0.65], [1.804, -0.665], [-0.096, -0.693], [1.732, -0.703], [0.411, -0.933], [-0.75, 1.149], [0.103, 0.541], [1.009, -0.861], [0.421, 0.25], [-2.379, 0.12], [-2.194, 0.707], [-1.55, 0.29], [-0.504, 1.391], [0.901, 0.542], [0.275, 0.499], [-0.689, 1.061], [-0.993, -0.007], [0.842, -1.214], [-0.922, -0.992], [1.897, -0.429], [-0.185, -0.92], [1.718, -1.106], [2.133, 0.003], [-1.782, -0.236], [2.099, -0.826], [-1.586, -0.374]]}};
+
+function sched(kind, T) {
+  let beta; if (kind === "lin") beta = Array.from({ length: T }, (_, i) => 1e-4 + (0.1 - 1e-4) * i / (T - 1)); else { const f = t => Math.cos((t / T + 0.008) / 1.008 * Math.PI / 2) ** 2, ab = Array.from({ length: T + 1 }, (_, t) => f(t) / f(0)); beta = Array.from({ length: T }, (_, i) => Math.min(0.999, 1 - ab[i + 1] / ab[i])); }
+  const ab = []; let p = 1; for (const b of beta) { p *= 1 - b; ab.push(p); } return { beta, ab };
+}
+function main() {
+  const el = id => document.getElementById(id), num = id => Number(el(id).value);
+  let seed = 4; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }, nrm = () => Math.sqrt(-2 * Math.log(rnd())) * Math.cos(2 * Math.PI * rnd());
+  const eps = D.data.map(() => [nrm(), nrm()]);
+  function fw() {
+    const kind = el("sch").value, t = Math.round(num("t")); el("tV").textContent = " t = " + t; const { ab } = sched(kind, 100), a = ab[t - 1], snr = a / (1 - a);
+    const pts = D.data.map((p, i) => [Math.sqrt(a) * p[0] + Math.sqrt(1 - a) * eps[i][0], Math.sqrt(a) * p[1] + Math.sqrt(1 - a) * eps[i][1]]), tv = pts.reduce((s, q) => s + q[0] * q[0] + q[1] * q[1], 0) / pts.length;
+    boxOut({ "alpha_bar_t (signal share)": a, "noise variance 1 - alpha_bar": 1 - a, "SNR": snr, "SNR (dB)": 10 * Math.log10(snr), "correlation of x_t with x_0 (sqrt alpha_bar, signal variance 1)": Math.sqrt(a), "total second moment of the cloud per axis": tv / 2 }, "fOut");
+    drawChart(el("fChart"), { title: "Noisy data x_t", xlabel: "x", ylabel: "y", xrange: [-3.5, 3.5], series: [{ kind: "points", xs: pts.map(p => p[0]), ys: pts.map(p => p[1]), color: "var(--highlight)", label: "x_t" }] });
+  }
+  el("sch").addEventListener("input", fw); el("t").addEventListener("input", fw); fw();
+  function rv() {
+    const k = el("rs").value, pts = D.traj[k]; const mx = pts.reduce((s, q) => s + q[0], 0) / pts.length, vx = pts.reduce((s, q) => s + (q[0] - mx) ** 2, 0) / pts.length, my = pts.reduce((s, q) => s + q[1], 0) / pts.length, vy = pts.reduce((s, q) => s + (q[1] - my) ** 2, 0) / pts.length;
+    boxOut({ "reverse steps done": k, "mean x": mx, "mean y": my, "variance x (data 1.91)": vx, "variance y (data 0.64)": vy }, "rOut");
+    drawChart(el("rChart"), { title: "Reverse chain after " + k + " steps", xlabel: "x", ylabel: "y", xrange: [-3.5, 3.5], series: [{ kind: "points", xs: D.data.slice(0, 500).map(p => p[0]), ys: D.data.slice(0, 500).map(p => p[1]), color: "var(--neutral)", label: "training data" }, { kind: "points", xs: pts.map(p => p[0]), ys: pts.map(p => p[1]), color: "var(--highlight)", label: "reverse chain" }] });
+  }
+  el("rs").addEventListener("input", rv); rv();
+  function surf() {
+    const s = num("s"), ab = Array.from({ length: 40 }, (_, i) => 0.01 + 0.98 * i / 39), xs = Array.from({ length: 40 }, (_, i) => -3 + 6 * i / 39), z = xs.map(x => ab.map(a => Math.sqrt(1 - a) / (a * s * s + 1 - a) * x));
+    Plotly.react("plot3d", [{ type: "surface", x: ab, y: xs, z, colorscale: "RdBu", reversescale: true }], { margin: { l: 0, r: 0, t: 30, b: 0 }, title: { text: "Optimal noise prediction, data N(0, " + s + "^2)" }, scene: { xaxis: { title: "alpha_bar" }, yaxis: { title: "x_t" }, zaxis: { title: "prediction" } } }, { responsive: true });
+  }
+  loadPlotlyThen(() => { surf(); el("s").addEventListener("input", surf); });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  main();
+  if (window.renderMathInElement) { renderMathInElement(document.body, { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] }); }
+});
+</script>
+</body>
+</html>

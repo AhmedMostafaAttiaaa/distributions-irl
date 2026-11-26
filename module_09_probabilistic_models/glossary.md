@@ -37,3 +37,12 @@
 | K-means | A hard clustering that alternates assigning points to the nearest centre and recomputing centres; the zero-variance, equal-spherical limit of a Gaussian mixture. | [09_04](html/09_04_density_estimation_kde_gmm_em.html) |
 | BIC and AIC | Information criteria that penalise the log-likelihood by the number of parameters (BIC: p ln n, AIC: 2p) to choose between models such as numbers of mixture components. | [09_04](html/09_04_density_estimation_kde_gmm_em.html) |
 | Label switching | The fact that the components of a mixture can be permuted without changing the likelihood, so component numbers are arbitrary. | [09_04](html/09_04_density_estimation_kde_gmm_em.html) |
+| Anomaly (outlier) | An observation that the usual process would almost never produce; defined relative to a model of normal behaviour. | [09_05](html/09_05_anomaly_detection.html) |
+| z-score | The number of standard deviations an observation lies from the mean, (x - mean) / sd; a 3-sigma rule flags 0.27 % of normal data. | [09_05](html/09_05_anomaly_detection.html) |
+| Robust z-score (MAD) | A z-score built on the median and the median absolute deviation, scaled by 0.6745 so that it matches the ordinary z for normal data; one outlier cannot ruin it. | [09_05](html/09_05_anomaly_detection.html) |
+| Mahalanobis distance | The distance of a point from the centre of a cloud measured in units of the cloud's own covariance; its square is chi-square distributed for Gaussian data. | [09_05](html/09_05_anomaly_detection.html) |
+| Masking | The effect by which outliers inflate the estimated spread of the data so that they no longer look unusual. | [09_05](html/09_05_anomaly_detection.html) |
+| Minimum covariance determinant (MCD) | A robust estimate of centre and covariance from the subset of h points whose covariance matrix has the smallest determinant. | [09_05](html/09_05_anomaly_detection.html) |
+| Breakdown point | The largest share of contaminated observations an estimator can tolerate before it can be moved arbitrarily far (0 for the mean, 50 % for the median). | [09_05](html/09_05_anomaly_detection.html) |
+| False-alarm rate | The share of normal observations that a detector flags; the threshold is chosen to meet a false-alarm budget. | [09_05](html/09_05_anomaly_detection.html) |
+| Base-rate effect on precision | When anomalies are rare, even a detector with a small false-alarm rate produces mostly false alerts: precision = recall x prevalence / (recall x prevalence + false-alarm rate x (1 - prevalence)). | [09_05](html/09_05_anomaly_detection.html) |

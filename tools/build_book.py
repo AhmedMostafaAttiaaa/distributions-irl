@@ -33,7 +33,7 @@ MODULES = [
      "Priors and posteriors, conjugate updating, credible intervals and predictions, MCMC and Thompson sampling."),
     ("08", "module_08_information", "Information theory",
      "Entropy and cross-entropy, KL and Jensen-Shannon divergence, Wasserstein distance, mutual information."),
-    ("09", "module_09_ml_ai", "Distributions inside ML and AI",
+    ("09", "module_09_probabilistic_models", "Probabilistic modelling",
      "Losses as likelihoods, GLMs, naive Bayes, density estimation, anomaly detection, neural-net randomness, LLM sampling, VAEs, diffusion, Gaussian processes, RL policies, priors, bias-variance and conformal prediction."),
     ("10", None, "Model evaluation and the confusion matrix", "Planned."),
     ("11", None, "Data science in practice", "Planned."),

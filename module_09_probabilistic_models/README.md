@@ -1,6 +1,6 @@
-# Module 09: Distributions inside ML and AI
+# Module 09: Probabilistic modelling
 
-Where the distributions of Modules 01-08 live inside machine-learning models: losses as likelihoods, generalised linear models, naive Bayes on real text, density estimation and mixtures, anomaly detection, the randomness of neural networks, LLM sampling, VAEs, diffusion, Gaussian processes, reinforcement-learning policies, priors as regularisers, the bias-variance trade-off and uncertainty with conformal prediction.
+How the distributions of Modules 01-08 become working models: losses as likelihoods, generalised linear models, naive Bayes on real text, density estimation and mixtures, anomaly detection, the randomness of neural networks, LLM sampling, VAEs, diffusion, Gaussian processes, reinforcement-learning policies, priors as regularisers, the bias-variance trade-off and uncertainty with conformal prediction.
 
 ## Lessons
 

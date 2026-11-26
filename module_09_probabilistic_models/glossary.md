@@ -65,3 +65,12 @@
 | Gumbel-softmax | A differentiable relaxation of categorical sampling that replaces the argmax by a softmax with temperature tau, trading bias against gradient variance. | [09_07](html/09_07_llm_sampling.html) |
 | Perplexity | The exponential of the average negative log-probability per token; the effective number of equally likely next tokens. | [09_07](html/09_07_llm_sampling.html) |
 | Distinct-n | The share of distinct n-grams among all n-grams of generated text, a simple measure of diversity. | [09_07](html/09_07_llm_sampling.html) |
+| Variational autoencoder (VAE) | A generative model with an encoder that maps data to a distribution over a latent code and a decoder that maps codes back to data, trained by maximising the ELBO. | [09_08](html/09_08_vae.html) |
+| Evidence lower bound (ELBO) | The expected log-likelihood of the data under the encoder minus the KL divergence of the encoder from the prior; a lower bound on the log-evidence whose gap is the KL to the true posterior. | [09_08](html/09_08_vae.html) |
+| Latent variable | A hidden variable that is never observed but generates the data, such as the code of a VAE or the segment of a mixture model. | [09_08](html/09_08_vae.html) |
+| Reparameterisation trick | Writing a sample as z = mu + sigma epsilon with parameter-free noise epsilon, so that gradients can flow through the sampling and have low variance. | [09_08](html/09_08_vae.html) |
+| Score-function (REINFORCE) estimator | A gradient estimator of an expectation that multiplies the function value by the gradient of the log-density; unbiased but of high variance. | [09_08](html/09_08_vae.html) |
+| Beta-VAE | A VAE whose KL term is weighted by beta, trading reconstruction quality against the information carried by the latent code. | [09_08](html/09_08_vae.html) |
+| Posterior collapse | A latent dimension whose encoder distribution equals the prior for every input, carrying no information; its KL cost is zero. | [09_08](html/09_08_vae.html) |
+| Active latent dimension | A latent dimension of a VAE whose average KL to the prior is above a small threshold (for example 0.05 nats). | [09_08](html/09_08_vae.html) |
+| Amortised inference | Using one neural network (the encoder) to approximate the posterior of every data point instead of optimising each posterior separately. | [09_08](html/09_08_vae.html) |

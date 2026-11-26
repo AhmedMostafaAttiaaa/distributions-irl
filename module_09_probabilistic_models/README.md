@@ -14,6 +14,7 @@ How the distributions of Modules 01-08 become working models: losses as likeliho
 | 09_06 The randomness inside neural networks | [notebook](notebooks/09_06_neural_net_randomness.ipynb) | [page](html/09_06_neural_net_randomness.html) | done |
 | 09_07 How language models sample | [notebook](notebooks/09_07_llm_sampling.ipynb) | [page](html/09_07_llm_sampling.html) | done |
 | 09_08 Variational autoencoders | [notebook](notebooks/09_08_vae.ipynb) | [page](html/09_08_vae.html) | done |
+| 09_09 Diffusion models | [notebook](notebooks/09_09_diffusion_noise.ipynb) | [page](html/09_09_diffusion_noise.html) | done |
 
 ## Contents of the folders
 

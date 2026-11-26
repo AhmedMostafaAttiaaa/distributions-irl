@@ -10,6 +10,7 @@ How the distributions of Modules 01-08 become working models: losses as likeliho
 | 09_02 Generalised linear models | [notebook](notebooks/09_02_glms.ipynb) | [page](html/09_02_glms.html) | done |
 | 09_03 Naive Bayes | [notebook](notebooks/09_03_naive_bayes.ipynb) | [page](html/09_03_naive_bayes.html) | done |
 | 09_04 Density estimation: KDE, Gaussian mixtures and EM | [notebook](notebooks/09_04_density_estimation_kde_gmm_em.ipynb) | [page](html/09_04_density_estimation_kde_gmm_em.html) | done |
+| 09_05 Anomaly detection | [notebook](notebooks/09_05_anomaly_detection.ipynb) | [page](html/09_05_anomaly_detection.html) | done |
 
 ## Contents of the folders
 

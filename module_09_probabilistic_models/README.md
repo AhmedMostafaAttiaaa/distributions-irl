@@ -17,6 +17,7 @@ How the distributions of Modules 01-08 become working models: losses as likeliho
 | 09_09 Diffusion models | [notebook](notebooks/09_09_diffusion_noise.ipynb) | [page](html/09_09_diffusion_noise.html) | done |
 | 09_10 Gaussian processes | [notebook](notebooks/09_10_gaussian_processes.ipynb) | [page](html/09_10_gaussian_processes.html) | done |
 | 09_11 Reinforcement learning policies | [notebook](notebooks/09_11_rl_policies.ipynb) | [page](html/09_11_rl_policies.html) | done |
+| 09_12 Priors as regularisers | [notebook](notebooks/09_12_priors_as_regularisers.ipynb) | [page](html/09_12_priors_as_regularisers.html) | done |
 
 ## Contents of the folders
 

@@ -7,6 +7,7 @@ How the distributions of Modules 01-08 become working models: losses as likeliho
 | Lesson | Notebook | Interactive page | Status |
 |---|---|---|---|
 | 09_01 Loss functions as likelihoods | [notebook](notebooks/09_01_losses_as_likelihoods.ipynb) | [page](html/09_01_losses_as_likelihoods.html) | done |
+| 09_02 Generalised linear models | [notebook](notebooks/09_02_glms.ipynb) | [page](html/09_02_glms.html) | done |
 
 ## Contents of the folders
 

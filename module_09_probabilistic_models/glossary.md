@@ -55,3 +55,13 @@
 | Deep ensemble | The average and spread of the predictions of several networks trained from different random seeds; a strong practical uncertainty estimate. | [09_06](html/09_06_neural_net_randomness.html) |
 | Label smoothing | Replacing the 0/1 target by (1 - epsilon) times the one-hot vector plus epsilon / K, which gives a finite optimal logit gap and reduces over-confidence. | [09_06](html/09_06_neural_net_randomness.html) |
 | Minibatch gradient noise | The sampling noise of a gradient computed on B examples, with standard deviation proportional to 1 / sqrt(B). | [09_06](html/09_06_neural_net_randomness.html) |
+| Softmax temperature | A divisor T applied to the logits before the softmax: T < 1 sharpens the distribution towards the argmax, T > 1 flattens it towards uniform. | [09_07](html/09_07_llm_sampling.html) |
+| Greedy decoding | Always choosing the most likely next token; deterministic and prone to repetition. | [09_07](html/09_07_llm_sampling.html) |
+| Top-k sampling | Sampling only from the k most likely tokens after renormalising their probabilities. | [09_07](html/09_07_llm_sampling.html) |
+| Top-p (nucleus) sampling | Sampling from the smallest set of most likely tokens whose total probability reaches p, so the number of candidates adapts to the model's confidence. | [09_07](html/09_07_llm_sampling.html) |
+| Min-p sampling | Keeping only tokens whose probability is at least a fraction of the most likely token's probability. | [09_07](html/09_07_llm_sampling.html) |
+| Truncation cost | Renormalising a distribution after keeping a set of probability mass m changes it by KL divergence -ln m. | [09_07](html/09_07_llm_sampling.html) |
+| Gumbel-max trick | The identity that argmax(logit + Gumbel noise) is an exact sample from the softmax of the logits. | [09_07](html/09_07_llm_sampling.html) |
+| Gumbel-softmax | A differentiable relaxation of categorical sampling that replaces the argmax by a softmax with temperature tau, trading bias against gradient variance. | [09_07](html/09_07_llm_sampling.html) |
+| Perplexity | The exponential of the average negative log-probability per token; the effective number of equally likely next tokens. | [09_07](html/09_07_llm_sampling.html) |
+| Distinct-n | The share of distinct n-grams among all n-grams of generated text, a simple measure of diversity. | [09_07](html/09_07_llm_sampling.html) |

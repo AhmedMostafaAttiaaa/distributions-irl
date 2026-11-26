@@ -11,6 +11,7 @@ How the distributions of Modules 01-08 become working models: losses as likeliho
 | 09_03 Naive Bayes | [notebook](notebooks/09_03_naive_bayes.ipynb) | [page](html/09_03_naive_bayes.html) | done |
 | 09_04 Density estimation: KDE, Gaussian mixtures and EM | [notebook](notebooks/09_04_density_estimation_kde_gmm_em.ipynb) | [page](html/09_04_density_estimation_kde_gmm_em.html) | done |
 | 09_05 Anomaly detection | [notebook](notebooks/09_05_anomaly_detection.ipynb) | [page](html/09_05_anomaly_detection.html) | done |
+| 09_06 The randomness inside neural networks | [notebook](notebooks/09_06_neural_net_randomness.ipynb) | [page](html/09_06_neural_net_randomness.html) | done |
 
 ## Contents of the folders
 

@@ -33,14 +33,15 @@ MODULES = [
      "Priors and posteriors, conjugate updating, credible intervals and predictions, MCMC and Thompson sampling."),
     ("08", "module_08_information", "Information theory",
      "Entropy and cross-entropy, KL and Jensen-Shannon divergence, Wasserstein distance, mutual information."),
-    ("09", None, "Distributions inside ML and AI", "Planned."),
+    ("09", "module_09_ml_ai", "Distributions inside ML and AI",
+     "Losses as likelihoods, GLMs, naive Bayes, density estimation, anomaly detection, neural-net randomness, LLM sampling, VAEs, diffusion, Gaussian processes, RL policies, priors, bias-variance and conformal prediction."),
     ("10", None, "Model evaluation and the confusion matrix", "Planned."),
     ("11", None, "Data science in practice", "Planned."),
     ("12", None, "Sampling algorithms", "Planned."),
     ("13", None, "Capstone projects", "Planned."),
 ]
 
-IN_PROGRESS = set()   # modules shown with the badge "in progress" instead of "done"
+IN_PROGRESS = {"09"}   # modules shown with the badge "in progress" instead of "done"
 
 CSS = """
 :root { --bg:#fff; --panel:#f6f7f9; --text:#1b1f24; --muted:#5b636d; --border:#d8dce1; --main:#0072B2; --hit:#fff3cd; }

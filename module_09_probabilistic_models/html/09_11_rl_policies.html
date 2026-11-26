@@ -524,7 +524,7 @@ function main() {
   const names = ["up", "down", "left", "right"];
   function pol() {
     const z = [0, 1, 2, 3].map(i => num("z" + i)), p = sm(z), H = -p.reduce((a, v) => a + v * Math.log(v + 1e-12), 0), mu = num("mu"), sg = Math.max(0.05, num("sg"));
-    boxOut({ "probabilities (up, down, left, right)": p.map(v => v.toFixed(3)).join(" / "), "entropy (nats), maximum ln 4 = 1.386": H, "score vector if 'right' is chosen": p.map((v, i) => ((i === 3 ? 1 : 0) - v).toFixed(3)).join(" / "), "Gaussian policy entropy": 0.5 * Math.log(2 * Math.PI * Math.E * sg * sg), "expected reward -(mu-1)^2 - sigma^2": -(mu - 1) ** 2 - sg * sg }, "pOut");
+    boxOut({ "probabilities (up, down, left, right)": p.map(v => v.toFixed(3)).join(" / "), "entropy (nats), maximum ln 4 = 1.386": H, "score vector if 'right' is chosen": p.map((v, i) => ((i === 3 ? 1 : 0) - v).toFixed(3)).join(" / "), "Gaussian policy entropy": 0.5 * Math.log(2 * Math.PI * Math.E * sg * sg), "expected reward -(mu-1)^2 - sigma^2": -((mu - 1) ** 2) - sg * sg }, "pOut");
     drawChart(el("pChart"), { title: "Softmax policy", xlabel: "action (1 up, 2 down, 3 left, 4 right)", ylabel: "probability", xrange: [0.4, 4.6], series: [{ kind: "bar", xs: [1, 2, 3, 4], ys: p, color: "var(--highlight)", label: "pi(a|s)" }] });
     el("pChart").dataset.p = JSON.stringify(p);
   }

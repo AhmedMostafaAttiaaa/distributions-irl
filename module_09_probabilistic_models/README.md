@@ -18,6 +18,7 @@ How the distributions of Modules 01-08 become working models: losses as likeliho
 | 09_10 Gaussian processes | [notebook](notebooks/09_10_gaussian_processes.ipynb) | [page](html/09_10_gaussian_processes.html) | done |
 | 09_11 Reinforcement learning policies | [notebook](notebooks/09_11_rl_policies.ipynb) | [page](html/09_11_rl_policies.html) | done |
 | 09_12 Priors as regularisers | [notebook](notebooks/09_12_priors_as_regularisers.ipynb) | [page](html/09_12_priors_as_regularisers.html) | done |
+| 09_13 The bias-variance trade-off | [notebook](notebooks/09_13_bias_variance_tradeoff.ipynb) | [page](html/09_13_bias_variance_tradeoff.html) | done |
 
 ## Contents of the folders
 

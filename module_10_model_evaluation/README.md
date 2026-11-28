@@ -8,6 +8,7 @@ How to judge a classifier or a regression model honestly: the two overlapping sc
 |---|---|---|---|
 | 10_01 The confusion matrix from two score distributions | [notebook](notebooks/10_01_confusion_matrix_from_distributions.ipynb) | [page](html/10_01_confusion_matrix_from_distributions.html) | done |
 | 10_02 Classification metrics | [notebook](notebooks/10_02_classification_metrics.ipynb) | [page](html/10_02_classification_metrics.html) | done |
+| 10_03 ROC and precision-recall curves | [notebook](notebooks/10_03_roc_auc_pr_curves.ipynb) | [page](html/10_03_roc_auc_pr_curves.html) | done |
 
 ## Contents of the folders
 
